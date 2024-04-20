@@ -1,0 +1,77 @@
+/*Barra de Navegacion*/
+nav{
+    background-color: var(--secondary);
+    height: 4.0rem;
+}
+
+.nav__container{
+    height: 100%;
+    width: 85%;
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.nav__icon{
+    filter: invert(100%);
+    height: 0.8rem;
+}
+
+.nav__options{
+    height: 100%;
+    display: flex;
+}
+
+.nav__item{
+    font-family: 'OpenSans-Bold';
+    font-size: 1.0rem;
+    display: flex;
+    list-style: none;
+    cursor: pointer;
+    height: 100%;
+    padding: 1rem;
+    align-items: center;
+    gap: 0.3rem;
+    position: relative;
+}
+
+.nav__item p{
+    display: inline;
+    color: var(--white);
+}
+
+.nav__item:hover{
+    background-color: var(--primary);
+
+    .nav__subitems{
+        display: block;
+    }
+}
+
+.nav__subitems{
+    display: none;
+    position: absolute;
+    top: 4.0rem;
+    left: 0;
+    list-style: none;
+}
+
+.nav__subitems li{
+    font-size: 0.8rem;
+    padding: 0.5rem 0.5rem 0.5rem 1rem;
+    background-color: var(--secondary);
+}
+
+.nav__subitems li:hover{
+    background-color: var(--third);
+}
+
+.button__close{
+    display: inline-block;
+}
+
+#powerOffSolid{
+    height: 2rem;
+    cursor: pointer;
+}

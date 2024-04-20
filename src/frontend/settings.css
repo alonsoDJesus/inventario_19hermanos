@@ -1,0 +1,42 @@
+/*Paleta de colores*/
+:root{
+    --primary: #2D3250;
+    --secondary: #424769;
+    --third: #7077A1;
+    --forth: #F6B17A;
+    --white:#ffffff;
+}
+
+/*Importacion de Fuentes*/
+@font-face{
+    font-family: 'OpenSans-Regular';
+    src: url('../../fonts/OpenSans-Regular.ttf');
+}
+
+@font-face{
+    font-family: 'OpenSans-Bold';
+    src: url('../../fonts/OpenSans-Bold.ttf');
+}
+
+@font-face{
+    font-family: 'MPLUS1Code-Regular';
+    src: url('../../fonts/MPLUS1Code-Regular.ttf');
+}
+
+/*Ajustes técnicos*/
+
+html {
+    box-sizing: border-box;
+  }
+
+*, *:before, *:after {
+    box-sizing: inherit;
+    margin: 0;
+    padding: 0;
+}
+
+body{
+    background-color: var(--primary);
+    font-size: 16px; /* 1 rem = 10 px */
+}
+

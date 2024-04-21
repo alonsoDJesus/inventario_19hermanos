@@ -8,11 +8,41 @@
 
     <link rel="stylesheet" href="settings.css">
     <link rel="stylesheet" href="menu.css">
+    <link rel="stylesheet" href="inicio.css">
 </head>
 
 <body>
     <script src="menu-resources.js"></script>
     <script src="menu.js"></script>
+
+    <main>
+        <h1>Ventas Iniciadas</h1>
+
+        <div class="container__sales">
+            <div class="container__headers">
+                <p class="container__header">ID</p>
+                <p class="container__header header_responsable">Responsable</p>
+                <p class="container__header header_route">Ruta</p>
+                <p class="container__header">Hora de Salida</p>
+                <p class="container__header">Cantidad de Piezas</p>
+            </div>
+
+            <div class="container__cards" id="containerCards">
+                <div class="card">
+                    <p class="text_example">
+                        Aún no tienes ninguna venta. <br>
+                        Registra una dando clic en el botón de agregar.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="button_add">
+        <img src="../../icons/plus-solid.svg" alt="" class="button_icon">
+    </div>
+
+    <script src="inicio.js"></script>
 </body>
 
 </html>

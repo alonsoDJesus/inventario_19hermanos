@@ -42,7 +42,7 @@ nav{
 }
 
 .nav__item:hover{
-    background-color: var(--primary);
+    background-color: var(--forth);
 
     .nav__subitems{
         display: block;
@@ -60,11 +60,11 @@ nav{
 .nav__subitems li{
     font-size: 0.8rem;
     padding: 0.5rem 0.5rem 0.5rem 1rem;
-    background-color: var(--secondary);
+    background-color: var(--forth);
 }
 
 .nav__subitems li:hover{
-    background-color: var(--third);
+    background-color: var(--forth_o);
 }
 
 .button__close{

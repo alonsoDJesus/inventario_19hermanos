@@ -4,6 +4,7 @@
     --secondary: #424769;
     --third: #7077A1;
     --forth: #F6B17A;
+    --forth_o: #e07d2c;
     --white:#ffffff;
 }
 
@@ -21,6 +22,11 @@
 @font-face{
     font-family: 'MPLUS1Code-Regular';
     src: url('../../fonts/MPLUS1Code-Regular.ttf');
+}
+
+@font-face{
+    font-family: 'Caveat-Regular';
+    src: url('../../fonts/Caveat-Regular.ttf');
 }
 
 /*Ajustes técnicos*/

@@ -43,6 +43,10 @@ async function getInitialSales(){
     return initialSales;
 }
 
+async function getCompletedSales(){
+    console.log('si funciona')
+}
+
 function createWindow(width, height) {
     window = new BrowserWindow({
         width: width,
@@ -58,5 +62,6 @@ function createWindow(width, height) {
 
 module.exports = {
     createWindow,
-    getInitialSales
+    getInitialSales,
+    getCompletedSales
 }

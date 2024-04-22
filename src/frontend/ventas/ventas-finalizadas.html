@@ -7,11 +7,35 @@
 
     <link rel="stylesheet" href="../settings.css">
     <link rel="stylesheet" href="../menu.css">
-    <link rel="stylesheet" href="css/venta-finalizada.css">
+    <link rel="stylesheet" href="css/ventas-finalizadas.css">
     <script src="venta-menu-resources.js"></script>
 </head>
 <body>
     <script src="../menu.js"></script>
-    Esta es la ventana de las ventas finalizadas
+
+    <main>
+        <h1>Ventas Iniciadas</h1>
+
+        <div class="container__sales">
+            <div class="container__headers">
+                <p class="container__header header_id">ID</p>
+                <p class="container__header header_responsable">Responsable</p>
+                <p class="container__header header_route">Ruta</p>
+                <p class="container__header header_jornada">Jornada</p>
+                <p class="container__header header_totales">Totales</p>
+            </div>
+
+            <div class="container__cards" id="containerCards">
+                <div class="card">
+                    <p class="text_example">
+                        Aún no tienes ninguna venta finalizada. <br>
+                        Las ventas finalizadas irán aparaciendo automáticamente.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="js/ventas-finalizadas.js"></script>
 </body>
 </html>

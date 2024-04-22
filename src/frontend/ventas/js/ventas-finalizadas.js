@@ -1,3 +1,6 @@
 async function getCompletedSales(){
-   await window.electronAPI.selectCompletedSales()
+   const completedSales = await window.electronAPI.selectCompletedSales()
+   console.log(completedSales)
 }
+
+getCompletedSales()

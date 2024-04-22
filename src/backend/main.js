@@ -30,7 +30,8 @@ async function getInitialSales(){
         INNER JOIN turno ON Turno_FK__venta = Turno_PK
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
-        WHERE Hora_fin__venta IS NULL;
+        WHERE Hora_fin__venta IS NULL
+        ORDER BY Venta_PK ASC;
     `)
 
     const piecesOfInitialSales = await getPiecesInitialSales()

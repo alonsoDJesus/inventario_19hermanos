@@ -10,6 +10,11 @@ function goToNewSale() {
     console.log('click')
 }
 
+function goToCompletedSales() {
+    location.href = links.completedSales
+    console.log('click')
+}
+
 body.innerHTML = `
 <nav>
 <div class="nav__container">
@@ -40,7 +45,7 @@ body.innerHTML = `
                 <li>
                     <p>Ver ventas iniciadas</p>
                 </li>
-                <li>
+                <li onclick="goToCompletedSales()">
                     <p>Ver ventas finalizadas</p>
                 </li>
             </ul>

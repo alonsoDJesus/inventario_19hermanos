@@ -8,5 +8,6 @@ const icons = {
 
 const links = {
     home: '../index.html',
-    newSale: 'nueva-venta.html'
+    newSale: 'nueva-venta.html',
+    completedSales: 'ventas-finalizadas.html'
 }

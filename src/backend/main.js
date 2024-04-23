@@ -71,6 +71,27 @@ async function getCompletedSales(){
     return completedSales
 }
 
+
+async function getEmployees(){
+    const conn = await getConnection()
+    const employees = await conn.query(`
+        SELECT CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre 
+        FROM distribuidor;
+    `)
+
+    return employees;
+}
+
+async function getRoutes(){
+    const conn = await getConnection()
+    const routes = await conn.query(`
+        SELECT Nombre__ruta as ruta 
+        FROM ruta;
+    `)
+
+    return routes
+}
+
 function createWindow(width, height) {
     window = new BrowserWindow({
         width: width,
@@ -87,5 +108,7 @@ function createWindow(width, height) {
 module.exports = {
     createWindow,
     getInitialSales,
-    getCompletedSales
+    getCompletedSales,
+    getEmployees,
+    getRoutes
 }

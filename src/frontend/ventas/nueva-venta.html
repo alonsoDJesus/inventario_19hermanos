@@ -1,39 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
     <link rel="stylesheet" href="../settings.css">
     <link rel="stylesheet" href="../menu.css">
+    <link rel="stylesheet" href="css/nueva-venta.css">
     <script src="venta-menu-resources.js"></script>
 </head>
+
 <body>
     <script src="../menu.js"></script>
     <main>
         <h1>Nueva Venta</h1>
-        <div id="nVenta">#0000001</div>
 
-        <form id="formulario">
-            <div class="grupo_campos">
-                <div>
-                    <label for="nombreResponsable">Responsable</label>
-                    <input type="text" id="nombreResponsable" placeholder="">
-                </div>
-    
-                <div>
-                    <label for="nombreRuta">Ruta</label>
-                    <input type="text" id="nombreRuta" placeholder="">
-                </div>
-    
-                <div>
-                    <label for="fecha">Fecha</label>
-                    <input type="date" id="fecha" placeholder="">
-                </div>
-    
-                <div>
-                    <label for="fecha">Hora de Salida</label>
-                    <input type="time" id="fecha" placeholder="">
+        <div class="container_aux">
+            <div id="nSale" class="form__tagnumber">#0000001</div>
+            <form id="formulario" class="form__container">
+                <div class="form__fields">
+                    <div class="select__group">
+                        <label for="employees">Responsable</label>
+                        <select id="employees" autofocus></select>
+                    </div>
+
+                    <div class="select__group">
+                        <label for="routes">Ruta</label>
+                        <select id="routes" autofocus></select>
+                    </div>
+
+                    <div class="input__group">
+                        <div class="checkbox__group">
+                            <input type="checkbox" id="scales" name="scales" />
+                            <label for="scales">Registrar fecha manualmente</label>
+                        </div>
+                        <label for="fecha">Fecha</label>
+                        <input type="date" id="fecha" placeholder="">
+                    </div>
+
+                    <div class="input__group">
+                        <div class="checkbox__group">
+                            <input type="checkbox" id="scales" name="scales" />
+                            <label for="scales">Registrar hora manualmente</label>
+                        </div>
+                        <label for="fecha">Hora de Salida</label>
+                        <input type="time" id="fecha" placeholder="">
+                    </div>
                 </div>
 
                 <div class="registro-ventas">
@@ -46,12 +59,12 @@
                     <div class="agregar-registro">
                         <button type="button">Agregar</button>
                     </div>
-
-                    
-                
                 </div>
-            </div>
-        </form>
+            </form>
+        </div>
     </main>
+
+    <script src="js/nueva-venta.js"></script>
 </body>
+
 </html>

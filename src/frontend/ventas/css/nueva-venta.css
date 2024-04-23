@@ -1,0 +1,64 @@
+main{
+    width: 65%;
+    margin: 3rem auto 0 auto;
+    height: 35rem;
+}
+
+h1{
+    font-family: 'OpenSans-Bold';
+    font-size: 2.5rem;
+    color: var(--white);
+}
+
+.container_aux{
+    position: relative;
+    height: 100%;
+}
+
+.form__tagnumber{
+    background-color: var(--forth);
+    font-family: 'MPLUS1Code-Regular';
+    font-size: 2rem;
+    display: inline-block;
+    padding: 0.5rem 0.5rem 3rem 0.5rem;
+    border-top-left-radius: 0.6rem;
+    border-top-right-radius: 0.6rem;
+    position: absolute;
+    right: 0;
+    top: -3.5rem;
+    z-index: -70;
+}
+
+.form__container{
+    background-color: var(--secondary);
+    border-radius: 1.4rem;
+    margin-top: 1.4rem;
+    padding: 1.4rem;
+    height: 100%;
+}
+
+.form__fields{
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+}
+
+.select__group label, .select__group select{
+    display: block;
+}
+
+.select__group select{
+    width: 100%;
+    height: 2.2rem;
+}
+
+label{
+    font-family: 'OpenSans-Regular';
+    color: var(--white);
+    font-size: 1.3rem;
+}
+
+.checkbox__group label{
+    font-size: 1rem;
+}

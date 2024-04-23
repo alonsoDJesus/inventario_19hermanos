@@ -8,4 +8,12 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectCompletedSales: () => {
         return ipcRenderer.invoke('select:completedSales') 
     },
+
+    selectEmployees: () => {
+        return ipcRenderer.invoke('select:employees') 
+    },
+
+    selectRoutes: () => {
+        return ipcRenderer.invoke('select:routes') 
+    },
 })

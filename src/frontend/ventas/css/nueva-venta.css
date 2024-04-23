@@ -72,6 +72,16 @@ label{
     outline: none;
 }
 
+.checkbox__group{
+    display: flex;
+    gap: .2rem;    
+}
+
 .checkbox__group label{
-    font-size: 1rem;
+    font-size: .8rem;
+    font-family: 'OpenSans-Light';
+}
+
+.checkbox__group input{
+    appearance: none;
 }

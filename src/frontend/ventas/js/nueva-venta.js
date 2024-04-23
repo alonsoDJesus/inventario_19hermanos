@@ -26,7 +26,8 @@ async function getEmployees(){
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún empleado"
     addOptions(employees, employeesData, "nombre", emptyOption)
-    console.log(document.querySelectorAll('option'))    
+
+    
 }
 
 async function getRoutes(){

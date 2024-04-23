@@ -92,6 +92,16 @@ async function getRoutes(){
     return routes
 }
 
+async function getLastSaleID(){
+    const conn = await getConnection()
+    const lastSaleID = await conn.query(`
+        SELECT MAX(Venta_PK) as lastSaleID
+        FROM venta;
+    `)
+
+    return lastSaleID[0].lastSaleID
+}
+
 function createWindow(width, height) {
     window = new BrowserWindow({
         width: width,
@@ -110,5 +120,6 @@ module.exports = {
     getInitialSales,
     getCompletedSales,
     getEmployees,
-    getRoutes
+    getRoutes,
+    getLastSaleID
 }

@@ -16,4 +16,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectRoutes: () => {
         return ipcRenderer.invoke('select:routes') 
     },
+
+    selectLastSaleID: () => {
+        return ipcRenderer.invoke('select:lastSaleID') 
+    },
 })

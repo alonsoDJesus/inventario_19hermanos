@@ -1,5 +1,5 @@
 const {app, screen, ipcMain} = require('electron')
-const {createWindow, getInitialSales, getCompletedSales, getEmployees, getRoutes} = require('./main')
+const {createWindow, getInitialSales, getCompletedSales, getEmployees, getRoutes, getLastSaleID} = require('./main')
 const { getDirName } = require('../../ruta')
 
 require('electron-reload')(getDirName())
@@ -19,6 +19,10 @@ app.whenReady().then( () => {
 
     ipcMain.handle('select:routes', async () => {
         return await getRoutes()
+    })
+
+    ipcMain.handle('select:lastSaleID', async () => {
+        return await getLastSaleID()
     })
 
     const primaryDisplay = screen.getPrimaryDisplay()

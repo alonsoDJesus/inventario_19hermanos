@@ -1,5 +1,7 @@
 const employees = document.getElementById('employees')
 const routes = document.getElementById('routes')
+const tagID = document.querySelector('.form__tagnumber p')
+let lastSaleID = 0;
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.appendChild(optionDefault)
@@ -8,6 +10,14 @@ function addOptions(selectField, dataset, key, optionDefault){
         option.text = data[key]
         selectField.appendChild(option)
     });
+}
+
+function setTagID(){
+    lastSaleID += 1
+    let numberZeros = 9 - (`${lastSaleID}`.length), tagNumber = "#"
+    tagNumber = tagNumber.concat("0".repeat(numberZeros))
+    tagNumber = tagNumber.concat(`${lastSaleID}`)
+    tagID.textContent = tagNumber
 }
 
 async function getEmployees(){
@@ -26,5 +36,11 @@ async function getRoutes(){
     addOptions(routes, routesData, "ruta", emptyOption)
 }
 
+async function getLastSaleID(){
+    lastSaleID = await window.electronAPI.selectLastSaleID()
+    setTagID()
+}
+
 getEmployees()
 getRoutes()
+getLastSaleID()

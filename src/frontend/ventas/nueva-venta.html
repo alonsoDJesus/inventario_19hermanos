@@ -17,17 +17,19 @@
         <h1>Nueva Venta</h1>
 
         <div class="container_aux">
-            <div id="nSale" class="form__tagnumber">#0000001</div>
+            <div id="nSale" class="form__tagnumber">
+                <p></p>
+            </div>
             <form id="formulario" class="form__container">
                 <div class="form__fields">
                     <div class="select__group">
                         <label for="employees">Responsable</label>
-                        <select id="employees" autofocus></select>
+                        <select id="employees" class="field" autofocus></select>
                     </div>
 
                     <div class="select__group">
                         <label for="routes">Ruta</label>
-                        <select id="routes" autofocus></select>
+                        <select id="routes" class="field"></select>
                     </div>
 
                     <div class="input__group">
@@ -36,7 +38,7 @@
                             <label for="scales">Registrar fecha manualmente</label>
                         </div>
                         <label for="fecha">Fecha</label>
-                        <input type="date" id="fecha" placeholder="">
+                        <input type="date" id="fecha" class="field">
                     </div>
 
                     <div class="input__group">
@@ -44,8 +46,8 @@
                             <input type="checkbox" id="scales" name="scales" />
                             <label for="scales">Registrar hora manualmente</label>
                         </div>
-                        <label for="fecha">Hora de Salida</label>
-                        <input type="time" id="fecha" placeholder="">
+                        <label for="hora">Hora de Salida</label>
+                        <input type="time" id="hora" class="field">
                     </div>
                 </div>
 

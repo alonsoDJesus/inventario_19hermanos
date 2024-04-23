@@ -48,15 +48,28 @@ h1{
     display: block;
 }
 
-.select__group select{
-    width: 100%;
-    height: 2.2rem;
-}
-
 label{
     font-family: 'OpenSans-Regular';
     color: var(--white);
     font-size: 1.3rem;
+}
+
+.field{
+    width: 100%;
+    height: 2.5rem;
+    background-color: var(--primary);
+    border-radius: 0.4rem;
+    border: none;
+    color: var(--white);
+    font-family: 'OpenSans-Light';
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-top: .5rem;
+}
+
+.field:focus{
+    border: var(--forth) solid 0.2rem;
+    outline: none;
 }
 
 .checkbox__group label{

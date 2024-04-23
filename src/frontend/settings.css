@@ -20,6 +20,11 @@
 }
 
 @font-face{
+    font-family: 'OpenSans-Light';
+    src: url('../../fonts/OpenSans-Light.ttf');
+}
+
+@font-face{
     font-family: 'MPLUS1Code-Regular';
     src: url('../../fonts/MPLUS1Code-Regular.ttf');
 }

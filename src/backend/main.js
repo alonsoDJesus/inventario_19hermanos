@@ -62,6 +62,12 @@ async function getCompletedSales(){
         ORDER BY Venta_PK ASC;
     `)
 
+    completedSales.forEach(sale => {
+        sale.venta = Intl.NumberFormat().format(sale.venta)
+        sale.costo = Intl.NumberFormat().format(sale.costo)
+        sale.utilidad = Intl.NumberFormat().format(sale.utilidad)
+    });
+
     return completedSales
 }
 

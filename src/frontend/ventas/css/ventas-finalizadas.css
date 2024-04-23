@@ -110,24 +110,40 @@ h1{
 
 .data_ruta{
     inline-size: 5.0rem;
-    margin-right: 1rem;
+    margin-right: 4.5rem;
 }
 
 .data__container{
     border-radius: 1rem;
     color: var(--white);
     display: grid;
+    font-family: 'OpenSans-Regular';
 }
 
 .itinerary{
     background-color: var(--primary);
-    width: 16rem;
+    width: 13.8rem;
     margin-right: 1rem;
     grid-template-columns: 1fr 1fr;
+    margin-right: 6.0rem;
 }
 
 .summary{
     background-color: var(--forth);
-    width: 20rem;
+    width: 24rem;
     grid-template-columns: 1fr 1fr 1fr;
+    color: var(--primary);
+}
+
+.itinerary p, .summary p{
+    place-self: center;
+}
+
+.data__containerheader{
+    font-weight: bold;
+}
+
+.number{
+    font-family: 'MPLUS1Code-Regular';
+    font-size: 1rem;
 }

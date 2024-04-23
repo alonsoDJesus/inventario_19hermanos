@@ -8,6 +8,7 @@ function addOptions(selectField, dataset, key, optionDefault){
     dataset.forEach(data => {
         const option = document.createElement('option')
         option.text = data[key]
+        option.setAttribute('id', data.id)
         selectField.appendChild(option)
     });
 }
@@ -25,8 +26,7 @@ async function getEmployees(){
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún empleado"
     addOptions(employees, employeesData, "nombre", emptyOption)
-
-    
+    console.log(document.querySelectorAll('option'))    
 }
 
 async function getRoutes(){

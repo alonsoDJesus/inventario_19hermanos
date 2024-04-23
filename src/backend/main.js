@@ -75,7 +75,9 @@ async function getCompletedSales(){
 async function getEmployees(){
     const conn = await getConnection()
     const employees = await conn.query(`
-        SELECT CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre 
+        SELECT 
+	        Distribuidor_PK as id,
+	        CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre 
         FROM distribuidor;
     `)
 
@@ -85,7 +87,9 @@ async function getEmployees(){
 async function getRoutes(){
     const conn = await getConnection()
     const routes = await conn.query(`
-        SELECT Nombre__ruta as ruta 
+        SELECT
+	        Ruta_PK as id,
+	        Nombre__ruta as ruta 
         FROM ruta;
     `)
 

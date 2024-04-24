@@ -20,7 +20,7 @@
             <div id="nSale" class="form__tagnumber">
                 <p></p>
             </div>
-            <form id="formulario" class="form__container">
+            <form id="formulario" class="form__container form">
                 <div class="form__fields">
                     <div class="select__group">
                         <label for="employees">Responsable</label>
@@ -51,20 +51,66 @@
                     </div>
                 </div>
 
-                <div class="registro-ventas">
-                    <div class="cabecera">
-                        <p>Descripcion</p>
-                        <p>Cantidad total de piezas</p>
-                        <p>Cantidad total de cajas</p>
+                <div class="log__container">
+                    <div class="log__headers">
+                        <p class="log__header header_descripcion">Descripcion</p>
+                        <p class="log__header header_piezas">Cantidad total de piezas</p>
+                        <p class="log__header header_cajas">Cantidad total de cajas</p>
                     </div>
 
-                    <div class="agregar-registro">
-                        <button type="button">Agregar</button>
+                    <div class="log__cards" id="logCards">
+                        <div class="card card__default">
+                            <div class="button button_greater">
+                                <img src="../../../icons/plus-solid.svg" alt="" class="h-2rem">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
         </div>
     </main>
+
+    <div class="button button_options button_greater">
+        <img src="../../../icons/ellipsis-solid.svg" alt="" class="h-2rem">
+    </div>
+
+    <div class="layout__opacity">
+        <form class="form__addsale form" id="formulario">
+            <div class="form__header">
+                <h2>Agrega un producto</h2>
+                <div class="modal__button button">
+                    <img src="../../../icons/xmark-solid.svg" alt="" class="h-1rem">
+                </div>
+            </div>
+
+            <div class="modal__fields">
+                <div class="input__group">
+                    <label for="descrition">Descripcion</label>
+                    <input type="text" id="descrition" class="field">
+                </div>
+
+                <div class="input__group">
+                    <label for="quantity">Cantidad</label>
+                    <input type="number" id="quantity" class="field">
+                </div>
+
+                <div class="input__group">
+                    <label for="boxes">Cajas</label>
+                    <input type="number" id="boxes" class="field" readonly>
+                </div>
+
+                <div class="input__group">
+                    <label for="cost">P. Costo</label>
+                    <input type="number" id="cost" class="field" readonly>
+                </div>
+
+                <div class="input__group">
+                    <label for="sale">P. Venta</label>
+                    <input type="number" id="sale" class="field" readonly>
+                </div>
+            </div>
+        </form>
+    </div>
 
     <script src="js/nueva-venta.js"></script>
 </body>

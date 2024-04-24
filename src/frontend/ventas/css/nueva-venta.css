@@ -12,7 +12,6 @@ h1{
 
 .container_aux{
     position: relative;
-    height: 100%;
 }
 
 .form__tagnumber{
@@ -31,10 +30,13 @@ h1{
 
 .form__container{
     background-color: var(--secondary);
-    border-radius: 1.4rem;
     margin-top: 1.4rem;
-    padding: 1.4rem;
     height: 100%;
+}
+
+.form{
+    padding: 1.4rem;
+    border-radius: 1.4rem;
 }
 
 .form__fields{
@@ -111,4 +113,116 @@ label{
     position: absolute;
     width: .3rem;
     height: .3rem;
+}
+
+.log__container{
+    height: 100%;
+}
+
+.log__headers{
+    margin-top: 1.4rem;
+}
+
+.log__header{
+    color: var(--white);
+    font-family: 'OpenSans-Regular';
+    font-size: 1rem;
+    display: inline-block;
+}
+
+.header_descripcion{
+    margin-right: 18rem;
+}
+
+.header_piezas{
+    margin-right: 3.5rem;
+}
+
+.log__cards{
+    width: 100%;
+    margin: 1rem auto;
+    background-color: antiquewhite;
+}
+
+.card{
+    background-color: var(--third);
+    border-radius: 1.2rem;
+    height: 7.5rem;
+    margin-bottom: 1rem;
+    padding: 0 1.9rem 0 1.9rem;
+}
+
+.card__default{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.button{
+    background-color: var(--forth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.button_greater{
+    width: 4rem;
+    height: 4rem;
+    box-shadow: 0 0.3rem 0.5rem black;
+}
+
+.h-2rem{
+    height: 2rem;
+}
+
+.button_options{
+    z-index: 100;
+    position: absolute;
+    right: 11.2rem;
+    bottom: 2.4rem;
+}
+
+
+.layout__opacity{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-color: var(--primary_op_70);
+    top: 0;
+    left: 0;
+    z-index: 150;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.form__addsale{
+    background-color: var(--third);
+    margin: auto;
+    width: 40rem;
+    height: 25rem;
+}
+
+.form__header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.form__addsale h2{
+    font-family: 'OpenSans-Bold';
+    font-size: 2rem;
+    color: var(--white);
+}
+
+.modal__button{
+    width: 1.2rem;
+    height: 1.2rem;
+    cursor: pointer;
+}
+
+.h-1rem{
+    height: 1rem;
 }

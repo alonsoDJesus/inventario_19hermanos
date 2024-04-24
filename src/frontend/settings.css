@@ -1,12 +1,13 @@
 /*Paleta de colores*/
 :root{
     --primary: #2D3250;
+    --primary_o: #252941;
+    --primary_op_70: rgba(45, 50, 80, .85);  
     --secondary: #424769;
     --third: #7077A1;
     --forth: #F6B17A;
-    --forth_o: #e07d2c;
-    --white:#ffffff;
-    --primary_op_70: rgba(45, 50, 80, .85);     
+    --forth_o: #fc9c4d;
+    --white:#ffffff;   
 }
 
 /*Importacion de Fuentes*/

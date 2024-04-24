@@ -23,13 +23,13 @@
             <form id="formulario" class="form__container form">
                 <div class="form__fields">
                     <div class="select__group">
-                        <label for="employees">Responsable</label>
-                        <select id="employees" class="field" autofocus></select>
+                        <label for="employees" class="fs-1">Responsable</label>
+                        <select id="employees" class="field field-bgcolor-primary" autofocus></select>
                     </div>
 
                     <div class="select__group">
-                        <label for="routes">Ruta</label>
-                        <select id="routes" class="field"></select>
+                        <label for="routes" class="fs-1">Ruta</label>
+                        <select id="routes" class="field field-bgcolor-primary"></select>
                     </div>
 
                     <div class="input__group">
@@ -37,8 +37,8 @@
                             <input type="checkbox" id="checkDate" name="checkDate"/>
                             <label for="checkDate">Registrar fecha manualmente</label>
                         </div>
-                        <label for="date">Fecha</label>
-                        <input type="date" id="date" class="field">
+                        <label for="date" class="fs-1">Fecha</label>
+                        <input type="date" id="date" class="field field-bgcolor-primary">
                     </div>
 
                     <div class="input__group">
@@ -46,8 +46,8 @@
                             <input type="checkbox" id="checkTime" name="checkTime" />
                             <label for="checkTime">Registrar hora manualmente</label>
                         </div>
-                        <label for="time">Hora de Salida</label>
-                        <input type="time" id="time" class="field">
+                        <label for="time" class="fs-1">Hora de Salida</label>
+                        <input type="time" id="time" class="field field-bgcolor-primary">
                     </div>
                 </div>
 
@@ -84,30 +84,33 @@
             </div>
 
             <div class="modal__fields">
-                <div class="input__group">
-                    <label for="descrition">Descripcion</label>
-                    <input type="text" id="descrition" class="field">
+                <div class="input__group grid-col-5">
+                    <label for="description" class="fs-2">Descripcion</label>
+                    <select id="description" class="field field-bgcolor-secondary"></select>
                 </div>
 
                 <div class="input__group">
-                    <label for="quantity">Cantidad</label>
-                    <input type="number" id="quantity" class="field">
+                    <label for="quantity" class="fs-2">Cantidad</label>
+                    <input type="number" id="quantity" class="field field-bgcolor-secondary" min="1">
                 </div>
 
                 <div class="input__group">
-                    <label for="boxes">Cajas</label>
-                    <input type="number" id="boxes" class="field" readonly>
+                    <label for="boxes" class="fs-2">Cajas</label>
+                    <input type="number" id="boxes" class="field field-bgcolor-secondary" readonly>
                 </div>
 
                 <div class="input__group">
-                    <label for="cost">P. Costo</label>
-                    <input type="number" id="cost" class="field" readonly>
+                    <label for="cost" class="fs-2">P. Costo</label>
+                    <input type="number" id="cost" class="field field-bgcolor-secondary" readonly>
                 </div>
 
                 <div class="input__group">
-                    <label for="sale">P. Venta</label>
-                    <input type="number" id="sale" class="field" readonly>
+                    <label for="sale" class="fs-2">P. Venta</label>
+                    <input type="number" id="sale" class="field field-bgcolor-secondary" readonly>
                 </div>
+
+                <button type="button" class="square-button cancel">Cancelar</button>
+                <button type="button" class="square-button accept">Aceptar</button>
             </div>
         </form>
     </div>

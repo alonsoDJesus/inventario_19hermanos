@@ -7,6 +7,7 @@ const dateCheck = document.getElementById('checkDate')
 const timeCheck = document.getElementById('checkTime')
 
 let lastSaleID = 0
+let intervalID = 0
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.appendChild(optionDefault)
@@ -26,21 +27,51 @@ function setTagID(){
     tagID.textContent = tagNumber
 }
 
+function getCurrentTime() {
+    let date = new Date()
+    let hour = date.getHours()
+    let minutes = date.getMinutes()
+    let seconds = date.getSeconds()
+    
+    hour = hour >= 0 && hour < 10 ? `0${hour}` : `${hour}`
+    minutes = minutes >= 0 && minutes < 10 ? `0${minutes}` : `${minutes}`
+    seconds = seconds >= 0 && seconds < 10 ? `0${seconds}` : `${seconds}`
+
+    timeField.value = `${hour}:${minutes}:${seconds}`
+}
+
+function getCurrentDate() {
+    let date = new Date()
+    today = date.getDate()
+    month = date.getMonth()
+    year = date.getFullYear()
+
+    today = today >= 1 && today < 10 ? `0${today}` : `${today}`
+    month = month >= 0 && month < 10 ? `0${month + 1}` : `${month + 1}`
+    dateField.value = `${year}-${month}-${today}`
+}
+
+
 function manageCheck(checkField, checked){
     if (checked) {
         checkField.disabled = false
+
+        if (checkField.id == 'time') {
+            clearInterval(intervalID)
+            intervalID = 0
+        }
     } else {
         checkField.disabled = true
+
+        if (checkField.id == 'time' && intervalID == 0) {
+            intervalID = setInterval(() => {
+                getCurrentTime()
+            }, 1000);
+        } else {
+            getCurrentDate()
+        }
     }
 }
-
-dateCheck.addEventListener('click', () => {
-    manageCheck(dateField, dateCheck.checked)
-})
-
-timeCheck.addEventListener('click', () => {
-    manageCheck(timeField, timeCheck.checked)
-})
 
 async function getEmployees(){
     const employeesData = await window.electronAPI.selectEmployees()
@@ -62,6 +93,15 @@ async function getLastSaleID(){
     lastSaleID = await window.electronAPI.selectLastSaleID()
     setTagID()
 }
+
+
+dateCheck.addEventListener('click', () => {
+    manageCheck(dateField, dateCheck.checked)
+})
+
+timeCheck.addEventListener('click', () => {
+    manageCheck(timeField, timeCheck.checked)
+})
 
 getEmployees()
 getRoutes()

@@ -1,7 +1,12 @@
 const employees = document.getElementById('employees')
 const routes = document.getElementById('routes')
 const tagID = document.querySelector('.form__tagnumber p')
-let lastSaleID = 0;
+const dateField = document.getElementById('date')
+const timeField = document.getElementById('time')
+const dateCheck = document.getElementById('checkDate')
+const timeCheck = document.getElementById('checkTime')
+
+let lastSaleID = 0
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.appendChild(optionDefault)
@@ -20,6 +25,22 @@ function setTagID(){
     tagNumber = tagNumber.concat(`${lastSaleID}`)
     tagID.textContent = tagNumber
 }
+
+function manageCheck(checkField, checked){
+    if (checked) {
+        checkField.disabled = false
+    } else {
+        checkField.disabled = true
+    }
+}
+
+dateCheck.addEventListener('click', () => {
+    manageCheck(dateField, dateCheck.checked)
+})
+
+timeCheck.addEventListener('click', () => {
+    manageCheck(timeField, timeCheck.checked)
+})
 
 async function getEmployees(){
     const employeesData = await window.electronAPI.selectEmployees()
@@ -45,3 +66,5 @@ async function getLastSaleID(){
 getEmployees()
 getRoutes()
 getLastSaleID()
+manageCheck(dateField, dateCheck.checked)
+manageCheck(timeField, timeCheck.checked)

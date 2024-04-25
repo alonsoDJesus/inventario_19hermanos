@@ -46,8 +46,15 @@ h1{
     gap: 2rem;
 }
 
-.select__group label, .select__group select{
-    display: block;
+.label__group{
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding-left: 0.2rem;
+}
+
+.label__icon{
+    height: 1rem;
 }
 
 label{
@@ -95,7 +102,8 @@ label{
 
 .checkbox__group{
     display: flex;
-    gap: .2rem;   
+    gap: .2rem;
+    padding-left: 0.2rem;   
 }
 
 .checkbox__group label{
@@ -275,6 +283,10 @@ label{
     font-size: 1rem;
     margin-top: 3rem;
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.3rem;
 }
 
 .cancel{

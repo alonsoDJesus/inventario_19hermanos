@@ -5,9 +5,18 @@ const dateField = document.getElementById('date')
 const timeField = document.getElementById('time')
 const dateCheck = document.getElementById('checkDate')
 const timeCheck = document.getElementById('checkTime')
+const buttonAddSale = document.getElementById('buttonAddSale')
+const modalForm = document.getElementById('modalForm')
+const buttonCloseModal = document.getElementById('buttonCloseModal')
+const buttonCancelModal = document.getElementById('buttonCancelModal')
 
 let lastSaleID = 0
 let intervalID = 0
+let addedProductos = []
+let campos = {
+    descripcion: false,
+    cantidad: false
+}
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.appendChild(optionDefault)
@@ -101,6 +110,18 @@ dateCheck.addEventListener('click', () => {
 
 timeCheck.addEventListener('click', () => {
     manageCheck(timeField, timeCheck.checked)
+})
+
+buttonAddSale.addEventListener('click', () => {
+    modalForm.classList.remove('display-none')
+})
+
+buttonCloseModal.addEventListener('click', () => {
+    modalForm.classList.add('display-none')
+})
+
+buttonCancelModal.addEventListener('click', () => {
+    modalForm.classList.add('display-none')
 })
 
 getEmployees()

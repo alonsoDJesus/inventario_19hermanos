@@ -60,8 +60,8 @@
 
                     <div class="log__cards" id="logCards">
                         <div class="card card__default">
-                            <div class="button button_greater">
-                                <img src="../../../icons/plus-solid.svg" alt="" class="h-2rem">
+                            <div class="button button_greater" id="buttonAddSale">
+                                <img src="../../../icons/plus-solid.svg" alt="" class="h-2rem" >
                             </div>
                         </div>
                     </div>
@@ -74,12 +74,12 @@
         <img src="../../../icons/ellipsis-solid.svg" alt="" class="h-2rem">
     </div>
 
-    <div class="layout__opacity">
+    <div class="layout__opacity display-none" id="modalForm">
         <form class="form__addsale form" id="formulario">
             <div class="form__header">
                 <h2>Agrega un producto</h2>
                 <div class="modal__button button">
-                    <img src="../../../icons/xmark-solid.svg" alt="" class="h-1rem">
+                    <img src="../../../icons/xmark-solid.svg" alt="" class="h-1rem" id="buttonCloseModal">
                 </div>
             </div>
 
@@ -109,7 +109,7 @@
                     <input type="number" id="sale" class="field field-bgcolor-secondary" readonly>
                 </div>
 
-                <button type="button" class="square-button cancel">Cancelar</button>
+                <button type="button" class="square-button cancel" id="buttonCancelModal">Cancelar</button>
                 <button type="button" class="square-button accept">Aceptar</button>
             </div>
         </form>

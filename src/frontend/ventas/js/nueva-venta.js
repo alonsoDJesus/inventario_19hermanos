@@ -10,7 +10,6 @@ const modalForm = document.getElementById('modalForm')
 const buttonCloseModal = document.getElementById('buttonCloseModal')
 const buttonCancelModal = document.getElementById('buttonCancelModal')
 const lockFieldIcons = document.querySelectorAll('.lock-field-icon')
-console.log(lockFieldIcons)
 
 let lastSaleID = 0
 let intervalID = 0

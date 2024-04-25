@@ -6,21 +6,25 @@ const timeField = document.getElementById('time')
 const dateCheck = document.getElementById('checkDate')
 const timeCheck = document.getElementById('checkTime')
 const buttonAddSale = document.getElementById('buttonAddSale')
-const modalForm = document.getElementById('modalForm')
+const layoutForm = document.getElementById('layoutForm')
 const buttonCloseModal = document.getElementById('buttonCloseModal')
 const buttonCancelModal = document.getElementById('buttonCancelModal')
 const lockFieldIcons = document.querySelectorAll('.lock-field-icon')
+const productsDescription = document.getElementById('description')
+const fields = document.querySelectorAll('.field')
+const quantityField = document.getElementById('quantity')
 
 let lastSaleID = 0
 let intervalID = 0
-let addedProductos = []
+let addedProductos = new Object()
 let campos = {
     descripcion: false,
     cantidad: false
 }
-let allProducts
+let productsData
 
 function addOptions(selectField, dataset, key, optionDefault){
+    selectField.innerHTML = ''
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
         const option = document.createElement('option')
@@ -90,13 +94,54 @@ function manageCheck(checkField, checked){
     }
 }
 
+function setPricesOnFields() {
+    const cost = document.getElementById('cost')
+    const sale = document.getElementById('sale')
+
+    productsData.forEach(product => {
+        if (product.id == productsDescription.selectedIndex) {
+            cost.value = `$ ${product.cost}`
+            sale.value = `$ ${product.sale}`
+        }
+    })
+}
+
+function isEmptyForm(fields) {
+    let isEmpty = true, index = 0
+    
+    
+    while (fields[index] != undefined && isEmpty == true) {
+        if (fields[index].type == "select-one") {
+            isEmpty = fields[index].selectedIndex == 0
+        } else {
+            isEmpty = fields[index].value == ''
+        }
+        index++
+    }
+
+    return isEmpty
+}
+
+function verifyToClose(){
+    let modalFormFields = []
+    modalFormFields.push(fields[4])
+    modalFormFields.push(fields[5])
+    
+    if (!isEmptyForm(modalFormFields)){
+        let response = confirm('¿Estas seguro de salir?\nLos datos se perderán!')
+        if (response){
+            layoutForm.classList.add('display-none')
+        }
+    }else{
+        layoutForm.classList.add('display-none')
+    }
+}
+
 async function getEmployees(){
     const employeesData = await window.electronAPI.selectEmployees()
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún empleado"
     addOptions(employees, employeesData, "nombre", emptyOption)
-
-    
 }
 
 async function getRoutes(){
@@ -112,10 +157,11 @@ async function getLastSaleID(){
 }
 
 async function getProducts(){
-    const products = await window.electronAPI.selectProducts()
-    return products
+    productsData = await window.electronAPI.selectProducts()
+    const emptyOption = document.createElement('option')
+    emptyOption.text = "Seleccione algún producto"
+    addOptions(productsDescription, productsData, "descrip", emptyOption)
 }
-
 
 dateCheck.addEventListener('click', () => {
     manageCheck(dateField, dateCheck.checked)
@@ -126,16 +172,25 @@ timeCheck.addEventListener('click', () => {
 })
 
 buttonAddSale.addEventListener('click', async () => {
-    modalForm.classList.remove('display-none')
-    allProducts = await getProducts()
+    layoutForm.classList.remove('display-none')
+    modalForm.reset()
+    await getProducts()
+})
+
+productsDescription.addEventListener('change', () => {
+    setPricesOnFields()
 })
 
 buttonCloseModal.addEventListener('click', () => {
-    modalForm.classList.add('display-none')
+    verifyToClose()
 })
 
 buttonCancelModal.addEventListener('click', () => {
-    modalForm.classList.add('display-none')
+    verifyToClose()
+})
+
+quantityField.addEventListener('keyup', () =>  {
+    
 })
 
 getEmployees()

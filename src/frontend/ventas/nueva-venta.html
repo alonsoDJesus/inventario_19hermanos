@@ -16,7 +16,7 @@
     <main>
         <h1>Nueva Venta</h1>
 
-        <div class="container_aux">
+        <div class="position-relative">
             <div id="nSale" class="form__tagnumber">
                 <p></p>
             </div>
@@ -83,7 +83,7 @@
                     <div class="log__cards" id="logCards">
                         <div class="card card__default">
                             <div class="button button_greater" id="buttonAddSale">
-                                <img src="../../../icons/plus-solid.svg" alt="" class="h-2rem" >
+                                <img src="../../../icons/plus-solid.svg" alt="" class="h-2rem">
                             </div>
                         </div>
                     </div>
@@ -96,8 +96,8 @@
         <img src="../../../icons/ellipsis-solid.svg" alt="" class="h-2rem">
     </div>
 
-    <div class="layout__opacity display-none" id="modalForm">
-        <form class="form__addsale form" id="formulario">
+    <div class="layout__opacity display-none" id="layoutForm">
+        <form class="form__addsale form" id="modalForm">
             <div class="form__header">
                 <h2>Agrega un producto</h2>
                 <div class="modal__button button">
@@ -141,7 +141,7 @@
                     </div>
 
                     <div class="position-relative">
-                        <input type="number" id="cost" class="field field-bgcolor-secondary" readonly>
+                        <input type="text" id="cost" class="field field-bgcolor-secondary font-MPLUS-Reg" readonly>
                         <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
                     </div>
                 </div>
@@ -153,7 +153,7 @@
                     </div>
 
                     <div class="position-relative">
-                        <input type="number" id="sale" class="field field-bgcolor-secondary" readonly>
+                        <input type="text" id="sale" class="field field-bgcolor-secondary font-MPLUS-Reg" readonly>
                         <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
                     </div>
                 </div>

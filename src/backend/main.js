@@ -118,6 +118,11 @@ async function getProducts(){
         FROM producto;
     `)
 
+    products.forEach(product => {
+        product.cost = Intl.NumberFormat().format(product.cost)
+        product.sale = Intl.NumberFormat().format(product.sale)
+    });
+
     return products
 }
 

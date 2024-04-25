@@ -10,10 +10,6 @@ h1{
     color: var(--white);
 }
 
-.container_aux{
-    position: relative;
-}
-
 .form__tagnumber{
     background-color: var(--forth);
     font-family: 'MPLUS1Code-Regular';
@@ -195,6 +191,10 @@ label{
     box-shadow: 0 0.3rem 0.5rem black;
 }
 
+.button_greater:hover{
+    background-color: var(--forth_o);
+}
+
 .h-2rem{
     height: 2rem;
 }
@@ -321,4 +321,8 @@ label{
 
 .m-right{
     margin-right: 0.7rem;
+}
+
+.font-MPLUS-Reg{
+    font-family: 'MPLUS1Code-Regular';
 }

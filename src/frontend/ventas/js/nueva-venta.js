@@ -9,6 +9,8 @@ const buttonAddSale = document.getElementById('buttonAddSale')
 const modalForm = document.getElementById('modalForm')
 const buttonCloseModal = document.getElementById('buttonCloseModal')
 const buttonCancelModal = document.getElementById('buttonCancelModal')
+const lockFieldIcons = document.querySelectorAll('.lock-field-icon')
+console.log(lockFieldIcons)
 
 let lastSaleID = 0
 let intervalID = 0
@@ -63,21 +65,27 @@ function getCurrentDate() {
 
 function manageCheck(checkField, checked){
     if (checked) {
-        checkField.disabled = false
+        checkField.readOnly = false
 
         if (checkField.id == 'time') {
             clearInterval(intervalID)
             intervalID = 0
+            lockFieldIcons[1].classList.add('display-none')
+        } else{
+            lockFieldIcons[0].classList.add('display-none')
         }
     } else {
-        checkField.disabled = true
+        checkField.readOnly = true
 
         if (checkField.id == 'time' && intervalID == 0) {
             intervalID = setInterval(() => {
                 getCurrentTime()
             }, 1000);
+
+            lockFieldIcons[1].classList.remove('display-none')
         } else {
             getCurrentDate()
+            lockFieldIcons[0].classList.remove('display-none')
         }
     }
 }

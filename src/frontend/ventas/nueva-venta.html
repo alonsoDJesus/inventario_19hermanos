@@ -24,7 +24,7 @@
                 <div class="form__fields">
                     <div class="select__group">
                         <div class="label__group">
-                            <img src="../../../icons/user-solid.svg" alt="" class="label__icon">
+                            <img src="../../../icons/user-solid.svg" alt="" class="h-1rem">
                             <label for="employees" class="fs-1">Responsable</label>
                         </div>
                         <select id="employees" class="field field-bgcolor-primary" autofocus></select>
@@ -32,7 +32,7 @@
 
                     <div class="select__group">
                         <div class="label__group">
-                            <img src="../../../icons/route-solid.svg" alt="" class="label__icon">
+                            <img src="../../../icons/route-solid.svg" alt="" class="h-1rem">
                             <label for="routes" class="fs-1">Ruta</label>
                         </div>
                         <select id="routes" class="field field-bgcolor-primary"></select>
@@ -45,10 +45,14 @@
                         </div>
 
                         <div class="label__group">
-                            <img src="../../../icons/calendar-solid.svg" alt="" class="label__icon">
+                            <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
                             <label for="date" class="fs-1">Fecha</label>
                         </div>
-                        <input type="date" id="date" class="field field-bgcolor-primary">
+
+                        <div class="position-relative">
+                            <input type="date" id="date" class="field field-bgcolor-primary">
+                            <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon m-right">
+                        </div>
                     </div>
 
                     <div class="input__group">
@@ -58,10 +62,14 @@
                         </div>
 
                         <div class="label__group">
-                            <img src="../../../icons/clock-solid.svg" alt="" class="label__icon">
+                            <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
                             <label for="time" class="fs-1">Hora de Salida</label>
                         </div>
-                        <input type="time" id="time" class="field field-bgcolor-primary">
+
+                        <div class="position-relative">
+                            <input type="time" id="time" class="field field-bgcolor-primary">
+                            <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon m-right">
+                        </div>
                     </div>
                 </div>
 
@@ -100,7 +108,7 @@
             <div class="modal__fields">
                 <div class="input__group grid-col-5">
                     <div class="label__group">
-                        <img src="../../../icons/bottle-water-solid.svg" alt="" class="label__icon">
+                        <img src="../../../icons/bottle-water-solid.svg" alt="" class="h-1rem">
                         <label for="description" class="fs-2">Descripcion</label>
                     </div>
                     <select id="description" class="field field-bgcolor-secondary"></select>
@@ -108,7 +116,7 @@
 
                 <div class="input__group">
                     <div class="label__group">
-                        <img src="../../../icons/boxes-stacked-solid.svg" alt="" class="label__icon">
+                        <img src="../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
                         <label for="quantity" class="fs-2">Cantidad</label>
                     </div>
                     <input type="number" id="quantity" class="field field-bgcolor-secondary" min="1">
@@ -116,34 +124,46 @@
 
                 <div class="input__group">
                     <div class="label__group">
-                        <img src="../../../icons/boxes-stacked-solid.svg" alt="" class="label__icon">
+                        <img src="../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
                         <label for="boxes" class="fs-2">Cajas</label>
                     </div>
-                    <input type="number" id="boxes" class="field field-bgcolor-secondary" readonly>
+
+                    <div class="position-relative">
+                        <input type="number" id="boxes" class="field field-bgcolor-secondary" readonly>
+                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
+                    </div>
                 </div>
 
                 <div class="input__group">
                     <div class="label__group">
-                        <img src="../../../icons/dollar-sign-solid.svg" alt="" class="label__icon">
+                        <img src="../../../icons/dollar-sign-solid.svg" alt="" class="h-1rem">
                         <label for="cost" class="fs-2">P. Costo</label>
                     </div>
-                    <input type="number" id="cost" class="field field-bgcolor-secondary" readonly>
+
+                    <div class="position-relative">
+                        <input type="number" id="cost" class="field field-bgcolor-secondary" readonly>
+                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
+                    </div>
                 </div>
 
                 <div class="input__group">
                     <div class="label__group">
-                        <img src="../../../icons/dollar-sign-solid.svg" alt="" class="label__icon">
+                        <img src="../../../icons/dollar-sign-solid.svg" alt="" class="h-1rem">
                         <label for="sale" class="fs-2">P. Venta</label>
                     </div>
-                    <input type="number" id="sale" class="field field-bgcolor-secondary" readonly>
+
+                    <div class="position-relative">
+                        <input type="number" id="sale" class="field field-bgcolor-secondary" readonly>
+                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
+                    </div>
                 </div>
 
                 <button type="button" class="square-button cancel" id="buttonCancelModal">
-                    <img src="../../../icons/xmark-solid-dark.svg" alt="" class="label__icon">
+                    <img src="../../../icons/xmark-solid-dark.svg" alt="" class="h-1rem">
                     <p>Cancelar</p>
                 </button>
                 <button type="button" class="square-button accept">
-                    <img src="../../../icons/check-solid-white.svg" alt="" class="label__icon">
+                    <img src="../../../icons/check-solid-white.svg" alt="" class="h-1rem">
                     <p>Aceptar</p>
                 </button>
             </div>

@@ -18,6 +18,7 @@ let campos = {
     descripcion: false,
     cantidad: false
 }
+let allProducts
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.appendChild(optionDefault)
@@ -110,6 +111,11 @@ async function getLastSaleID(){
     setTagID()
 }
 
+async function getProducts(){
+    const products = await window.electronAPI.selectProducts()
+    return products
+}
+
 
 dateCheck.addEventListener('click', () => {
     manageCheck(dateField, dateCheck.checked)
@@ -119,8 +125,9 @@ timeCheck.addEventListener('click', () => {
     manageCheck(timeField, timeCheck.checked)
 })
 
-buttonAddSale.addEventListener('click', () => {
+buttonAddSale.addEventListener('click', async () => {
     modalForm.classList.remove('display-none')
+    allProducts = await getProducts()
 })
 
 buttonCloseModal.addEventListener('click', () => {

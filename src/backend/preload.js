@@ -20,4 +20,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     selectLastSaleID: () => {
         return ipcRenderer.invoke('select:lastSaleID') 
     },
+
+    selectProducts: () => {
+        return ipcRenderer.invoke('select:products') 
+    }
 })

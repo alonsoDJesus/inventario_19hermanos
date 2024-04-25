@@ -106,6 +106,21 @@ async function getLastSaleID(){
     return lastSaleID[0].lastSaleID
 }
 
+async function getProducts(){
+    const conn = await getConnection()
+    const products = await conn.query(`
+        SELECT 	Producto_PK as id,
+            Descripcion__producto as descrip,
+            Cantidad_piezas_por_caja__producto as piecesInBox,
+            Precio_costo__producto as cost,
+            Precio_venta__producto as sale,
+            Cantidad_existencias_actual_inventario__producto as stock
+        FROM producto;
+    `)
+
+    return products
+}
+
 function createWindow(width, height) {
     window = new BrowserWindow({
         width: width,
@@ -125,5 +140,6 @@ module.exports = {
     getCompletedSales,
     getEmployees,
     getRoutes,
-    getLastSaleID
+    getLastSaleID,
+    getProducts
 }

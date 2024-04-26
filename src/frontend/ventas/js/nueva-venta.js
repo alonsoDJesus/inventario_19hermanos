@@ -215,6 +215,7 @@ buttonAddSale.addEventListener('click', async () => {
     layoutForm.classList.remove('display-none')
     modalForm.reset()
     await getProducts()
+    productsDescription.focus()
 })
 
 productsDescription.addEventListener('change', () => {
@@ -246,11 +247,13 @@ buttonAceptModal.addEventListener('click', () => {
 buttonCloseModal.addEventListener('click', () => {
     layoutForm.classList.add('display-none')
     delete addedProductos[productsDescription.selectedIndex]
+    employees.focus()
 })
 
 buttonCancelModal.addEventListener('click', () => {
     layoutForm.classList.add('display-none')
     delete addedProductos[productsDescription.selectedIndex]
+    employees.focus()
 })
 
 getEmployees()

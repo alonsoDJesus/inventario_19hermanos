@@ -227,7 +227,7 @@ label{
 .form__addsale{
     background-color: var(--third);
     margin: auto;
-    width: 40rem;
+    width: 50rem;
     height: 25rem;
 }
 
@@ -260,12 +260,12 @@ label{
 .modal__fields{
     margin-top: 1rem;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
 .grid-col-5{
-    grid-column: 1 / 5;
+    grid-column: 1 / 6;
 }
 
 .buttons{
@@ -292,7 +292,7 @@ label{
 .cancel{
     background-color: var(--forth);
     color: var(--primary);
-    grid-column: 3 / 4;
+    grid-column: 4 / 5;
 }
 
 .cancel:hover{
@@ -302,7 +302,7 @@ label{
 .accept{
     background-color: var(--secondary);
     color: var(--white);
-    grid-column: 4 / 5;
+    grid-column: 5 / 6;
 }
 
 .accept:hover{

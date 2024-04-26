@@ -8,13 +8,19 @@ const timeCheck = document.getElementById('checkTime')
 const buttonAddSale = document.getElementById('buttonAddSale')
 const layoutForm = document.getElementById('layoutForm')
 const buttonCloseModal = document.getElementById('buttonCloseModal')
+const buttonAceptModal = document.getElementById('buttonAceptModal')
 const buttonCancelModal = document.getElementById('buttonCancelModal')
 const lockFieldIcons = document.querySelectorAll('.lock-field-icon')
 const productsDescription = document.getElementById('description')
 const fields = document.querySelectorAll('.field')
-const quantityField = document.getElementById('quantity')
+const quantity = document.getElementById('quantity')
+const cost = document.getElementById('cost')
+const sale = document.getElementById('sale')
+const stock= document.getElementById('stock')
+const boxes = document.getElementById('boxes')
 
 let lastSaleID = 0
+let newSaleID = 0
 let intervalID = 0
 let addedProductos = new Object()
 let campos = {
@@ -22,6 +28,7 @@ let campos = {
     cantidad: false
 }
 let productsData
+let selectedProduct
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.innerHTML = ''
@@ -35,10 +42,10 @@ function addOptions(selectField, dataset, key, optionDefault){
 }
 
 function setTagID(){
-    lastSaleID += 1
-    let numberZeros = 9 - (`${lastSaleID}`.length), tagNumber = "#"
+    newSaleID = lastSaleID + 1
+    let numberZeros = 9 - (`${newSaleID}`.length), tagNumber = "#"
     tagNumber = tagNumber.concat("0".repeat(numberZeros))
-    tagNumber = tagNumber.concat(`${lastSaleID}`)
+    tagNumber = tagNumber.concat(`${newSaleID}`)
     tagID.textContent = tagNumber
 }
 
@@ -64,6 +71,36 @@ function getCurrentDate() {
     today = today >= 1 && today < 10 ? `0${today}` : `${today}`
     month = month >= 0 && month < 10 ? `0${month + 1}` : `${month + 1}`
     dateField.value = `${year}-${month}-${today}`
+}
+
+function updateStockOnField(){
+    let product = searchProductByIdAttribute()
+
+    if (product != undefined) {
+        let productStock = parseInt(product.stock)
+        if(quantity.value <= 0){
+            quantity.value = ''
+        }
+
+        productStock -= quantity.value
+        stock.value = productStock
+        verifyStock()
+    }
+}
+
+function uptdateBoxesOnField(){
+    let product = searchProductByIdAttribute()
+
+    if (product != undefined) {
+        let piecesInBox = parseInt(product.piecesInBox)
+        if(quantity.value <= 0){
+            quantity.value = ''
+        }
+
+        boxesComputed = Math.ceil(quantity.value / piecesInBox)
+        boxes.value = boxesComputed
+    }
+
 }
 
 
@@ -94,16 +131,34 @@ function manageCheck(checkField, checked){
     }
 }
 
-function setPricesOnFields() {
-    const cost = document.getElementById('cost')
-    const sale = document.getElementById('sale')
-
+function searchProductByIdAttribute() {
+    let productFounded
+    
     productsData.forEach(product => {
         if (product.id == productsDescription.selectedIndex) {
-            cost.value = `$ ${product.cost}`
-            sale.value = `$ ${product.sale}`
+            productFounded = product
         }
     })
+
+    return productFounded
+}
+
+function verifyStock(){
+    if (stock.value < 0) {
+        quantity.value = ''
+
+        product = searchProductByIdAttribute()
+        stock.value = product.stock
+    }
+}
+
+function setDataOnFields() {
+    product = searchProductByIdAttribute()  
+    cost.value = `$ ${product.cost}`
+    sale.value = `$ ${product.sale}`
+    stock.value = product.stock - quantity.value
+    verifyStock()
+    uptdateBoxesOnField()
 }
 
 function isEmptyForm(fields) {
@@ -120,21 +175,6 @@ function isEmptyForm(fields) {
     }
 
     return isEmpty
-}
-
-function verifyToClose(){
-    let modalFormFields = []
-    modalFormFields.push(fields[4])
-    modalFormFields.push(fields[5])
-    
-    if (!isEmptyForm(modalFormFields)){
-        let response = confirm('¿Estas seguro de salir?\nLos datos se perderán!')
-        if (response){
-            layoutForm.classList.add('display-none')
-        }
-    }else{
-        layoutForm.classList.add('display-none')
-    }
 }
 
 async function getEmployees(){
@@ -178,19 +218,39 @@ buttonAddSale.addEventListener('click', async () => {
 })
 
 productsDescription.addEventListener('change', () => {
-    setPricesOnFields()
+    setDataOnFields()
+})
+
+quantity.addEventListener('keyup', () =>  {
+    updateStockOnField()
+    uptdateBoxesOnField()
+})
+
+buttonAceptModal.addEventListener('click', () => {
+    let modalFormFields = []
+    
+    modalFormFields.push(fields[4])
+    modalFormFields.push(fields[5])
+
+    addedProductos[productsDescription.selectedIndex] = {
+        Venta_FK__detalleventa: newSaleID,
+        Producto_FK__detalleventa: productsDescription.selectedIndex,
+        Cantidad_piezas_inicio__detalleventa: quantity.value,
+        Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
+        Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
+    }
+
+    console.log(addedProductos)
 })
 
 buttonCloseModal.addEventListener('click', () => {
-    verifyToClose()
+    layoutForm.classList.add('display-none')
+    delete addedProductos[productsDescription.selectedIndex]
 })
 
 buttonCancelModal.addEventListener('click', () => {
-    verifyToClose()
-})
-
-quantityField.addEventListener('keyup', () =>  {
-    
+    layoutForm.classList.add('display-none')
+    delete addedProductos[productsDescription.selectedIndex]
 })
 
 getEmployees()

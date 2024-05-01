@@ -23,12 +23,51 @@ let lastSaleID = 0
 let newSaleID = 0
 let intervalID = 0
 let addedProductos = new Object()
-let campos = {
-    descripcion: false,
-    cantidad: false
-}
+let addedProductosString = ""
 let productsData
 let selectedProduct
+
+/*
+    Objeto para los campos:
+    - Almacena true si un campo tiene un dato correcto y un false si no lo tiene
+*/
+
+const fieldsCheck = {
+    description: false,
+    quantity: false,
+}
+
+
+function sendSalesToStorage(sales, addedSale, index){
+    sales[index] = addedSale
+    const salesString = JSON.stringify(sales)
+    sessionStorage.setItem("addedSales", salesString)
+}
+
+function setAddedSalesOnStorage(addedSale){
+    if (sessionStorage.length != 0) {
+        // Recuperalos del session storage
+        const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales"))
+        let index = parseInt(sessionStorage.getItem("index"))
+        index++
+        sendSalesToStorage(auxAddedSales, addedSale, index)
+        sessionStorage.setItem("index", `${index}`)
+        // auxAddedSales[productsDescription.selectedIndex] = addedSale
+
+        // const auxAddedSalesString = JSON.stringify(auxAddedSales)
+        // sessionStorage.setItem("addedSales", auxAddedSalesString)
+
+    } else {
+        // Crea todo un objeto y establecelo en sessionStorage
+        const transientSale = new Object()
+        sessionStorage.setItem("index", "1")
+        sendSalesToStorage(transientSale, addedSale, 1)
+        // transientSale[productsDescription.selectedIndex] = addedSale
+        
+        // const transientSaleString = JSON.stringify(transientSale)
+        // sessionStorage.setItem("addedSales", transientSaleString)
+    }
+}
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.innerHTML = ''
@@ -71,36 +110,6 @@ function getCurrentDate() {
     today = today >= 1 && today < 10 ? `0${today}` : `${today}`
     month = month >= 0 && month < 10 ? `0${month + 1}` : `${month + 1}`
     dateField.value = `${year}-${month}-${today}`
-}
-
-function updateStockOnField(){
-    let product = searchProductByIdAttribute()
-
-    if (product != undefined) {
-        let productStock = parseInt(product.stock)
-        if(quantity.value <= 0){
-            quantity.value = ''
-        }
-
-        productStock -= quantity.value
-        stock.value = productStock
-        verifyStock()
-    }
-}
-
-function uptdateBoxesOnField(){
-    let product = searchProductByIdAttribute()
-
-    if (product != undefined) {
-        let piecesInBox = parseInt(product.piecesInBox)
-        if(quantity.value <= 0){
-            quantity.value = ''
-        }
-
-        boxesComputed = Math.ceil(quantity.value / piecesInBox)
-        boxes.value = boxesComputed
-    }
-
 }
 
 
@@ -156,9 +165,16 @@ function setDataOnFields() {
     product = searchProductByIdAttribute()  
     cost.value = `$ ${product.cost}`
     sale.value = `$ ${product.sale}`
-    stock.value = product.stock - quantity.value
-    verifyStock()
-    uptdateBoxesOnField()
+    stock.value = product.stock
+}
+
+// Limppieza de datos de los campos
+function clearDataFromFields(wantToCleanQuantity = true){
+    cost.value = ''
+    sale.value = ''
+    stock.value = ''
+    boxes.value = ''
+    quantity.value = wantToCleanQuantity ? '' : quantity.value
 }
 
 function isEmptyForm(fields) {
@@ -175,6 +191,81 @@ function isEmptyForm(fields) {
     }
 
     return isEmpty
+}
+
+// Limpieza de validaciones
+function clearValidations(nameField, field){
+    // Se ocultan los íconos
+    document.getElementById(`${nameField}__val`).classList.remove('opacity-1');
+    document.getElementById(`${nameField}__val`).classList.add('opacity-0');
+
+    // Se eliminan los íconos de correcto o incorrecto
+    document.getElementById(`${nameField}__val`).classList.remove('icon-wrong');
+    document.getElementById(`${nameField}__val`).classList.remove('icon-check');
+
+    // Se eliminan mensajes de error
+    field.parentNode.children[`${nameField}__warning`].classList.remove('formulario__input-error-activo')
+
+    fieldsCheck[nameField] = false; // En el objeto de los campos se señala una entrada incorrecta
+}
+
+function renderAllSales() {
+    if (sessionStorage.getItem("addedSales")) {
+        const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales"))
+        const containerSales = document.getElementById('logCards')
+        let indexChild = containerSales.childNodes.length - 1
+
+        while (indexChild != 2) {
+            containerSales.removeChild(containerSales.childNodes[indexChild])
+            indexChild--
+        }
+
+        for (let index = Object.keys(auxAddedSales).length; index > 0; index--) {
+            // Card
+            const card = document.createElement('div')
+            card.classList.add('card')
+
+            // Card body
+            const cardBody = document.createElement('div')
+            cardBody.classList.add('card__body')
+            card.appendChild(cardBody)
+
+            // Card Data
+            const cardData = document.createElement('div')
+            cardData.classList.add('card__data')
+
+            const paragraphDescription = document.createElement('p')
+            paragraphDescription.classList.add('data')
+            paragraphDescription.classList.add('data_description')
+            paragraphDescription.innerText = `${auxAddedSales[index].description}`
+            cardData.appendChild(paragraphDescription)
+
+            const paragraphPieces = document.createElement('p')
+            paragraphPieces.classList.add('data')
+            paragraphPieces.classList.add('data_pieces')
+            paragraphPieces.classList.add('number')
+            paragraphPieces.innerText = `${auxAddedSales[index]['Cantidad_piezas_inicio__detalleventa']}`
+            cardData.appendChild(paragraphPieces)
+
+            const paragraphBoxes = document.createElement('p')
+            paragraphBoxes.classList.add('data')
+            paragraphBoxes.classList.add('data_boxes')
+            paragraphBoxes.classList.add('number')
+            paragraphBoxes.innerText = `${auxAddedSales[index].quantityBoxes}`
+            cardData.appendChild(paragraphBoxes)
+
+            cardBody.appendChild(cardData)
+
+            // Card Buttons
+            const cardButtons = document.createElement('div')
+            cardButtons.classList.add('card__buttons')
+            cardBody.appendChild(cardButtons)
+
+            // Se crea la tarjeta
+            containerSales.appendChild(card)
+        }
+    }
+    
 }
 
 async function getEmployees(){
@@ -211,48 +302,53 @@ timeCheck.addEventListener('click', () => {
     manageCheck(timeField, timeCheck.checked)
 })
 
+// Clic para abrir el modal del registro para el nuevo producto
 buttonAddSale.addEventListener('click', async () => {
-    layoutForm.classList.remove('display-none')
-    modalForm.reset()
-    await getProducts()
-    productsDescription.focus()
-})
+    layoutForm.classList.remove('display-none') // Se muestra el modal
+    modalForm.reset() // Limpieza del formulario
+    await getProducts() // Colocación de productos en el select
+    productsDescription.focus() // Cambia el enfoque al select de los productos
 
-productsDescription.addEventListener('change', () => {
-    setDataOnFields()
-})
+    // Limpieza de validaciones
 
-quantity.addEventListener('keyup', () =>  {
-    updateStockOnField()
-    uptdateBoxesOnField()
-})
-
-buttonAceptModal.addEventListener('click', () => {
     let modalFormFields = []
     
+    // En una lista se almacenan los campos que serán limpiados de sus validaciones
     modalFormFields.push(fields[4])
     modalFormFields.push(fields[5])
 
-    addedProductos[productsDescription.selectedIndex] = {
-        Venta_FK__detalleventa: newSaleID,
-        Producto_FK__detalleventa: productsDescription.selectedIndex,
-        Cantidad_piezas_inicio__detalleventa: quantity.value,
-        Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
-        Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
-    }
+    modalFormFields.forEach(modalField => {
+        // De cada campo se necesita su nombre y el propio campo para su limpieza
+        clearValidations(modalField.name, modalField)
+    })
+})
 
-    console.log(addedProductos)
+buttonAceptModal.addEventListener('click', () => {
+    
+    if (fieldsCheck.description && fieldsCheck.quantity) {
+        const addedSale = {
+            Venta_FK__detalleventa: newSaleID,
+            Producto_FK__detalleventa: productsDescription.selectedIndex,
+            Cantidad_piezas_inicio__detalleventa: quantity.value,
+            Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
+            Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
+            description: productsDescription.value,
+            quantityBoxes: boxes.value
+        }
+        setAddedSalesOnStorage(addedSale)
+        layoutForm.classList.add('display-none')
+        employees.focus()
+        renderAllSales()
+    }
 })
 
 buttonCloseModal.addEventListener('click', () => {
     layoutForm.classList.add('display-none')
-    delete addedProductos[productsDescription.selectedIndex]
     employees.focus()
 })
 
 buttonCancelModal.addEventListener('click', () => {
     layoutForm.classList.add('display-none')
-    delete addedProductos[productsDescription.selectedIndex]
     employees.focus()
 })
 

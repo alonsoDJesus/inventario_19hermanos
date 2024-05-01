@@ -93,6 +93,14 @@
     </main>
 
     <div class="button button_options button_greater">
+        <img src="../../../icons/xmark-solid-white.svg" alt="" class="h-2rem">
+    </div>
+
+    <div class="button button_options button_greater">
+        <img src="../../../icons/check-solid-white.svg" alt="" class="h-2rem">
+    </div>
+
+    <div class="button button_options button_greater">
         <img src="../../../icons/ellipsis-solid.svg" alt="" class="h-2rem">
     </div>
 
@@ -106,20 +114,25 @@
             </div>
 
             <div class="modal__fields">
-                <div class="input__group grid-col-5">
+                <div class="input__group grid-col-5 position-relative">
                     <div class="label__group">
                         <img src="../../../icons/bottle-water-solid.svg" alt="" class="h-1rem">
                         <label for="description" class="fs-2">Descripcion</label>
                     </div>
-                    <select id="description" class="field field-bgcolor-secondary"></select>
+                    <select id="description" name="description" class="field field-bgcolor-secondary"></select>
+                    <div class="formulario__validacion-estado icon-wrong opacity-0" id="description__val"></div>
+                    <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
+                    <p class="formulario__input-error" id="description__warning">Seleccione un producto válido</p>
                 </div>
 
-                <div class="input__group">
+                <div class="input__group position-relative">
                     <div class="label__group">
                         <img src="../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
                         <label for="quantity" class="fs-2">Cantidad</label>
                     </div>
-                    <input type="number" id="quantity" class="field field-bgcolor-secondary" min="1">
+                    <input type="number" id="quantity" name="quantity" class="field field-bgcolor-secondary" min="1">
+                    <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem" id="quantity__val"></div>
+                    <p class="formulario__input-error" id="quantity__warning"></p>
                 </div>
 
                 <div class="input__group">
@@ -129,7 +142,7 @@
                     </div>
 
                     <div class="position-relative">
-                        <input type="number" id="stock" class="field field-bgcolor-secondary" readonly>
+                        <input type="number" id="stock" name="stock" class="field field-bgcolor-secondary" readonly>
                         <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
                     </div>
                 </div>
@@ -141,7 +154,7 @@
                     </div>
 
                     <div class="position-relative">
-                        <input type="number" id="boxes" class="field field-bgcolor-secondary" readonly>
+                        <input type="number" id="boxes" name="boxes" class="field field-bgcolor-secondary" readonly>
                         <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
                     </div>
                 </div>
@@ -153,7 +166,7 @@
                     </div>
 
                     <div class="position-relative">
-                        <input type="text" id="cost" class="field field-bgcolor-secondary font-MPLUS-Reg" readonly>
+                        <input type="text" id="cost" name="cost" class="field field-bgcolor-secondary font-MPLUS-Reg" readonly>
                         <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
                     </div>
                 </div>
@@ -165,7 +178,7 @@
                     </div>
 
                     <div class="position-relative">
-                        <input type="text" id="sale" class="field field-bgcolor-secondary font-MPLUS-Reg" readonly>
+                        <input type="text" id="sale" name="sale" class="field field-bgcolor-secondary font-MPLUS-Reg" readonly>
                         <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon">
                     </div>
                 </div>
@@ -183,6 +196,7 @@
     </div>
 
     <script src="js/nueva-venta.js"></script>
+    <script src="js/validacion_nueva-venta.js"></script>
 </body>
 
 </html>

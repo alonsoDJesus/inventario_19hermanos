@@ -49,10 +49,6 @@ h1{
     padding-left: 0.2rem;
 }
 
-.h-1rem{
-    height: 1rem;
-}
-
 label{
     font-family: 'OpenSans-Regular';
     color: var(--white);
@@ -76,6 +72,13 @@ label{
     font-size: 1rem;
     padding: 0 1rem;
     margin-top: .5rem;
+    transition: .1s ease all;
+}
+
+.field:focus{
+    border: 3px solid var(--forth);
+    outline: none;
+    box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
 
 .field-bgcolor-primary{
@@ -159,7 +162,6 @@ label{
 .log__cards{
     width: 100%;
     margin: 1rem auto;
-    background-color: antiquewhite;
 }
 
 .card{
@@ -174,6 +176,46 @@ label{
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.card__body{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100%;
+}
+
+.card__data{
+    width: 85%;
+}
+
+.data{
+    display: inline-block;
+    color: var(--white);
+    font-family: 'OpenSans-Regular';
+    font-size: 0.8rem;
+    overflow-wrap: break-word;
+}
+
+.data_description{
+    margin-right: 25%;
+    inline-size: 30%;
+}
+
+.data_pieces{
+    inline-size: 10%;
+    text-align: center;
+    margin-right: 21%;
+}
+
+.data_boxes{
+    inline-size: 10%;
+    text-align: center;
+}
+
+.number{
+    font-family: 'MPLUS1Code-Regular';
+    font-size: 1rem;
 }
 
 .button{
@@ -201,14 +243,13 @@ label{
 
 .button_options{
     z-index: 100;
-    position: absolute;
-    right: 11.2rem;
-    bottom: 2.4rem;
+    position: fixed;
+    right: 5.5rem;
 }
 
 
 .layout__opacity{
-    position: absolute;
+    position: fixed;
     width: 100%;
     height: 100%;
     background-color: var(--primary_op_70);
@@ -228,7 +269,6 @@ label{
     background-color: var(--third);
     margin: auto;
     width: 50rem;
-    height: 25rem;
 }
 
 .form__header{
@@ -325,4 +365,52 @@ label{
 
 .font-MPLUS-Reg{
     font-family: 'MPLUS1Code-Regular';
+}
+
+/* Para validaciones */
+.icon-wrong{
+    background-image: url('../../../../icons/xmark-solid-red.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 1.4rem;
+    bottom: 2.9rem;
+}
+
+.icon-check{
+    background-image: url('../../../../icons/check-solid-green.svg');
+    position: absolute;
+    right: 1.4rem;
+    bottom: 0.6rem;
+}
+
+.mr-1rem{
+    margin-right: 1rem;
+}
+
+.formulario__validacion-estado{
+    height: 1.2rem;
+    width: 0.9rem;
+}
+
+.formulario__input-error{
+    display: none;
+}
+
+.formulario__input-error-activo{
+    font-family: 'OpenSans-Regular';
+    font-size: 0.9rem;
+    display: block;
+    background-color: var(--forth);
+    padding: 0.3rem 0 0.3rem 1.4rem;
+    border-radius: 0.3rem;
+    color: var(--primary);
+    margin-top: 0.5rem;
+}
+
+.opacity-0{
+    opacity: 0;
+}
+
+.opacity-1{
+    opacity: 1;
 }

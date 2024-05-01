@@ -18,9 +18,9 @@ const cost = document.getElementById('cost')
 const sale = document.getElementById('sale')
 const stock= document.getElementById('stock')
 const boxes = document.getElementById('boxes')
-const btnSave = document.getElementById('btnSave')
-const btnCancel = document.getElementById('btnCancel')
-const btnShowOptions = document.getElementById('btnShowOptions')
+const buttonSave = document.getElementById('buttonSave')
+const buttonCancel = document.getElementById('buttonCancel')
+const buttonShowOptions = document.getElementById('buttonShowOptions')
 
 let lastSaleID = 0
 let newSaleID = 0
@@ -38,6 +38,7 @@ let selectedProduct
 const fieldsCheck = {
     description: false,
     quantity: false,
+    employees: false
 }
 
 
@@ -297,9 +298,9 @@ async function getProducts(){
     addOptions(productsDescription, productsData, "descrip", emptyOption)
 }
 
-btnShowOptions.onclick = function () {
-    btnSave.classList.toggle('button_save_active')
-    btnCancel.classList.toggle('button_cancel_active')
+buttonShowOptions.onclick = function () {
+    buttonSave.classList.toggle('button_save_active')
+    buttonCancel.classList.toggle('button_cancel_active')
 }
 
 dateCheck.addEventListener('click', () => {

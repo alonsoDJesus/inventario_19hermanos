@@ -18,6 +18,9 @@ const cost = document.getElementById('cost')
 const sale = document.getElementById('sale')
 const stock= document.getElementById('stock')
 const boxes = document.getElementById('boxes')
+const btnSave = document.getElementById('btnSave')
+const btnCancel = document.getElementById('btnCancel')
+const btnShowOptions = document.getElementById('btnShowOptions')
 
 let lastSaleID = 0
 let newSaleID = 0
@@ -294,6 +297,11 @@ async function getProducts(){
     addOptions(productsDescription, productsData, "descrip", emptyOption)
 }
 
+btnShowOptions.onclick = function () {
+    btnSave.classList.toggle('button_save_active')
+    btnCancel.classList.toggle('button_cancel_active')
+}
+
 dateCheck.addEventListener('click', () => {
     manageCheck(dateField, dateCheck.checked)
 })
@@ -357,3 +365,4 @@ getRoutes()
 getLastSaleID()
 manageCheck(dateField, dateCheck.checked)
 manageCheck(timeField, timeCheck.checked)
+renderAllSales()

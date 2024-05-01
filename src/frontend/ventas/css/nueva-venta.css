@@ -245,8 +245,21 @@ label{
     z-index: 100;
     position: fixed;
     right: 5.5rem;
+    transition: .5s;
+    transform: translate(0, 0);
 }
 
+.button_save_active{
+    background-color: var(--secondary);
+    transition: .5s;
+    transform: translate(0, -120%);
+}
+
+.button_cancel_active{
+    background-color: var(--secondary);
+    transition: .5s;
+    transform: translate(0, -240%);
+}
 
 .layout__opacity{
     position: fixed;

@@ -13,7 +13,7 @@ async function getPiecesInitialSales(){
         FROM detalleventa
         WHERE Cantidad_piezas_fin__detalleventa IS NULL
         GROUP BY Venta_FK__detalleventa
-        ORDER BY Venta_FK__detalleventa ASC;
+        ORDER BY Venta_FK__detalleventa DESC;
     `)
 
     return piecesInitialSales
@@ -31,7 +31,7 @@ async function getInitialSales(){
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
         WHERE Hora_fin__venta IS NULL
-        ORDER BY Venta_PK ASC;
+        ORDER BY Venta_PK DESC;
     `)
 
     const piecesOfInitialSales = await getPiecesInitialSales()
@@ -126,6 +126,44 @@ async function getProducts(){
     return products
 }
 
+async function setNewShift(newShift){
+    const conn = await getConnection()
+    try {
+        const shiftInserted = await conn.query('INSERT INTO turno SET ?', newShift)
+
+        return shiftInserted.insertId
+    } catch (error) {
+        return error
+    }
+}
+
+async function setNewSaleWithShift(newSaleWithShift){
+    const conn = await getConnection()
+    try {
+        const saleWithShiftInserted = await conn.query('INSERT INTO venta SET ?', newSaleWithShift)
+
+        return saleWithShiftInserted.insertId
+    } catch (error) {
+        return error
+    }
+}
+
+async function setSaleDetail(saleDetail){
+    const conn = await getConnection()
+    try {
+        //const saleWithShiftInserted = await conn.query('INSERT INTO venta SET ?', newSaleWithShift)
+        for (let index = 1; index <= Object.keys(saleDetail).length; index++) {
+            delete saleDetail[index].description
+            delete saleDetail[index].quantityBoxes
+
+            await conn.query('INSERT INTO detalleventa SET ?', saleDetail[index])
+            console.log(`datos ingresados: ${saleDetail[index]}`)
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 function createWindow(width, height) {
     window = new BrowserWindow({
         width: width,
@@ -146,5 +184,8 @@ module.exports = {
     getEmployees,
     getRoutes,
     getLastSaleID,
-    getProducts
+    getProducts,
+    setNewShift,
+    setNewSaleWithShift,
+    setSaleDetail
 }

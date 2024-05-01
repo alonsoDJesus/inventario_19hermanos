@@ -134,3 +134,28 @@ quantity.addEventListener('keyup', (e) =>  {
 quantity.addEventListener('change', (e) => {
     regulateQuantity()
 })
+
+// Click en el botón guardar
+buttonSave.addEventListener('click', async () => {
+    const newShift = {
+        Ruta_FK__turno: routes.selectedIndex,
+        Distribuidor_FK__turno: employees.selectedIndex
+    }
+
+    const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
+
+    if (typeof shiftInsertID == "number") {
+        const newSaleWithShift = {
+            Venta_PK: newSaleID,
+            Fecha__venta: dateField.value,
+            Hora_inicio__venta: timeField.value,
+            Turno_FK__venta: shiftInsertID
+        }
+
+        const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
+        if (typeof saleWithShiftInsertID == "number") {
+            const saleDetail = JSON.parse(sessionStorage.getItem("addedSales"))
+            await window.electronAPI.insertSaleDetail(saleDetail)
+        }
+    }
+})

@@ -23,5 +23,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     selectProducts: () => {
         return ipcRenderer.invoke('select:products') 
-    }
+    },
+
+    insertNewShift: (newShift) => {
+        return ipcRenderer.invoke('insert:newShift', newShift) 
+    },
+
+    insertNewSaleWithShift: (newSaleWithShift) => {
+        return ipcRenderer.invoke('insert:newSaleWithShift', newSaleWithShift) 
+    },
+
+    insertSaleDetail: (saleDetail) => {
+        return ipcRenderer.invoke('insert:saleDetail', saleDetail) 
+    },
 })

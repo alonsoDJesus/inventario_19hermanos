@@ -16,26 +16,30 @@
     <main>
         <h1>Nueva Venta</h1>
 
-        <div class="position-relative">
+        <div class="position-relative mb-3">
             <div id="nSale" class="form__tagnumber">
                 <p></p>
             </div>
             <form id="formulario" class="form__container form">
                 <div class="form__fields">
-                    <div class="select__group">
+                    <div class="select__group position-relative">
                         <div class="label__group">
                             <img src="../../../icons/user-solid.svg" alt="" class="h-1rem">
                             <label for="employees" class="fs-1">Responsable</label>
                         </div>
                         <select id="employees" class="field field-bgcolor-primary" autofocus></select>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="employees__val"></div>
+                        <p class="formulario__input-error" id="employees__warning">Seleccione un producto válido</p>
                     </div>
 
-                    <div class="select__group">
+                    <div class="select__group position-relative">
                         <div class="label__group">
                             <img src="../../../icons/route-solid.svg" alt="" class="h-1rem">
                             <label for="routes" class="fs-1">Ruta</label>
                         </div>
                         <select id="routes" class="field field-bgcolor-primary"></select>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="routes__val"></div>
+                        <p class="formulario__input-error" id="routes__warning">Seleccione un producto válido</p>
                     </div>
 
                     <div class="input__group">
@@ -120,7 +124,7 @@
                         <label for="description" class="fs-2">Descripcion</label>
                     </div>
                     <select id="description" name="description" class="field field-bgcolor-secondary"></select>
-                    <div class="formulario__validacion-estado icon-wrong opacity-0" id="description__val"></div>
+                    <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal" id="description__val"></div>
                     <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                     <p class="formulario__input-error" id="description__warning">Seleccione un producto válido</p>
                 </div>
@@ -131,7 +135,7 @@
                         <label for="quantity" class="fs-2">Cantidad</label>
                     </div>
                     <input type="number" id="quantity" name="quantity" class="field field-bgcolor-secondary" min="1">
-                    <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem" id="quantity__val"></div>
+                    <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem new-top-modal" id="quantity__val"></div>
                     <p class="formulario__input-error" id="quantity__warning"></p>
                 </div>
 

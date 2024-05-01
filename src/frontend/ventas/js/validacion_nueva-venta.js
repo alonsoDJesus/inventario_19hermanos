@@ -69,6 +69,14 @@ function searchRepeatedSale(addedSales){
     return mySale
 }
 
+employees.addEventListener('change', () => {
+    employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
+})
+
+routes.addEventListener('change', () => {
+    routes.selectedIndex != 0 ? establecerCorrecto('routes', routes) : establecerIncorrecto('routes', routes, 'Selecciona una ruta');
+})
+
 // Clic para seleccionar algun producto
 productsDescription.addEventListener('change', () => {
     let modalFormFields = []

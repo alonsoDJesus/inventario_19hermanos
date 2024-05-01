@@ -4,6 +4,8 @@ const icons = {
     truck: '../../../icons/truck-solid.svg',
     user: '../../../icons/user-solid.svg',
     off: '../../../icons/power-off-solid.svg',
+    edit: '../../../icons/pen-to-square-solid.svg',
+    delete: '../../../icons/trash-solid.svg',
 }
 
 const links = {

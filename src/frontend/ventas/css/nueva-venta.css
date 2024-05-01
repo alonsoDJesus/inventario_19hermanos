@@ -1,7 +1,7 @@
 main{
     width: 65%;
     margin: 3rem auto 0 auto;
-    height: 35rem;
+    height: 100%;
 }
 
 h1{
@@ -60,6 +60,10 @@ label{
 
 .fs-2{
     font-size: 1.2rem;
+}
+
+.mb-3{
+    margin-bottom: 3rem;
 }
 
 .field{
@@ -213,6 +217,17 @@ label{
     text-align: center;
 }
 
+.card__buttons{
+    width: 7%;
+    display: flex;
+    justify-content: space-between;
+}
+
+.card__button{
+    height: 1.2rem;
+    cursor: pointer;
+}
+
 .number{
     font-family: 'MPLUS1Code-Regular';
     font-size: 1rem;
@@ -247,6 +262,7 @@ label{
     right: 5.5rem;
     transition: .5s;
     transform: translate(0, 0);
+    bottom: 2rem;
 }
 
 .button_save_active{
@@ -386,14 +402,19 @@ label{
     background-repeat: no-repeat;
     position: absolute;
     right: 1.4rem;
-    bottom: 2.9rem;
+    top: 3rem;
 }
 
 .icon-check{
     background-image: url('../../../../icons/check-solid-green.svg');
     position: absolute;
     right: 1.4rem;
-    bottom: 0.6rem;
+    top: 3rem;
+}
+
+.new-top-modal{
+    position: absolute;
+    top: 2.85rem
 }
 
 .mr-1rem{

@@ -33,6 +33,8 @@ nav{
     align-items: center;
     gap: 0.3rem;
     position: relative;
+    width: 9rem;
+    justify-content: center;
 }
 
 .nav__item p{
@@ -41,7 +43,7 @@ nav{
 }
 
 .nav__item:hover{
-    background-color: var(--forth);
+    background-color: var(--primary);
 
     .nav__subitems{
         display: block;
@@ -61,6 +63,10 @@ nav{
     font-size: 0.8rem;
     padding: 0.5rem 0.5rem 0.5rem 1rem;
     background-color: var(--forth);
+}
+
+.nav__subitems li p{
+    color: var(--primary);
 }
 
 .nav__subitems li:hover{

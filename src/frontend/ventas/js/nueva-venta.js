@@ -38,7 +38,8 @@ let selectedProduct
 const fieldsCheck = {
     description: false,
     quantity: false,
-    employees: false
+    employees: false,
+    routes: false
 }
 
 
@@ -232,12 +233,12 @@ function renderAllSales() {
             // Card body
             const cardBody = document.createElement('div')
             cardBody.classList.add('card__body')
-            card.appendChild(cardBody)
 
             // Card Data
             const cardData = document.createElement('div')
             cardData.classList.add('card__data')
 
+            // Elementos del data
             const paragraphDescription = document.createElement('p')
             paragraphDescription.classList.add('data')
             paragraphDescription.classList.add('data_description')
@@ -258,14 +259,28 @@ function renderAllSales() {
             paragraphBoxes.innerText = `${auxAddedSales[index].quantityBoxes}`
             cardData.appendChild(paragraphBoxes)
 
-            cardBody.appendChild(cardData)
+            cardBody.appendChild(cardData) // La sección de datos se añade al contenido de la tarjeta
 
             // Card Buttons
             const cardButtons = document.createElement('div')
             cardButtons.classList.add('card__buttons')
-            cardBody.appendChild(cardButtons)
 
-            // Se crea la tarjeta
+            // <img src="${icons.up}" alt="" class="card_button">
+            const edit = document.createElement('img')
+            edit.src = `${icons.edit}`
+            edit.classList.add('card__button')
+            cardButtons.appendChild(edit)
+
+            const trash = document.createElement('img')
+            trash.src = `${icons.delete}`
+            trash.classList.add('card__button')
+            cardButtons.appendChild(trash)
+
+            cardBody.appendChild(cardButtons) // La sección de botones se añade al contenido de la tarjeta
+
+            card.appendChild(cardBody) // La sección de contenido en general es añadida la tarjeta como tal
+            
+            // La tarjeta es añadida al espacio de tarjetas
             containerSales.appendChild(card)
         }
     }

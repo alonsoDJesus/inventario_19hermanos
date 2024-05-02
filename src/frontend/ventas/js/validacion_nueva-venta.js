@@ -69,6 +69,44 @@ function searchRepeatedSale(addedSales){
     return mySale
 }
 
+async function confirmToExit(goToSomewhere, swalIcon){
+    await swal({
+        icon: swalIcon,
+        title: "¿Seguro que quiere salir?",
+        text: 'Su avance se perderá :(',
+        padding: '1.4rem',
+        buttons: {
+            cancel: {
+                text: 'Cancelar',
+                value: null,
+                visible: true,
+                closeModal: true
+            },
+
+            confirm: {
+                text: "Aceptar",
+                value: true,
+                visible: true,
+                closeModal: true
+            }
+        }
+    }).then(async (value) => {
+        switch (value) {
+
+            case true:
+                sessionStorage.removeItem("index")
+                sessionStorage.removeItem("addedSales")
+                goToSomewhere()
+                break;
+         
+            default:
+                buttonSave.classList.remove('button_save_active')
+                buttonCancel.classList.remove('button_cancel_active')
+                break;
+          }
+    })
+}
+
 employees.addEventListener('change', () => {
     employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
 })
@@ -185,7 +223,6 @@ buttonSave.addEventListener('click', async () => {
                             await window.electronAPI.insertSaleDetail(saleDetail)
 
                             await swal({
-                                icon: "success",
                                 title: "Venta iniciada exitosamente",
                                 button: {
                                     text: 'Aceptar'
@@ -223,39 +260,23 @@ buttonSave.addEventListener('click', async () => {
 })
 
 buttonCancel.addEventListener('click', async() => {
-    await swal({
-        icon: "error",
-        title: "¿Seguro que quiere salir?",
-        text: 'Su avance se perderá :(',
-        padding: '1.4rem',
-        buttons: {
-            cancel: {
-                text: 'Cancelar',
-                value: null,
-                visible: true,
-                closeModal: true
-            },
+    confirmToExit(goToHome, "error")
+})
 
-            confirm: {
-                text: "Aceptar",
-                value: true,
-                visible: true,
-                closeModal: true
-            }
-        }
-    }).then(async (value) => {
-        switch (value) {
+window.addEventListener('load', () => {
+    const navHome = document.getElementById('navHome')
+    const navNewSale = document.getElementById('navNewSale')
+    const navCompletedSales = document.getElementById('navCompletedSales')
+    
+    navHome.addEventListener('click', async () => {
+        confirmToExit(goToHome, "warning")
+    })
 
-            case true:
-                sessionStorage.removeItem("index")
-                sessionStorage.removeItem("addedSales")
-                goToHome()
-                break;
-         
-            default:
-                buttonSave.classList.toggle('button_save_active')
-                buttonCancel.classList.toggle('button_cancel_active')
-                break;
-          }
+    navNewSale.addEventListener('click', async () => {
+        confirmToExit(goToNewSale, "warning")
+    })
+
+    navCompletedSales.addEventListener('click', async () => {
+        confirmToExit(goToCompletedSales, "warning")
     })
 })

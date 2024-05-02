@@ -16,7 +16,7 @@ body.innerHTML = `
 <nav>
 <div class="nav__container">
     <ul class="nav__options">
-        <li class="nav__item" onclick="goToHome()">
+        <li class="nav__item" id="navHome">
             <img src="${icons.house}" alt="" class="nav__icon" id="houseSolid">
             <p>Inicio</p>
         </li>
@@ -36,13 +36,13 @@ body.innerHTML = `
             <img src="${icons.truck}" alt="" class="nav__icon" id="truckSolid">
             <p>Ventas</p>
             <ul class="nav__subitems">
-                <li onclick="goToNewSale()">
+                <li id="navNewSale">
                     <p>Nueva venta</p>
                 </li>
                 <li>
                     <p>Ver ventas iniciadas</p>
                 </li>
-                <li onclick="goToCompletedSales()">
+                <li id="navCompletedSales">
                     <p>Ver ventas finalizadas</p>
                 </li>
             </ul>

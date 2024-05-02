@@ -36,3 +36,21 @@ async function getInitialSales(){
 }
 
 getInitialSales();
+
+window.addEventListener('load', () => {
+    const navHome = document.getElementById('navHome')
+    const navNewSale = document.getElementById('navNewSale')
+    const navCompletedSales = document.getElementById('navCompletedSales')
+    
+    navHome.addEventListener('click', async () => {
+        goToHome()
+    })
+ 
+    navNewSale.addEventListener('click', async () => {
+        goToNewSale()
+    })
+ 
+    navCompletedSales.addEventListener('click', async () => {
+        goToCompletedSales()
+    })
+})

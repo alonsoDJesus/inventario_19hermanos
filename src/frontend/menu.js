@@ -2,17 +2,14 @@ const body = document.body
 
 function goToHome() {
     location.href = links.home
-    console.log('click')
 }
 
 function goToNewSale() {
     location.href = links.newSale
-    console.log('click')
 }
 
 function goToCompletedSales() {
     location.href = links.completedSales
-    console.log('click')
 }
 
 body.innerHTML = `

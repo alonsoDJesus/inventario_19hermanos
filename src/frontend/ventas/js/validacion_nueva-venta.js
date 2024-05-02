@@ -137,25 +137,125 @@ quantity.addEventListener('change', (e) => {
 
 // Click en el botón guardar
 buttonSave.addEventListener('click', async () => {
-    const newShift = {
-        Ruta_FK__turno: routes.selectedIndex,
-        Distribuidor_FK__turno: employees.selectedIndex
+    const saleDetail = JSON.parse(sessionStorage.getItem("addedSales"))
+
+    if (saleDetail && fieldsCheck.employees && fieldsCheck.routes) {
+
+        await swal({
+            icon: "warning",
+            title: "¿Seguro de guardar los cambios?",
+            padding: '1.4rem',
+            buttons: {
+                cancel: {
+                    text: 'Cancelar',
+                    value: null,
+                    visible: true,
+                    closeModal: true
+                },
+    
+                confirm: {
+                    text: "Aceptar",
+                    value: true,
+                    visible: true,
+                    closeModal: true
+                }
+            }
+        }).then(async (value) => {
+            switch (value) {
+ 
+                case true:
+
+                    const newShift = {
+                        Ruta_FK__turno: routes.selectedIndex,
+                        Distribuidor_FK__turno: employees.selectedIndex
+                    }
+
+                    const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
+
+                    if (typeof shiftInsertID == "number") {
+                        const newSaleWithShift = {
+                            Venta_PK: newSaleID,
+                            Fecha__venta: dateField.value,
+                            Hora_inicio__venta: timeField.value,
+                            Turno_FK__venta: shiftInsertID
+                        }
+
+                        const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
+                        if (typeof saleWithShiftInsertID == "number") {
+                            await window.electronAPI.insertSaleDetail(saleDetail)
+
+                            await swal({
+                                icon: "success",
+                                title: "Venta iniciada exitosamente",
+                                button: {
+                                    text: 'Aceptar'
+                                }
+                            })
+
+                            sessionStorage.removeItem("index")
+                            sessionStorage.removeItem("addedSales")
+                            goToHome()
+                        }
+                    }
+
+                    break;
+             
+                default:
+                    buttonSave.classList.toggle('button_save_active')
+                    buttonCancel.classList.toggle('button_cancel_active')
+                    break;
+              }
+        })
+    }else{
+        const errorMessageForm = document.getElementById('errorMessageForm')
+        errorMessageForm.classList.add('formulario__data-error')
+        errorMessageForm.classList.remove('display-none')
+
+        buttonSave.classList.toggle('button_save_active')
+        buttonCancel.classList.toggle('button_cancel_active')
+
+        setTimeout(() => {
+            errorMessageForm.classList.remove('formulario__data-error')
+            errorMessageForm.classList.add('display-none')
+        }, 5000);
     }
+    
+})
 
-    const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
+buttonCancel.addEventListener('click', async() => {
+    await swal({
+        icon: "error",
+        title: "¿Seguro que quiere salir?",
+        text: 'Su avance se perderá :(',
+        padding: '1.4rem',
+        buttons: {
+            cancel: {
+                text: 'Cancelar',
+                value: null,
+                visible: true,
+                closeModal: true
+            },
 
-    if (typeof shiftInsertID == "number") {
-        const newSaleWithShift = {
-            Venta_PK: newSaleID,
-            Fecha__venta: dateField.value,
-            Hora_inicio__venta: timeField.value,
-            Turno_FK__venta: shiftInsertID
+            confirm: {
+                text: "Aceptar",
+                value: true,
+                visible: true,
+                closeModal: true
+            }
         }
+    }).then(async (value) => {
+        switch (value) {
 
-        const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
-        if (typeof saleWithShiftInsertID == "number") {
-            const saleDetail = JSON.parse(sessionStorage.getItem("addedSales"))
-            await window.electronAPI.insertSaleDetail(saleDetail)
-        }
-    }
+            case true:
+                sessionStorage.removeItem("index")
+                sessionStorage.removeItem("addedSales")
+                goToHome()
+                break;
+         
+            default:
+                buttonSave.classList.toggle('button_save_active')
+                buttonCancel.classList.toggle('button_cancel_active')
+                break;
+          }
+    })
 })

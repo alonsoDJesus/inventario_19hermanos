@@ -21,6 +21,7 @@ const boxes = document.getElementById('boxes')
 const buttonSave = document.getElementById('buttonSave')
 const buttonCancel = document.getElementById('buttonCancel')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
+const modalForm = document.getElementById('modalForm')
 
 let lastSaleID = 0
 let newSaleID = 0
@@ -329,6 +330,7 @@ timeCheck.addEventListener('click', () => {
 // Clic para abrir el modal del registro para el nuevo producto
 buttonAddSale.addEventListener('click', async () => {
     layoutForm.classList.remove('display-none') // Se muestra el modal
+    modalForm.classList.remove('display-none')
     modalForm.reset() // Limpieza del formulario
     await getProducts() // Colocación de productos en el select
     productsDescription.focus() // Cambia el enfoque al select de los productos
@@ -360,6 +362,7 @@ buttonAceptModal.addEventListener('click', () => {
             quantityBoxes: boxes.value
         }
         setAddedSalesOnStorage(addedSale)
+        
         layoutForm.classList.add('display-none')
         employees.focus()
         renderAllSales()

@@ -1,0 +1,90 @@
+.swal-overlay {
+    background-color: var(--primary_op_70);
+  }
+
+.swal-modal {
+    background-color: var(--third);
+    margin: auto;
+    width: 30rem;
+    padding: 1.4rem;
+    border-radius: 1.4rem;
+}
+
+.confirm__header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.swal-title {
+    font-family: 'OpenSans-Bold';
+    font-size: 2rem;
+    color: var(--white);
+
+}
+
+.swal-button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.confirm__button-close{
+    background-color: var(--forth);
+    width: 1.2rem;
+    height: 1.2rem;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.swal-text{
+    font-family: 'OpenSans-Regular';
+    color: var(--white);
+    font-size: 1rem;
+}
+
+.swal-footer{
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    gap: .3rem;
+}
+
+.swal-button--confirm{
+    appearance: none;
+    background-color: var(--primary);
+    border-radius: .3rem;
+    border: none;
+    font-family: 'OpenSans-Regular';
+    font-size: 1rem;
+    margin-top: 3rem;
+    cursor: pointer;
+    gap: .3rem;
+    height: 2.5rem;
+    width: 7rem;
+    color: var(--white);
+}
+
+.swal-button--cancel{
+    appearance: none;
+    background-color: var(--forth);
+    border-radius: .3rem;
+    border: none;
+    font-family: 'OpenSans-Regular';
+    font-size: 1rem;
+    margin-top: 3rem;
+    cursor: pointer;
+    gap: .3rem;
+    height: 2.5rem;
+    width: 7rem;
+    color: var(--primary);
+}
+
+.display-none {
+    display: none;
+}
+
+.h1-rem{
+    height: 1rem;
+}

@@ -448,3 +448,20 @@ label{
 .opacity-1{
     opacity: 1;
 }
+
+.formulario__data-error{
+    background-color: var(--warning);
+    width: 65%;
+    color: var(--primary);
+    padding: 0.5rem;
+    border-radius: .4rem;
+    font-family: 'OpenSans-Regular';
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5%;
+    position: fixed;
+    bottom: 2rem;
+    left: 17.5%;
+}

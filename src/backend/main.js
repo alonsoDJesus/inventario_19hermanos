@@ -157,7 +157,6 @@ async function setSaleDetail(saleDetail){
             delete saleDetail[index].quantityBoxes
 
             await conn.query('INSERT INTO detalleventa SET ?', saleDetail[index])
-            console.log(`datos ingresados: ${saleDetail[index]}`)
         }
     } catch (error) {
         console.log(error)

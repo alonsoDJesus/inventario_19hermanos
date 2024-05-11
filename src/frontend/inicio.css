@@ -1,13 +1,19 @@
+header{
+    width: 85%;
+    margin: auto;
+    margin-top: 3rem;
+}
+
 main{
     width: 85%;
-    margin: 3rem auto 0 auto;
+    margin: 0 auto;
     height: 100%;
+    margin-top: 1.4rem;
 }
 
 .container__sales{
     background-color: var(--secondary);
     border-radius: 1.4rem;
-    margin-top: 1.4rem;
     padding: 1.4rem;
     height: 35rem;
 }

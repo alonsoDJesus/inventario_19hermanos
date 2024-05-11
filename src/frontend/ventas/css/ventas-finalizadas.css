@@ -1,13 +1,20 @@
+header{
+    width: 85%;
+    margin: auto;
+    margin-top: 3rem;
+}
+
 main{
     width: 85%;
-    margin: 3rem auto 0 auto;
+    margin: 0 auto;
     height: 100%;
+    margin-top: 1.4rem;
+    margin-bottom: 1rem;
 }
 
 .container__sales{
     background-color: var(--secondary);
     border-radius: 1.4rem;
-    margin-top: 1.4rem;
     padding: 1.4rem;
     height: 35rem;
 }
@@ -24,25 +31,25 @@ main{
     display: inline-block;
 }
 
-.header_id{
-    margin-right: 4rem;
+.container__header:nth-child(1){
+    margin-right: 6.5%;
 }
 
-.header_responsable{
-    margin-right: 7rem;
+.container__header:nth-child(2){
+    margin-right: 11.3%;
 }
 
-.header_route{
-    margin-right: 12rem;
+.container__header:nth-child(3){
+    margin-right: 18%;
 }
 
-.header_jornada{
-    margin-right: 20rem;
+.container__header:nth-child(4){
+    margin-right: 32%;
 }
 
 .container__cards{
     width: 100%;
-    margin: 1rem auto;
+    margin-top: 1rem;
     overflow-y: auto;
     height: 93%;
 }
@@ -53,7 +60,7 @@ main{
     height: 7.5rem;
     width: 98%;
     margin-bottom: 1rem;
-    padding: 0 1.9rem 0 1.9rem;
+    padding: 0 2.85%;
 }
 
 .text_example{
@@ -92,17 +99,17 @@ main{
     align-items: center;
 }
 
-.data_id{
+.data:nth-child(1){
     inline-size: 2.4rem;
     margin-right: 2.5rem;
 }
 
-.data_nombre{
+.data:nth-child(2){
     inline-size: 7.0rem;
     margin-right: 5.3rem;
 }
 
-.data_ruta{
+.data:nth-child(3){
     inline-size: 5.0rem;
     margin-right: 5.5rem;
 }

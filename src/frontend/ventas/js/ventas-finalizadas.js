@@ -10,9 +10,9 @@ function renderCompletedSales(completedSales) {
 
                <div class="card__body">
                    <div class="card__data">
-                        <p class="data data_id">${sale.id}</p>
-                        <p class="data data_nombre">${sale.nombre}</p>
-                        <p class="data data_ruta">${sale.ruta}</p>
+                        <p class="data">${sale.id}</p>
+                        <p class="data">${sale.nombre}</p>
+                        <p class="data">${sale.ruta}</p>
                         <div class="data__container itinerary">
                            <p class= "data__containerheader">Inicio</p>
                            <p class= "data__containerheader">Fin</p>

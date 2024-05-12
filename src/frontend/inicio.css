@@ -20,23 +20,35 @@ main{
 
 .container__headers{
     width: 80%;
-    margin-left: 2rem;
+    margin-left: 2.7rem;
     display: flex;
-    justify-content: space-between;
 }
 
 .container__header{
     color: var(--white);
     font-family: 'OpenSans-Regular';
     font-size: 1rem;
+    text-align: center;
 }
 
-.header_responsable{
-    margin-left: 1rem;
+.container__header:nth-child(1){
+    margin-right: 12%;
 }
 
-.header_route{
-    margin-left: 2rem;
+.container__header:nth-child(2){
+    margin-right: 13.5%;
+}
+
+.container__header:nth-child(3){
+    margin-right: 14%;
+}
+
+.container__header:nth-child(4){
+    margin-right: 8%;
+}
+
+.container__header:nth-child(5){
+    margin-right: 4%;
 }
 
 .container__cards{
@@ -52,7 +64,7 @@ main{
     height: 7.5rem;
     width: 98%;
     margin-bottom: 1rem;
-    padding: 0 1.9rem 0 1.9rem;
+    padding: 0 1.9rem   0 1.9rem;
 }
 
 .text_example{
@@ -77,11 +89,10 @@ main{
 .card_data{
     width: 90%;
     display: flex;
-    justify-content: space-between;
+    gap: 10%;
 }
 
 .data{
-    margin-right: 3.2rem;
     font-family: 'OpenSans-Regular';
     color: var(--white);
     font-size: 0.8rem;
@@ -89,39 +100,69 @@ main{
     text-align: center;
     display: flex;
     align-items: center;
+    justify-content: center;
 }
 
-.data_id{
+.data:nth-child(1){
     inline-size: 2.4rem;
 }
 
-.data_nombre{
+.data:nth-child(2){
     inline-size: 7.0rem;
 }
 
-.data_ruta{
+.data:nth-child(3){
     inline-size: 5.0rem;
 }
 
-.data_time{
-    margin-right: 10rem;
-}
-
-.number{
+.data:nth-child(6){
    font-family: 'MPLUS1Code-Regular';
    font-size: 0.9rem;
-   margin-right: 5rem;
+   text-align: right;
+   
 }
 
 .card_buttons{
-    width: 7%;
+    width: 10%;
     display: flex;
     justify-content: space-between;
 }
 
 .card_button{
-    height: 1.2rem;
+    height: 2rem;
+    width: 2rem;
     cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s;
+}
+
+.card_button:hover{
+    background-color: var(--primary);
+}
+
+.card_button div{
+    background-repeat: no-repeat;
+}
+
+.card_button:nth-child(1) div{
+    width: 0.86rem;
+    height: 1.2rem;
+    background-image: url('../../icons/arrow-up-solid.svg');
+}
+
+.card_button:nth-child(2) div{
+    width: 1rem;
+    height: 1rem;
+    background-image: url('../../icons/pen-to-square-solid.svg');
+}
+
+.card_button:nth-child(3) div{
+    width: 0.9rem;
+    height: 1rem;
+    background-image: url('../../icons/trash-solid.svg');
 }
 
 .button_add{

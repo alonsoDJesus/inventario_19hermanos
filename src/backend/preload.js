@@ -1,6 +1,24 @@
 const { contextBridge, ipcRenderer } = require('electron/renderer')
 
 contextBridge.exposeInMainWorld('electronAPI', {
+    navigateTo: (page) => {
+        switch (page) {
+            case 'home':
+                location.href = '../frontend/index.html'
+                break;
+
+            case 'newSale':
+                location.href = '../frontend/ventas/nueva-venta.html'
+                break;
+            
+            case 'completedSales':
+                location.href = '../frontend/ventas/ventas-finalizadas.html'
+                break;
+
+            default:
+                break;
+        }
+    },
     selectInitialSales: () => {
         return ipcRenderer.invoke('select:initialSales') 
     },

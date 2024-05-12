@@ -23,21 +23,31 @@ async function getInitialSales(){
     const conn = await getConnection()
     const initialSales = await conn.query(`
         SELECT 	Venta_PK as id, 
-                CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre, 
-                Nombre__ruta as ruta, 
-                Hora_inicio__venta as salida
+            CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre, 
+            Nombre__ruta as ruta, 
+            Fecha__venta as fecha,
+            Hora_inicio__venta as salida
         FROM venta
         INNER JOIN turno ON Turno_FK__venta = Turno_PK
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
         WHERE Hora_fin__venta IS NULL
         ORDER BY Venta_PK DESC;
-    `)
+        `)
 
     const piecesOfInitialSales = await getPiecesInitialSales()
     
     for (let index = 0; index < initialSales.length; index++) {
         initialSales[index].cantidad_piezas = piecesOfInitialSales[index].cantidad_piezas
+        
+        let fecha = new Date(initialSales[index].fecha)
+        dia = fecha.getDate()
+        mes = fecha.getMonth()
+        anio = fecha.getFullYear()
+
+        dia = dia >= 1 && dia < 10 ? `0${dia}` : `${dia}`
+        mes = mes >= 0 && mes < 10 ? `0${mes + 1}` : `${mes + 1}`
+        initialSales[index].fecha = `${dia}/${mes}/${anio}`
     }
 
     return initialSales;
@@ -167,6 +177,7 @@ function createWindow(width, height) {
     window = new BrowserWindow({
         width: width,
         height: height,
+        resizable: false,
         webPreferences: {
             nodeIntegration: true, // Habilita Node.js en la ventana del navegador
             enableRemoteModule: true, // Habilita el módulo remote

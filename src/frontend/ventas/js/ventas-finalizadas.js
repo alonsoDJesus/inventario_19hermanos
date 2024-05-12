@@ -43,19 +43,19 @@ async function getCompletedSales(com){
 getCompletedSales()
 
 window.addEventListener('load', () => {
-   const navHome = document.getElementById('navHome')
-   const navNewSale = document.getElementById('navNewSale')
-   const navCompletedSales = document.getElementById('navCompletedSales')
+    const navHome = document.getElementById('navHome')
+    const navNewSale = document.getElementById('navNewSale')
+    const navCompletedSales = document.getElementById('navCompletedSales')
    
-   navHome.addEventListener('click', async () => {
-       goToHome()
-   })
+    navHome.addEventListener('click', async () => {
+        await window.electronAPI.navigateTo(links.home)
+    })
 
-   navNewSale.addEventListener('click', async () => {
-       goToNewSale()
-   })
+    navNewSale.addEventListener('click', async () => {
+        await window.electronAPI.navigateTo(links.newSale)
+    })
 
-   navCompletedSales.addEventListener('click', async () => {
-       goToCompletedSales()
-   })
+    navCompletedSales.addEventListener('click', async () => {
+        await window.electronAPI.navigateTo(links.completedSales)
+    })
 })

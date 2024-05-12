@@ -1,17 +1,5 @@
 const body = document.body
 
-function goToHome() {
-    location.href = links.home
-}
-
-function goToNewSale() {
-    location.href = links.newSale
-}
-
-function goToCompletedSales() {
-    location.href = links.completedSales
-}
-
 body.innerHTML = `
 <nav>
 <div class="nav__container">

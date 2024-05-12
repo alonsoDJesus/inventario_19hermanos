@@ -96,7 +96,7 @@ async function confirmToExit(goToSomewhere, swalIcon){
             case true:
                 sessionStorage.removeItem("index")
                 sessionStorage.removeItem("addedSales")
-                goToSomewhere()
+                await goToSomewhere()
                 break;
          
             default:
@@ -267,16 +267,27 @@ window.addEventListener('load', () => {
     const navHome = document.getElementById('navHome')
     const navNewSale = document.getElementById('navNewSale')
     const navCompletedSales = document.getElementById('navCompletedSales')
+
+    let goToSomeWhere;
     
-    navHome.addEventListener('click', async () => {
-        confirmToExit(goToHome, "warning")
+    navHome.addEventListener('click', () => {
+        goToSomeWhere = async function(){
+            await window.electronAPI.navigateTo(links.home)
+        }
+        confirmToExit(goToSomeWhere, "warning")
     })
 
-    navNewSale.addEventListener('click', async () => {
-        confirmToExit(goToNewSale, "warning")
+    navNewSale.addEventListener('click', () => {
+        goToSomeWhere = async function(){
+            await window.electronAPI.navigateTo(links.newSale)
+        }
+        confirmToExit(goToSomeWhere, "warning")
     })
 
-    navCompletedSales.addEventListener('click', async () => {
-        confirmToExit(goToCompletedSales, "warning")
+    navCompletedSales.addEventListener('click', () => {
+        goToSomeWhere = async function(){
+            await window.electronAPI.navigateTo(links.completedSales)
+        }
+        confirmToExit(goToSomeWhere, "warning")
     })
 })

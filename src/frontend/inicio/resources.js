@@ -6,10 +6,11 @@ const icons = {
     off: '../../../icons/power-off-solid.svg',
     edit: '../../../icons/pen-to-square-solid.svg',
     delete: '../../../icons/trash-solid.svg',
+    up: '../../../icons/arrow-up-solid.svg',
 }
 
 const links = {
-    home: '../inicio/index.html',
-    newSale: 'nueva-venta.html',
-    completedSales: 'ventas-finalizadas.html'
+    home: 'index.html',
+    newSale: '../ventas/nueva-venta.html',
+    completedSales: '../ventas/ventas-finalizadas.html'
 }

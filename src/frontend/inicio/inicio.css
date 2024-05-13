@@ -150,19 +150,19 @@ main{
 .card_button:nth-child(1) div{
     width: 0.86rem;
     height: 1.2rem;
-    background-image: url('../../icons/arrow-up-solid.svg');
+    background-image: url('../../../icons/arrow-up-solid.svg');
 }
 
 .card_button:nth-child(2) div{
     width: 1rem;
     height: 1rem;
-    background-image: url('../../icons/pen-to-square-solid.svg');
+    background-image: url('../../../icons/pen-to-square-solid.svg');
 }
 
 .card_button:nth-child(3) div{
     width: 0.9rem;
     height: 1rem;
-    background-image: url('../../icons/trash-solid.svg');
+    background-image: url('../../../icons/trash-solid.svg');
 }
 
 .button_add{

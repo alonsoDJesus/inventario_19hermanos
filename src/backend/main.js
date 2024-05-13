@@ -184,7 +184,7 @@ function createWindow(width, height) {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    window.loadFile('../inv_19h_electron_mysql/src/frontend/index.html')
+    window.loadFile('../inv_19h_electron_mysql/src/frontend/inicio/index.html')
 }
 
 module.exports = {

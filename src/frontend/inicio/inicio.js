@@ -115,11 +115,18 @@ dateField.addEventListener('change', () => {
     checkDate()
 })
 
-buttonSearch.addEventListener('click', () => {
+buttonSearch.addEventListener('click', async () => {
     if (fieldsCheck.date) {
         getInitialSalesWithCriteria(dateField.value)
     }else{
-        console.log('no se pueda buscar bro')
+        await swal({
+            icon: "warning",
+            title: "Fecha incorrecta",
+            text: "No se pudo realizar la busqueda porque la fecha no es válida",
+            button: {
+                text: 'Aceptar'
+            }
+        })
     }
 })
 

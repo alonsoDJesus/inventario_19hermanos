@@ -12,9 +12,8 @@ header{
 
 main{
     width: 85%;
-    margin: 0 auto;
+    margin: 1.4rem auto;
     height: 100%;
-    margin-top: 1.4rem;
 }
 
 form{

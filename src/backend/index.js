@@ -1,5 +1,6 @@
-const {app, screen, ipcMain} = require('electron')
-const {createWindow, getInitialSales, getCompletedSales, getEmployees, getRoutes, getLastSaleID, getProducts, setNewShift, setNewSaleWithShift, setSaleDetail} = require('./main')
+const { app, screen, ipcMain } = require('electron')
+const { createWindow, getCompletedSales, getEmployees, getRoutes, getLastSaleID, getProducts, setNewShift, setNewSaleWithShift, setSaleDetail } = require('./main')
+const { getInitialSales } = require('./controllers/inicio')
 const { getDirName } = require('../../ruta')
 
 require('electron-reload')(getDirName())

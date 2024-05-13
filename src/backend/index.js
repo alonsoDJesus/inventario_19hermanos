@@ -5,8 +5,8 @@ const { getDirName } = require('../../ruta')
 require('electron-reload')(getDirName())
 
 app.whenReady().then( () => {
-    ipcMain.handle('select:initialSales', async () => {
-        return await getInitialSales()
+    ipcMain.handle('select:initialSales', async (event, criteria) => {
+        return await getInitialSales(criteria)
     })
 
     ipcMain.handle('select:completedSales', async () => {

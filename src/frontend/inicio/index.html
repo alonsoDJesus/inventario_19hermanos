@@ -20,12 +20,34 @@
     <header>
         <h1>Ventas Iniciadas</h1>
     </header>
-
-    <form action="">
-
-    </form>
     
     <main>
+
+        <form>
+            <div>
+                <input type="radio" id="radioShowAll" name="searchCriteria" value="showAll" checked/>
+                <label for="radioShowAll">Mostrar todos</label>
+            </div>
+            
+            <div>
+                <input type="radio" id="radioShowDate" name="searchCriteria" value="searchDate"/>
+                <label for="radioShowDate">Buscar por fecha</label>                
+            </div>
+
+            <div class="input-group display-none position-relative">
+                <div>
+                    <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
+                    <label for="date">Fecha</label>
+                </div>
+                <input type="date" id="date" class="display-inline-block">
+                <div class="display-inline-block button-search" id="buttonSearch">
+                    <img src="../../../icons/magnifying-glass-solid-white.svg" alt="" class="h-1rem">
+                </div>
+
+                <div class="formulario__validacion-estado icon-wrong opacity-0" id="date__val"></div>
+                <p class="formulario__input-error" id="date__warning"></p>
+            </div>
+        </form>
 
         <div class="container__sales">
             <div class="container__headers">
@@ -38,12 +60,6 @@
             </div>
 
             <div class="container__cards" id="containerCards">
-                <div class="card">
-                    <p class="text_example">
-                        Aún no tienes ninguna venta. <br>
-                        Registra una dando clic en el botón de agregar.
-                    </p>
-                </div>
             </div>
         </div>
     </main>

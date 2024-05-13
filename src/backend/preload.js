@@ -4,8 +4,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
     navigateTo: (url) => {
         location.href = url
     },
-    selectInitialSales: () => {
-        return ipcRenderer.invoke('select:initialSales') 
+    
+    selectInitialSales: (criteria) => {
+        return ipcRenderer.invoke('select:initialSales', criteria) 
     },
 
     selectCompletedSales: () => {

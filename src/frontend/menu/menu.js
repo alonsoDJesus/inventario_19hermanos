@@ -13,9 +13,15 @@ body.innerHTML = `
             <p>Inventario</p>
             <ul class="nav__subitems">
                 <li>
+                    <div class = "container-icon">
+                        <img src="${icons.boxesPrimary}" alt="" class="nav__icon" id="boxSolid">
+                    </div>
                     <p>Ver todos los productos</p>
                 </li>
                 <li>
+                    <div class = "container-icon">
+                        <img src="${icons.bottlePrimary}" alt="" class="nav__icon" id="boxSolid">
+                    </div>
                     <p>Registrar nuevo producto</p>
                 </li>
             </ul>
@@ -25,12 +31,21 @@ body.innerHTML = `
             <p>Ventas</p>
             <ul class="nav__subitems">
                 <li id="navNewSale">
+                    <div class = "container-icon">
+                        <img src="${icons.truckPrimary}" alt="" class="nav__icon" id="boxSolid">
+                    </div>
                     <p>Nueva venta</p>
                 </li>
                 <li>
+                    <div class = "container-icon">
+                        <img src="${icons.hourglassStartPrimary}" alt="" class="nav__icon" id="boxSolid">
+                    </div>
                     <p>Ver ventas iniciadas</p>
                 </li>
                 <li id="navCompletedSales">
+                    <div class = "container-icon">
+                        <img src="${icons.hourglassEndPrimary}" alt="" class="nav__icon" id="boxSolid">
+                    </div>
                     <p>Ver ventas finalizadas</p>
                 </li>
             </ul>
@@ -40,6 +55,9 @@ body.innerHTML = `
             <p>Personal</p>
             <ul class="nav__subitems">
                 <li>
+                    <div class = "container-icon">
+                        <img src="${icons.addressCardPrimary}" alt="" class="nav__icon" id="boxSolid">
+                    </div>
                     <p>Registrar nuevo personal</p>
                 </li>
             </ul>

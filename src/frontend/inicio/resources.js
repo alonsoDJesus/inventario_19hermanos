@@ -7,6 +7,12 @@ const icons = {
     edit: '../../../icons/pen-to-square-solid.svg',
     delete: '../../../icons/trash-solid.svg',
     up: '../../../icons/arrow-up-solid.svg',
+    boxesPrimary: '../../../icons/boxes-stacked-solid-primary.svg',
+    bottlePrimary: '../../../icons/bottle-water-solid-primary.svg',
+    truckPrimary: '../../../icons/truck-solid-primary.svg',
+    hourglassStartPrimary: '../../../icons/hourglass-start-solid-primary.svg',
+    hourglassEndPrimary: '../../../icons/hourglass-end-solid-primary.svg',
+    addressCardPrimary: '../../../icons/address-card-solid-primary.svg',
 }
 
 const links = {

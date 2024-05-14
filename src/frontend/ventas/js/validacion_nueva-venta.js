@@ -231,7 +231,7 @@ buttonSave.addEventListener('click', async () => {
 
                             sessionStorage.removeItem("index")
                             sessionStorage.removeItem("addedSales")
-                            goToHome()
+                            await window.electronAPI.navigateTo(links.home)
                         }
                     }
 

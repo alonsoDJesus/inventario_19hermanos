@@ -9,8 +9,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('select:initialSales', criteria) 
     },
 
-    selectCompletedSales: () => {
-        return ipcRenderer.invoke('select:completedSales') 
+    selectCompletedSales: (criteria) => {
+        return ipcRenderer.invoke('select:completedSales', criteria) 
     },
 
     selectEmployees: () => {

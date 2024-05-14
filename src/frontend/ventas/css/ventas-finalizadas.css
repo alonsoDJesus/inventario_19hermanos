@@ -1,3 +1,10 @@
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    margin-right: 0;
+    cursor: pointer;
+}
+
+
 header{
     width: 85%;
     margin: auto;
@@ -10,6 +17,71 @@ main{
     height: 100%;
     margin-top: 1.4rem;
     margin-bottom: 1rem;
+}
+
+form{
+    margin-bottom: 1rem;
+    font-family: 'OpenSans-Light';
+    color: var(--white);
+}
+
+form label{
+    cursor: pointer;
+}
+
+input[type="radio"]{
+    cursor: pointer;
+    appearance: none;
+    background-color: var(--secondary);
+    background-image: url('../../../../icons/check-solid-secondary.svg');
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    transition: .3s;
+}
+
+input[type="radio"]:checked{
+    background-color: var(--forth);
+}
+
+input[type="radio"]:focus{
+    border: var(--forth) solid .1rem; 
+}
+
+.input-group{
+    background-color: var(--secondary);
+    margin-top: .7rem;
+    margin-left: 1.4rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    display: inline-block;
+    transition: .3s;
+}
+
+input[type="date"]{
+    height: 2.5rem;
+    border-radius: 0.4rem;
+    border: none;
+    color: var(--white);
+    font-family: 'OpenSans-Light';
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-top: .5rem;
+    transition: .1s ease all;
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
+.button-search{
+    margin-left: 0.3rem;
+    padding: 0.55rem 1rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.button-search:hover{
+    background-color: var(--primary);
 }
 
 .container__sales{
@@ -32,19 +104,23 @@ main{
 }
 
 .container__header:nth-child(1){
-    margin-right: 6.5%;
+    margin-right: 10%;
 }
 
 .container__header:nth-child(2){
-    margin-right: 11.3%;
+    margin-right: 7%;
 }
 
 .container__header:nth-child(3){
-    margin-right: 18%;
+    margin-right: 10%;
 }
 
 .container__header:nth-child(4){
-    margin-right: 32%;
+    margin-right: 10%;
+}
+
+.container__header:nth-child(5){
+    margin-right: 19%;
 }
 
 .container__cards{
@@ -101,17 +177,22 @@ main{
 
 .data:nth-child(1){
     inline-size: 2.4rem;
-    margin-right: 2.5rem;
+    margin-right: 6%;
 }
 
 .data:nth-child(2){
     inline-size: 7.0rem;
-    margin-right: 5.3rem;
+    margin-right: 3.5%;
 }
 
 .data:nth-child(3){
-    inline-size: 5.0rem;
-    margin-right: 5.5rem;
+    inline-size: 6rem;
+    margin-right: 5%;
+}
+
+.data:nth-child(4){
+    inline-size: 6rem;
+    margin-right: 0.5%;
 }
 
 .data__container{
@@ -123,14 +204,14 @@ main{
 
 .itinerary{
     background-color: var(--primary);
-    width: 13.8rem;
+    width: 11rem;
     grid-template-columns: 1fr 1fr;
-    margin-right: 5.0rem;
+    margin-right: 1.2%;
 }
 
 .summary{
     background-color: var(--forth);
-    width: 24rem;
+    width: 20rem;
     grid-template-columns: 1fr 1fr 1fr;
     color: var(--primary);
 }
@@ -146,4 +227,133 @@ main{
 .number{
     font-family: 'MPLUS1Code-Regular';
     font-size: 1rem;
+}
+
+.card_buttons{
+    width: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.card_button{
+    height: 2rem;
+    width: 2rem;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s;
+}
+
+.card_button:hover{
+    background-color: var(--primary);
+}
+
+.card_button div{
+    background-repeat: no-repeat;
+}
+
+.card_button:nth-child(1) div{
+    width: 1rem;
+    height: 1rem;
+    background-image: url('../../../../icons/pen-to-square-solid.svg');
+}
+
+.card_button:nth-child(2) div{
+    width: 0.9rem;
+    height: 1rem;
+    background-image: url('../../../../icons/trash-solid.svg');
+}
+
+.h-1rem{
+    height: 1rem;
+}
+
+.display-none{
+    display: none;
+}
+
+.display-inline-block{
+    display: inline-block;
+}
+
+.position-relative{
+    position: relative;
+}
+
+/* Para validaciones */
+.icon-wrong{
+    background-image: url('../../../../icons/xmark-solid-red.svg');
+    background-repeat: no-repeat;
+    position: absolute;
+    right: 1.4rem;
+    top: 3rem;
+}
+
+.icon-check{
+    background-image: url('../../../../icons/check-solid-green.svg');
+    position: absolute;
+    right: 1.4rem;
+    top: 3rem;
+}
+
+.new-top-modal{
+    position: absolute;
+    top: 2.85rem
+}
+
+.mr-1rem{
+    margin-right: 1rem;
+}
+
+.formulario__validacion-estado{
+    height: 1.2rem;
+    width: 0.9rem;
+}
+
+.formulario__input-error{
+    display: none;
+}
+
+.formulario__input-error-activo{
+    font-family: 'OpenSans-Regular';
+    font-size: 0.9rem;
+    display: block;
+    background-color: var(--forth);
+    padding: 0.3rem 0 0.3rem 1.4rem;
+    border-radius: 0.3rem;
+    color: var(--primary);
+    margin-top: 0.5rem;
+}
+
+.opacity-0{
+    opacity: 0;
+}
+
+.opacity-1{
+    opacity: 1;
+}
+
+.formulario__data-error{
+    background-color: var(--warning);
+    width: 65%;
+    color: var(--primary);
+    padding: 0.5rem;
+    border-radius: .4rem;
+    font-family: 'OpenSans-Regular';
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5%;
+    position: fixed;
+    bottom: 2rem;
+    left: 17.5%;
+}
+
+/*Corrección provisional a los íconos de validacion*/
+#date__val{
+    top: 3.5rem;
+    right: 7rem;
 }

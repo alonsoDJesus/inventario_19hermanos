@@ -8,6 +8,10 @@ let fieldsCheck = {
     date: false
 }
 
+async function goToCompletingSale(event, id) {
+    await window.electronAPI.navigateTo(links.completingSale, id)
+}
+
 function renderInitialSales(searchType = 'all') {
     const containerCards = document.getElementById('containerCards')
 
@@ -28,7 +32,7 @@ function renderInitialSales(searchType = 'all') {
                         </div>
 
                         <div class="card_buttons">
-                            <div class="card_button"><div></div></div>
+                            <div class="card_button" onclick="goToCompletingSale(event, ${sale.id})"><div></div></div>
                             <div class="card_button"><div></div></div>
                             <div class="card_button"><div></div></div>
                         </div>
@@ -101,6 +105,8 @@ buttonSearch.addEventListener('click', async () => {
     }
 })
 
+getInitialSales();
+
 window.addEventListener('load', () => {
     const navHome = document.getElementById('navHome')
     const navNewSale = document.getElementById('navNewSale')
@@ -118,5 +124,3 @@ window.addEventListener('load', () => {
         await window.electronAPI.navigateTo(links.completedSales)
     })
 })
-
-getInitialSales();

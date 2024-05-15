@@ -1,8 +1,29 @@
 const { contextBridge, ipcRenderer } = require('electron/renderer')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    navigateTo: (url) => {
+    navigateTo: (url, id=-1) => {
+        switch (url) {
+            case '../ventas/finalizar-venta.html':
+                const completingSaleParams = {
+                    editingStatusOfCompletingSale: true,
+                    index: id
+                }
+
+                const completingSaleParamsString = JSON.stringify(completingSaleParams)
+                sessionStorage.setItem("completingSaleParams", completingSaleParamsString)
+                break;
+        
+            default:
+                break;
+        }
+
         location.href = url
+    },
+
+    getParams: (paramID) => {
+        let params = sessionStorage.getItem(paramID)
+        params = JSON.parse(params)
+        return params
     },
 
     prepareSaleDetailOnSessionStorage: () => {
@@ -62,6 +83,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     selectProducts: () => {
         return ipcRenderer.invoke('select:products') 
+    },
+
+    selectSaleById: (id) => {
+        return ipcRenderer.invoke('select:saleByID', id) 
     },
 
     insertNewShift: (newShift) => {

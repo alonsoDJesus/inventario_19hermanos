@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finalización de una venta</title>
+
+    <link rel="stylesheet" href="../project-styles/settings.css">
+    <link rel="stylesheet" href="../project-styles/framework.css">
+    <link rel="stylesheet" href="../menu/menu.css">
+    <link rel="stylesheet" href="css/finalizar-venta.css">
+    <link rel="stylesheet" href="../sweetalert/sweetalert.css">
+    <link rel="stylesheet" href="../validacion-fields/validacion-fields.css">
+
+    <script src="venta-resources.js"></script>
+</head>
+<body>
+    <script src="../menu/menu.js"></script>
+
+    <header>
+        <h1 id="title"></h1>
+    </header>
+
+    <main>
+        <div class="position-relative">
+            <div id="saleIndex" class="completingsale__tagnumber">
+                <p></p>
+            </div>
+            <div class="completingsale__container">
+                <form class="completingsale__form">
+
+                    <div class="input__group position-relative">
+                        <div class="label__group">
+                            <img src="../../../icons/user-solid.svg" alt="" class="h-1rem">
+                            <label for="employee" class="fs-1">Responsable</label>
+                        </div>
+                        <input type="text" id="employee" class="completingsale__field bg-primary" autofocus readonly></input>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="employee__val"></div>
+                        <p class="formulario__input-error" id="employee__warning">Seleccione un producto válido</p>
+                    </div>
+
+                    <div class="input__group position-relative">
+                        <div class="label__group">
+                            <img src="../../../icons/route-solid.svg" alt="" class="h-1rem">
+                            <label for="route" class="fs-1">Ruta</label>
+                        </div>
+                        <input type="text" id="route" class="completingsale__field bg-primary" autofocus readonly></input>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="route__val"></div>
+                        <p class="formulario__input-error" id="route__warning">Seleccione un producto válido</p>
+                    </div>
+
+                    <div class="input__group position-relative">
+                        <div class="label__group">
+                            <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
+                            <label for="date" class="fs-1">Fecha</label>
+                        </div>
+                        <input type="date" id="date" class="completingsale__field bg-primary" autofocus readonly></input>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="date__val"></div>
+                        <p class="formulario__input-error" id="date__warning">Seleccione un producto válido</p>
+                    </div>
+
+                    <div class="input__group position-relative">
+                        <div class="label__group">
+                            <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
+                            <label for="timeStart" class="fs-1">Hora de Salida</label>
+                        </div>
+                        <input type="time" id="timeStart" class="completingsale__field bg-primary" autofocus readonly></input>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="timeStart__val"></div>
+                        <p class="formulario__input-error" id="timeStart__warning">Seleccione un producto válido</p>
+                    </div>
+
+                    <div class="input__group position-relative">
+                        <div class="checkbox__group">
+                            <input type="checkbox" id="checkTime" name="checkTime" />
+                            <label for="checkTime">Registrar hora manualmente</label>
+                        </div>
+                        <div class="label__group">
+                            <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
+                            <label for="timeFinish" class="fs-1">Hora de Llegada</label>
+                        </div>
+                        <input type="time" id="timeFinish" class="completingsale__field bg-primary" autofocus></input>
+                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon display-none">
+                        
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="timeFinish__val"></div>
+                        <p class="formulario__input-error" id="timeFinish__warning">Seleccione un producto válido</p>
+                    </div>
+
+                </form>
+            </div>
+        </div>
+    </main>
+    
+
+    <script src="../sweetalert/sweetalert.min.js"></script>
+    <script src="../validacion-fields/validacion-fields.js"></script>
+    <script src="js/finalizar-venta.js"></script>
+</body>
+</html>

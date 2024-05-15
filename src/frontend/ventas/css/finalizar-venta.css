@@ -1,0 +1,143 @@
+::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    margin-right: 0;
+    cursor: pointer;
+}
+
+header{
+    width: 85%;
+    margin: auto;
+    margin-top: 3rem;
+}
+
+main{
+    width: 85%;
+    margin: 0 auto;
+    height: 100%;
+    margin-top: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.completingsale__container{
+    background-color: var(--secondary);
+    border-radius: 1.4rem;
+    padding: 1.4rem;
+}
+
+.completingsale__tagnumber{
+    background-color: var(--forth);
+    font-family: 'MPLUS1Code-Regular';
+    font-size: 2rem;
+    display: inline-block;
+    padding: 0.5rem 0.5rem 3rem 0.5rem;
+    border-top-left-radius: 0.6rem;
+    border-top-right-radius: 0.6rem;
+    position: absolute;
+    right: 0;
+    top: -3.5rem;
+    z-index: -70;
+}
+
+.completingsale__form{
+    width: 70%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.4rem;
+}
+
+.label__group{
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding-left: 0.2rem;
+}
+
+label{
+    font-family: 'OpenSans-Regular';
+    color: var(--white);
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+.completingsale__field{
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 0.4rem;
+    border: none;
+    color: var(--white);
+    font-family: 'OpenSans-Light';
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-top: .5rem;
+    transition: .1s ease all;
+}
+
+input:focus{
+    border: 3px solid var(--forth);
+    outline: none;
+    box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+
+.checkbox__group{
+    display: flex;
+    gap: .2rem;
+    padding-left: 0.2rem;   
+}
+
+.checkbox__group label{
+    font-size: .8rem;
+    font-family: 'OpenSans-Light';
+}
+
+.checkbox__group input{
+    cursor: pointer;
+    appearance: none;
+    background-color: var(--primary);
+    background-image: url('../../../../icons/check-solid.svg');
+    width: 1rem;
+    height: 1rem;
+    border-radius: .5rem;
+    position: relative;
+}
+
+.checkbox__group input:checked{
+    background-color: var(--forth);
+}
+
+.checkbox__group input:focus{
+    border: var(--forth) solid .1rem; 
+}
+
+.checkbox__group img{
+    position: absolute;
+    width: .3rem;
+    height: .3rem;
+}
+
+.lock-field-icon{
+    position: absolute;
+    top: 4.1rem;
+    right: 1.25rem;
+}
+
+.position-relative{
+    position: relative;
+}
+
+.h-1rem{
+    height: 1rem;
+}
+
+.bg-primary{
+    background-color: var(--primary);
+}
+
+.display-none{
+    display: none;
+}
+
+/*Corrección provisional a los íconos de validacion*/
+#timeFinish__val{
+    top: 4.1rem;
+    right: 2.4rem;
+}

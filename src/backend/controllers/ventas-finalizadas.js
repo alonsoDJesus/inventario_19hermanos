@@ -19,7 +19,7 @@ async function getCompletedSales(criteria = ''){
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
         WHERE Hora_fin__venta IS NOT NULL ${searchCriteriaString}
-        ORDER BY Venta_PK ASC;
+        ORDER BY Venta_PK DESC;
     `)
 
     completedSales.forEach(sale => {

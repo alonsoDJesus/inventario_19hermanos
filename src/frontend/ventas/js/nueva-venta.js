@@ -1,6 +1,5 @@
 const employees = document.getElementById('employees')
 const routes = document.getElementById('routes')
-const tagID = document.querySelector('.form__tagnumber p')
 const dateField = document.getElementById('date')
 const timeField = document.getElementById('time')
 const dateCheck = document.getElementById('checkDate')
@@ -21,16 +20,6 @@ const boxes = document.getElementById('boxes')
 const buttonSave = document.getElementById('buttonSave')
 const buttonCancel = document.getElementById('buttonCancel')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
-const modalForm = document.getElementById('modalForm')
-
-let lastSaleID = 0
-let newSaleID = 0
-let intervalID = 0
-let addedProductos = new Object()
-let addedProductosString = ""
-let productsData
-let selectedProduct
-
 /*
     Objeto para los campos:
     - Almacena true si un campo tiene un dato correcto y un false si no lo tiene
@@ -43,6 +32,11 @@ const fieldsCheck = {
     routes: false
 }
 
+let saleID = 0
+let intervalID = 0
+let productsData
+
+//---------------------------------------------------Código a borrar
 function sendSalesToStorage(sales, addedSale, index){
     sales[index] = addedSale
     const salesString = JSON.stringify(sales)
@@ -50,29 +44,24 @@ function sendSalesToStorage(sales, addedSale, index){
 }
 
 function setAddedSalesOnStorage(addedSale){
-    if (sessionStorage.length != 0) {
-        // Recuperalos del session storage
-        const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales"))
+    const sessionStorageSales = sessionStorage.getItem("addedSales")
+    
+    if (sessionStorageSales) {
+        // Recupera las ventas del session storage
+        const auxAddedSales = JSON.parse(sessionStorageSales)
         let index = parseInt(sessionStorage.getItem("index"))
         index++
         sendSalesToStorage(auxAddedSales, addedSale, index)
         sessionStorage.setItem("index", `${index}`)
-        // auxAddedSales[productsDescription.selectedIndex] = addedSale
-
-        // const auxAddedSalesString = JSON.stringify(auxAddedSales)
-        // sessionStorage.setItem("addedSales", auxAddedSalesString)
 
     } else {
         // Crea todo un objeto y establecelo en sessionStorage
         const transientSale = new Object()
         sessionStorage.setItem("index", "1")
         sendSalesToStorage(transientSale, addedSale, 1)
-        // transientSale[productsDescription.selectedIndex] = addedSale
-        
-        // const transientSaleString = JSON.stringify(transientSale)
-        // sessionStorage.setItem("addedSales", transientSaleString)
     }
 }
+//----------------------------------------------------------------------------
 
 function addOptions(selectField, dataset, key, optionDefault){
     selectField.innerHTML = ''
@@ -85,11 +74,14 @@ function addOptions(selectField, dataset, key, optionDefault){
     });
 }
 
-function setTagID(){
-    newSaleID = lastSaleID + 1
-    let numberZeros = 9 - (`${newSaleID}`.length), tagNumber = "#"
-    tagNumber = tagNumber.concat("0".repeat(numberZeros))
-    tagNumber = tagNumber.concat(`${newSaleID}`)
+function setTagID(saleID){
+    const tagID = document.querySelector('.form__tagnumber p')
+    let numberZeros = 9 - (`${saleID}`.length), tagNumber = "#"
+
+    if(numberZeros > 0){
+        tagNumber = tagNumber.concat("0".repeat(numberZeros))
+    }
+    tagNumber = tagNumber.concat(`${saleID}`)
     tagID.textContent = tagNumber
 }
 
@@ -344,8 +336,9 @@ async function getRoutes(){
 }
 
 async function getLastSaleID(){
-    lastSaleID = await window.electronAPI.selectLastSaleID()
-    setTagID()
+    let lastSaleID = await window.electronAPI.selectLastSaleID()
+    saleID = lastSaleID + 1
+    setTagID(saleID)
 }
 
 async function getProducts(){
@@ -408,6 +401,7 @@ timeCheck.addEventListener('click', () => {
 
 // Clic para abrir el modal del registro para el nuevo producto
 buttonAddSale.addEventListener('click', async () => {
+    const modalForm = document.getElementById('modalForm')
     layoutForm.classList.remove('display-none') // Se muestra el modal
     modalForm.classList.remove('display-none')
     modalForm.reset() // Limpieza del formulario
@@ -428,11 +422,11 @@ buttonAddSale.addEventListener('click', async () => {
     })
 })
 
-buttonAceptModal.addEventListener('click', () => {
+buttonAceptModal.addEventListener('click', async() => {
     
     if (fieldsCheck.description && fieldsCheck.quantity) {
         const addedSale = {
-            Venta_FK__detalleventa: newSaleID,
+            Venta_FK__detalleventa: saleID,
             Producto_FK__detalleventa: productsDescription.selectedIndex,
             Cantidad_piezas_inicio__detalleventa: quantity.value,
             Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
@@ -440,7 +434,13 @@ buttonAceptModal.addEventListener('click', () => {
             description: productsDescription.value,
             quantityBoxes: boxes.value
         }
-        setAddedSalesOnStorage(addedSale)
+        
+        //setAddedSalesOnStorage(addedSale)
+
+        // Inserción de la venta en Session Storage
+        const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
+        saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
+        await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
         
         layoutForm.classList.add('display-none')
         employees.focus()
@@ -563,7 +563,7 @@ buttonSave.addEventListener('click', async () => {
 
                     if (typeof shiftInsertID == "number") {
                         const newSaleWithShift = {
-                            Venta_PK: newSaleID,
+                            Venta_PK: saleID,
                             Fecha__venta: dateField.value,
                             Hora_inicio__venta: timeField.value,
                             Turno_FK__venta: shiftInsertID

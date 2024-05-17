@@ -32,7 +32,31 @@ async function getSaleById(id){
     }
 }
 
+async function getSaleDetailById(id){
+
+    try {
+        const conn = await getConnection()
+        const saleDetail = await conn.query(`
+            SELECT
+                Producto_PK as idProducto,
+                Descripcion__producto as descripcion,
+                Cantidad_piezas_inicio__detalleventa as piezasEntregadas,
+                Precio_venta_al_momento__detalleventa as precioVenta,
+                Precio_costo_al_momento__detalleventa as precioCosto
+            FROM detalleventa
+            INNER JOIN producto ON Producto_FK__detalleventa = Producto_PK
+            INNER JOIN venta ON Venta_FK__detalleventa = Venta_PK
+            WHERE Venta_FK__detalleventa = ${id};
+        `)
+
+        return saleDetail
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
-    getSaleById
+    getSaleById,
+    getSaleDetailById
 }

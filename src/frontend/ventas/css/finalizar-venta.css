@@ -21,7 +21,7 @@ main{
 .completingsale__container{
     background-color: var(--secondary);
     border-radius: 1.4rem;
-    padding: 1.4rem 1.4rem 0 1.4rem;
+    padding: 1.4rem;
 }
 
 .completingsale__tagnumber{
@@ -72,7 +72,7 @@ label{
     transition: .1s ease all;
 }
 
-input:focus{
+input:focus, .completingsale__financialdata input:focus{
     border: 3px solid var(--forth);
     outline: none;
     box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
@@ -129,6 +129,7 @@ hgroup{
     width: 100%;
     display: flex;
     align-items: center;
+    margin-bottom: 1rem;
 }
 
 .saleDetail__header{
@@ -169,10 +170,6 @@ hgroup{
     margin-right: 4%;
     width: 6rem;
     text-align: center;
-}
-
-.saledetail__groupcard{
-    margin-top: 1rem;
 }
 
 .saledetail__card{
@@ -279,6 +276,38 @@ hgroup{
     justify-content: end;
 }
 
+.completingsale__containerfinancial{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+}
+
+.completingsale__financialdata{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    align-items: center;
+}
+
+.completingsale__financialdata label{
+    font-family: 'OpenSans-Bold';
+    font-size: 1.5rem;
+}
+
+.completingsale__financialdata input{
+    width: 15rem;
+    height: 3rem;
+    border-radius: 0.4rem;
+    border: none;
+    color: var(--white);
+    font-family: 'MPLUS1Code-Regular';
+    font-size: 1.3rem;
+    text-align: right;
+    padding: 0 1rem;
+    transition: .1s ease all;
+}
+
 .position-relative{
     position: relative;
 }
@@ -299,4 +328,19 @@ hgroup{
 #timeFinish__val{
     top: 4.1rem;
     right: 2.4rem;
+}
+
+.val__replacer{
+    top: 0.7rem;
+    right: 2.3rem;
+}
+
+.formulario__input-error-activo{
+    position: absolute;
+    width: 11rem;
+    bottom: -1.2rem;
+    -webkit-box-shadow: -2px 10px 22px 2px rgba(45,50,80,1);
+    -moz-box-shadow: -2px 10px 22px 2px rgba(45,50,80,1);
+    box-shadow: -2px 10px 22px 2px rgba(45,50,80,1);
+    
 }

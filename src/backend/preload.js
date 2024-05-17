@@ -89,6 +89,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('select:saleByID', id) 
     },
 
+    selectSaleDetailById: (id) => {
+        return ipcRenderer.invoke('select:saleDetailByID', id) 
+    },
+
     insertNewShift: (newShift) => {
         return ipcRenderer.invoke('insert:newShift', newShift) 
     },

@@ -8,9 +8,9 @@
     <link rel="stylesheet" href="../project-styles/settings.css">
     <link rel="stylesheet" href="../project-styles/framework.css">
     <link rel="stylesheet" href="../menu/menu.css">
+    <link rel="stylesheet" href="../validacion-fields/validacion-fields.css">
     <link rel="stylesheet" href="css/finalizar-venta.css">
     <link rel="stylesheet" href="../sweetalert/sweetalert.css">
-    <link rel="stylesheet" href="../validacion-fields/validacion-fields.css">
 
     <script src="venta-resources.js"></script>
 </head>
@@ -98,41 +98,22 @@
                     </hgroup>
 
                     <section class="saledetail__containercards">
-                        <div class="saledetail__groupcard">
-                            <article class="saledetail__card position-relative">
-                                <div class="card__data">
-                                    <div class="data"><p>Jamón Sabroso</p></div>
-                                    <div class="data"><p>99999</p></div>
-                                    <div class="input__group position-relative data">
-                                        <input type="number" class="card__field bg-primary"></input>
-                                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="timeStart__val"></div>
-                                        <p class="formulario__input-error" id="timeStart__warning">Cantidad Excedente</p>
-                                    </div>
-                                    <p class="data">99999</p>
-                                    <p class="data">99,999.99</p>
-                                    <p class="data">99,999.99</p>
-                                </div>
-                            </article>
-                            <article class="saledetail__subcard">
-                                <div class="subcard__data">
-                                    <div class="subcard__containersubdata">
-                                        <div class="containersubdata__header"><p>Venta: </p> </div>
-                                        <div class="containersubdata__subdata"><p>$ 99,999,999.99</p></div>
-                                    </div>
-                                    
-                                    <div class="subcard__containersubdata">
-                                        <div class="containersubdata__header"><p>Costo: </p> </div>
-                                        <div class="containersubdata__subdata"><p>$ 99,999,999.99</p></div>
-                                    </div>
-
-                                    <div class="subcard__containersubdata">
-                                        <div class="containersubdata__header"><p>Utilidad: </p></div>
-                                        <div class="containersubdata__subdata"><p>$ 99,999,999.99</p></div>
-                                    </div>
-                                </div>
-                            </article>
-                        </div>
                     </section>
+                </section>
+
+                <section class="completingsale__containerfinancial">
+                    <article class="completingsale__financialdata">
+                        <label for="finalSaleData">Venta Total</label>
+                        <input type="text" id="finalSaleData" class="bg-primary" readonly>
+                    </article>
+                    <article class="completingsale__financialdata">
+                        <label for="finalCostData">Costo Total</label>
+                        <input type="text" id="finalCostData" class="bg-primary" readonly>
+                    </article>
+                    <article class="completingsale__financialdata">
+                        <label for="finalUtilityData">Utilidad Total</label>
+                        <input type="text" id="finalUtilityData" class="bg-primary" readonly>
+                    </article>
                 </section>
             </div>
         </div>

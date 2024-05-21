@@ -36,6 +36,13 @@ let saleID = 0
 let intervalID = 0
 let productsData
 
+function setSaleID(newSaleID){
+    saleID = newSaleID
+}
+
+function getSaleID(){
+    return saleID
+}
 //---------------------------------------------------Código a borrar
 function sendSalesToStorage(sales, addedSale, index){
     sales[index] = addedSale
@@ -63,12 +70,12 @@ function setAddedSalesOnStorage(addedSale){
 }
 //----------------------------------------------------------------------------
 
-function addOptions(selectField, dataset, key, optionDefault){
+function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault){
     selectField.innerHTML = ''
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
         const option = document.createElement('option')
-        option.text = data[key]
+        option.text = data[keyName]
         option.setAttribute('id', data.id)
         selectField.appendChild(option)
     });
@@ -110,7 +117,7 @@ function getCurrentDate() {
 }
 
 
-function manageCheck(checkField, checked){
+function switchModeTime(checkField, checked){
     if (checked) {
         checkField.readOnly = false
 
@@ -321,31 +328,55 @@ function searchRepeatedSale(addedSales){
     return mySale
 }
 
-async function getEmployees(){
-    const employeesData = await window.electronAPI.selectEmployees()
+function setEmployeesField(employeesData){
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún empleado"
-    addOptions(employees, employeesData, "nombre", emptyOption)
+    setOptionsOnSelectField(employees, employeesData, "nombre", emptyOption)
 }
 
-async function getRoutes(){
-    const routesData = await window.electronAPI.selectRoutes()
+function setRoutesField(routesData) {
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione alguna ruta"
-    addOptions(routes, routesData, "ruta", emptyOption)
+    setOptionsOnSelectField(routes, routesData, "ruta", emptyOption)
 }
 
-async function getLastSaleID(){
+async function init(){
+    const employeesData = await fetchEmployeesData()
+    const routesData = await fetchRoutesData()
+    
+    setEmployeesField(employeesData)
+    setRoutesField(routesData)
+
+    const lastSaleID = await fetchLastSaleID()
+    setSaleID(lastSaleID+1)
+    setTagID(getSaleID())
+
+    switchModeTime(dateField, dateCheck.checked)
+    switchModeTime(timeField, timeCheck.checked)
+
+    renderAllSales()
+}
+
+async function fetchEmployeesData(){
+    const employeesData = await window.electronAPI.selectEmployees()
+    return employeesData
+}
+
+async function fetchRoutesData(){
+    const routesData = await window.electronAPI.selectRoutes()
+    return routesData
+}
+
+async function fetchLastSaleID(){
     let lastSaleID = await window.electronAPI.selectLastSaleID()
-    saleID = lastSaleID + 1
-    setTagID(saleID)
+    return lastSaleID
 }
 
 async function getProducts(){
     productsData = await window.electronAPI.selectProducts()
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún producto"
-    addOptions(productsDescription, productsData, "descrip", emptyOption)
+    setOptionsOnSelectField(productsDescription, productsData, "descrip", emptyOption)
 }
 
 async function confirmToExit(goToSomewhere, swalIcon){
@@ -392,11 +423,11 @@ buttonShowOptions.onclick = function () {
 }
 
 dateCheck.addEventListener('click', () => {
-    manageCheck(dateField, dateCheck.checked)
+    switchModeTime(dateField, dateCheck.checked)
 })
 
 timeCheck.addEventListener('click', () => {
-    manageCheck(timeField, timeCheck.checked)
+    switchModeTime(timeField, timeCheck.checked)
 })
 
 // Clic para abrir el modal del registro para el nuevo producto
@@ -643,9 +674,4 @@ window.addEventListener('load', () => {
     })
 })
 
-getEmployees()
-getRoutes()
-getLastSaleID()
-manageCheck(dateField, dateCheck.checked)
-manageCheck(timeField, timeCheck.checked)
-renderAllSales()
+init()

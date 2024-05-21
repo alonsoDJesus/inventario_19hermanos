@@ -308,12 +308,50 @@ hgroup{
     transition: .1s ease all;
 }
 
+.completingsale__floatbutton{
+    background-color: var(--forth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 4rem;
+    height: 4rem;
+    box-shadow: 0 0.3rem 0.5rem black;
+    z-index: 100;
+    position: fixed;
+    right: 5.5rem;
+    transition: .5s;
+    transform: translate(0, 0);
+    bottom: 2rem;
+}
+
+.floatbutton__option1-active{
+    background-color: var(--secondary);
+    transition: .5s;
+    transform: translate(0, -120%);
+}
+
+.floatbutton__option2-active{
+    background-color: var(--secondary);
+    transition: .5s;
+    transform: translate(0, -240%);
+}
+
+.completingsale__floatbutton:hover{
+    background-color: var(--forth_o);
+}
+
 .position-relative{
     position: relative;
 }
 
 .h-1rem{
     height: 1rem;
+}
+
+.h-2rem{
+    height: 2rem;
 }
 
 .bg-primary{

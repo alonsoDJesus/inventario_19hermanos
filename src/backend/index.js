@@ -2,7 +2,7 @@ const { app, screen, ipcMain } = require('electron')
 const { createWindow, getEmployees, getRoutes, getLastSaleID, getProducts, setNewShift, setNewSaleWithShift, setSaleDetail } = require('./main')
 const { getInitialSales } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
-const { getSaleById, getSaleDetail, getSaleDetailById } = require('./controllers/finalizar-venta')
+const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
 const { getDirName } = require('../../ruta')
 
 require('electron-reload')(getDirName())
@@ -50,6 +50,14 @@ app.whenReady().then( () => {
 
     ipcMain.handle('insert:saleDetail', async (event, saleDetail) => {
         return await setSaleDetail(saleDetail)
+    }),
+
+    ipcMain.handle('update:sale', async (event, saleUpdated, id) => {
+        return await updateSaleById(saleUpdated, id)
+    }),
+
+    ipcMain.handle('update:saleDetail', async (event, saleUpdated, saleId, productId) => {
+        return await updateSaleDetailById(saleUpdated, saleId, productId)
     })
 
     const primaryDisplay = screen.getPrimaryDisplay()

@@ -1,14 +1,34 @@
+const buttonOption1 = document.getElementById('buttonOption1')
+const buttonOption2 = document.getElementById('buttonOption2')
+const buttonOptions = document.getElementById('buttonShowOptions')
+
 const timeFinishField = document.getElementById('timeFinish')
 const fieldsCheck = {
     timeFinish: false
 }
+const optionsFormat = {
+    style: 'currency',
+    currency: 'USD'
+}
+const format = new Intl.NumberFormat('en-US', optionsFormat);
 
 let intervalID
-let saleDataToUpdate = {}
-let saleDetailToUpdate = {}
-let saleAddends = [0]
-let costAddends = [0]
-let utilityAddends = [0]
+let saleAddends = [0.0]
+let costAddends = [0.0]
+let utilityAddends = [0.0]
+let saleID = -1
+
+function getStatusValidationFields(){
+    const initialValue = true
+    const fieldsCheckArray = Object.values(fieldsCheck)
+    const statusValidation = fieldsCheckArray.reduce( (acumulator, currentValue) => {
+        return acumulator && currentValue
+    },
+    initialValue
+    )
+
+    return statusValidation
+}
 
 function getTotalAmountOf(addendsArray){
     const totalAmount = addendsArray.reduce( (acumulator, currentValue) => {
@@ -45,6 +65,10 @@ function getUtilityAddends(){
 function setTitle(text){
     const title = document.getElementById('title')
     title.innerText = text
+}
+
+function setSaleID(index){
+    saleID = index
 }
 
 function setTagID(saleID){
@@ -92,6 +116,10 @@ function setFieldTimeFinish(time){
     establecerCorrecto('timeFinish', timeFinishField)
 }
 
+function getFieldTimeFinish(){
+    return timeFinishField.value
+}
+
 function getInitialPieces(index){
     const paragraphInitialPieces = document.getElementById(`paragraphInitialPieces${index}`)
     return parseInt(paragraphInitialPieces.innerText)
@@ -109,57 +137,99 @@ function getSaledPieces(index){
 
 function getSalePrice(index) {
     const paragraphSalePrice = document.getElementById(`paragraphSalePrice${index}`)
-    return parseFloat(paragraphSalePrice.innerText.replace('$', '').trim())
+    return parseFloat(paragraphSalePrice.innerText.replace('$', '').replace(',','').trim()).toFixed(2)
 }
 
 function getCostPrice(index) {
     const paragraphCostPrice = document.getElementById(`paragraphCostPrice${index}`)
-    return parseFloat(paragraphCostPrice.innerText.replace('$', '').trim())
+    return parseFloat(paragraphCostPrice.innerText.replace('$', '').replace(',', '').trim()).toFixed(2)
 }
 
 function setTotalSalePerProduct(salePrice, saledPieces, index) {
     const paragraphSaleData = document.getElementById(`paragraphSaleData${index}`)
-    paragraphSaleData.innerText = `$ ${(salePrice * saledPieces).toFixed(2)}`
+    paragraphSaleData.innerText = `${format.format((salePrice * saledPieces).toFixed(2))}`
 }
 
 function getTotalSalePerProduct(index){
     const paragraphSaleData = document.getElementById(`paragraphSaleData${index}`)
-    return parseFloat(paragraphSaleData.innerText.replace('$', '').trim())
+    return parseFloat(paragraphSaleData.innerText.replace('$', '').replace(',', '').trim())
 }
 
 function setTotalCostPerProduct(costPrice, saledPieces, index) {
     const paragraphCostData = document.getElementById(`paragraphCostData${index}`)
-    paragraphCostData.innerText = `$ ${(costPrice * saledPieces).toFixed()}`
+    paragraphCostData.innerText = `${format.format((costPrice * saledPieces).toFixed(2))}`
 }
 
 function getTotalCostPerProduct(index){
     const paragraphCostData = document.getElementById(`paragraphCostData${index}`)
-    return parseFloat(paragraphCostData.innerText.replace('$', '').trim())
+    return parseFloat(paragraphCostData.innerText.replace('$', '').replace(',','').trim())
 }
 
 function setTotalUtilityPerProduct(totalSale, totalCost, index) {
     const paragraphUtilityData = document.getElementById(`paragraphUtilityData${index}`)
-    paragraphUtilityData.innerText = `$ ${(totalSale - totalCost).toFixed(2)}`
+    paragraphUtilityData.innerText = `${format.format((totalSale - totalCost).toFixed(2))}`
 }
 
 function getTotalUtilityPerProduct(index){
     const paragraphUtilityData = document.getElementById(`paragraphUtilityData${index}`)
-    return parseFloat(paragraphUtilityData.innerText.replace('$', '').trim())
+    return parseFloat(paragraphUtilityData.innerText.replace('$', '').replace(',', '').trim())
 }
 
 function setFinalSaleData(value) {
     const finalSaleDataField = document.getElementById('finalSaleData')
-    finalSaleDataField.value = `$ ${parseFloat(value).toFixed(2)}`
+    finalSaleDataField.value = `${format.format(parseFloat(value).toFixed(2))}`
+}
+
+function getFinalSaleData() {
+    const finalSaleDataField = document.getElementById('finalSaleData')
+    return parseFloat(finalSaleDataField.value.replace('$', '').replace(',', '').trim())
 }
 
 function setFinalCostData(value) {
     const finalCostDataField = document.getElementById('finalCostData')
-    finalCostDataField.value = `$ ${parseFloat(value).toFixed(2)}`
+    finalCostDataField.value = `${format.format(parseFloat(value).toFixed(2))}`
+}
+
+function getFinalCostData(value) {
+    const finalCostDataField = document.getElementById('finalCostData')
+    return parseFloat(finalCostDataField.value.replace('$', '').replace(',', '').trim())
 }
 
 function setFinalUtilityData(value) {
     const finalUtilityDataField = document.getElementById('finalUtilityData')
-    finalUtilityDataField.value = `$ ${parseFloat(value).toFixed(2)}`
+    finalUtilityDataField.value = `${format.format(parseFloat(value).toFixed(2))}`
+}
+
+function getFinalUtilityData(value) {
+    const finalUtilityDataField = document.getElementById('finalUtilityData')
+    return parseFloat(finalUtilityDataField.value.replace('$', '').replace(',', '').trim())
+}
+
+function cancelSaleDetail() {
+    goToSomeWhere = async function(){
+        await window.electronAPI.navigateTo(links.home)
+    }
+    confirmToExit(goToSomeWhere, "error")
+}
+
+function setButtonsOptions(isReadOnly = false){
+    
+    if (!isReadOnly) {
+        buttonOption1.children[0].src = icons.checkWhite
+        buttonOption1.addEventListener('click', () => {
+            saveSaleDetail()
+        })
+
+        buttonOption2.children[0].src = icons.xmarkWhite
+        buttonOption2.addEventListener('click', () => {
+            cancelSaleDetail()
+        })
+    }
+
+    buttonOptions.onclick = function () {
+        buttonOption1.classList.toggle('floatbutton__option1-active')
+        buttonOption2.classList.toggle('floatbutton__option2-active')
+    }
 }
 
 function getCurrentTime() {
@@ -224,8 +294,6 @@ function regulateQuantity(field, index){
             setFinalSaleData(getTotalAmountOf(getSaleAddends()))
             setFinalCostData(getTotalAmountOf(getCostAddends()))
             setFinalUtilityData(getTotalAmountOf(getUtilityAddends()))
-
-            console.log(getTotalAmountOf(getUtilityAddends()))
         }
     } catch (error) { // Si ocurre algun error, entonces
         if (error instanceof TypeError) {
@@ -272,6 +340,7 @@ function renderSaleDetail(isReadOnly = false) {
         // Elementos del data
         const divDescription = document.createElement('div')
         divDescription.classList.add('data')
+        divDescription.classList.add('description')
         divDescription.id = saleDetailElement.idProducto
 
         const paragraphDescription = document.createElement('p')
@@ -301,6 +370,8 @@ function renderSaleDetail(isReadOnly = false) {
         inputFinalPieces.classList.add('bg-primary')
         inputFinalPieces.readOnly = isReadOnly
         inputFinalPieces.id = `finalPieces${index+1}`
+
+        fieldsCheck[inputFinalPieces.id] = false // Inicialización de claves en el objeto de las validaciones
 
         const divValidation = document.createElement('div')
         divValidation.classList.add('formulario__validacion-estado')
@@ -333,8 +404,8 @@ function renderSaleDetail(isReadOnly = false) {
         divCostPrice.classList.add('data')
 
         const paragraphCostPrice = document.createElement('p')
-        paragraphCostPrice.innerText = `$ ${saleDetailElement.precioCosto}`
-        paragraphCostPrice.id = `paragraphCostPrice${index+1}`
+        paragraphCostPrice.innerText = `${format.format(parseFloat(saleDetailElement.precioVenta).toFixed(2))}`
+        paragraphCostPrice.id = `paragraphSalePrice${index+1}`
 
         divCostPrice.appendChild(paragraphCostPrice)
         cardData.appendChild(divCostPrice)
@@ -343,8 +414,8 @@ function renderSaleDetail(isReadOnly = false) {
         divSalePrice.classList.add('data')
 
         const paragraphSalePrice = document.createElement('p')
-        paragraphSalePrice.innerText = `$ ${saleDetailElement.precioVenta}`
-        paragraphSalePrice.id = `paragraphSalePrice${index+1}`
+        paragraphSalePrice.innerText = `${format.format(parseFloat(saleDetailElement.precioCosto).toFixed(2))}`
+        paragraphSalePrice.id = `paragraphCostPrice${index+1}`
 
         divSalePrice.appendChild(paragraphSalePrice)
         cardData.appendChild(divSalePrice)
@@ -456,8 +527,51 @@ async function getParams() {
     return await window.electronAPI.getParams("completingSaleParams")
 }
 
+async function deleteParams() {
+    return await window.electronAPI.deleteParams("completingSaleParams")
+}
+
 async function getSaleDataById(id){
     return await window.electronAPI.selectSaleById(id)
+}
+
+async function saveSaleDetail() {
+    const statusValidation = getStatusValidationFields()
+
+    if (statusValidation){
+        const saleDataToUpdate = {
+            Hora_fin__venta: getFieldTimeFinish(),
+            Venta_total_global__venta: getFinalSaleData(),
+            Costo_total_global__venta: getFinalCostData(),
+            Utilidad_total_global__venta: getFinalUtilityData()
+        }
+
+        const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, saleID)
+
+        if(typeof saleUpdatedID == "number" && saleUpdatedID == 1){
+            const cardFields = document.querySelectorAll('.card__field')
+            const productsIds = document.querySelectorAll('.description')
+            const confirmationsAffectedRows = []
+
+            cardFields.forEach( async (cardField, index) => {
+                const saleDetailToUpdate = {
+                    Cantidad_piezas_fin__detalleventa: parseInt(cardField.value),
+                    Cantidad_piezas_vendidas__detalleventa: getSaledPieces(index+1),
+                    Venta_total__detalleventa: getTotalSalePerProduct(index+1),
+                    Costo_total__detalleventa: getTotalCostPerProduct(index+1),
+                    Utilidad__detalleventa: getTotalUtilityPerProduct(index+1)
+                }
+
+                const productId = parseInt(productsIds[index].id)
+                await window.electronAPI.updateSaleDetail(saleDetailToUpdate, saleID, productId)
+            }) 
+            
+            
+        }
+        
+    }
+    //const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, )
+
 }
 
 async function init(){
@@ -480,6 +594,8 @@ async function init(){
             setTagID(params.index)
             switchModeTime(checkTime.checked)
             renderSaleDetail()
+            setButtonsOptions()
+            setSaleID(params.index)
 
             checkTime.addEventListener('click', () => {
                 switchModeTime(checkTime.checked)
@@ -516,10 +632,13 @@ async function confirmToExit(goToSomewhere, swalIcon){
         switch (value) {
 
             case true:
+                await deleteParams()
                 await goToSomewhere()
                 break;
          
             default:
+                buttonOption1.classList.toggle('floatbutton__option1-active')
+                buttonOption2.classList.toggle('floatbutton__option2-active')
                 break;
           }
     })

@@ -26,6 +26,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return params
     },
 
+    deleteParams: (paramID) => {
+        sessionStorage.removeItem(paramID)
+    },
+
     prepareSaleDetailOnSessionStorage: () => {
         const sessionStorageSales = sessionStorage.getItem("addedSales")
     
@@ -103,5 +107,13 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     insertSaleDetail: (saleDetail) => {
         return ipcRenderer.invoke('insert:saleDetail', saleDetail) 
+    },
+
+    updateSale: (saleUpdated, id) => {
+        return ipcRenderer.invoke('update:sale', saleUpdated, id) 
+    },
+
+    updateSaleDetail: (saleUpdated, saleId, productId) => {
+        return ipcRenderer.invoke('update:saleDetail', saleUpdated, saleId, productId) 
     },
 })

@@ -55,8 +55,37 @@ async function getSaleDetailById(id){
     }
 }
 
+async function updateSaleById(saleUpdated, id){
+
+    try {
+        const conn = await getConnection()
+        const saleUpdate = await conn.query(`UPDATE venta SET ? WHERE Venta_PK = ?`, [saleUpdated, id])
+
+        return saleUpdate.affectedRows
+    } catch (error) {
+        return error
+    }
+}
+
+async function updateSaleDetailById(saleUpdated, saleId, productId){
+
+    try {
+        const conn = await getConnection()
+        const saleDetailUpdate = await conn.query(`
+            UPDATE detalleventa SET ? 
+            WHERE 
+                Venta_FK__detalleventa = ? AND Producto_FK__detalleventa = ?`, 
+        [saleUpdated, saleId, productId])
+
+        return saleDetailUpdate.affectedRows
+    } catch (error) {
+        return error
+    }
+}
 
 module.exports = {
     getSaleById,
-    getSaleDetailById
+    getSaleDetailById,
+    updateSaleById,
+    updateSaleDetailById
 }

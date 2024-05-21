@@ -12,6 +12,8 @@ const icons = {
     hourglassStartPrimary: '../../../icons/hourglass-start-solid-primary.svg',
     hourglassEndPrimary: '../../../icons/hourglass-end-solid-primary.svg',
     addressCardPrimary: '../../../icons/address-card-solid-primary.svg',
+    checkWhite: '../../../icons/check-solid-white.svg',
+    xmarkWhite: '../../../icons/xmark-solid-white.svg'
 }
 
 const links = {

@@ -2,8 +2,6 @@ const employees = document.getElementById('employees')
 const routes = document.getElementById('routes')
 const dateField = document.getElementById('date')
 const timeField = document.getElementById('time')
-const dateCheck = document.getElementById('checkDate')
-const timeCheck = document.getElementById('checkTime')
 const buttonAddSale = document.getElementById('buttonAddSale')
 const layoutForm = document.getElementById('layoutForm')
 const buttonCloseModal = document.getElementById('buttonCloseModal')
@@ -511,20 +509,21 @@ async function saveSaleDetail(){
 }
 
 async function init(){
-    const checkTime = document.getElementById('checkTime')
-    const checkDate = document.getElementById('checkDate')
-    const date = document.getElementById('date')
-    const time = document.getElementById('time')
     const params = await getParams()
     const employeesData = await fetchEmployeesData()
     const routesData = await fetchRoutesData()
-    const lastSaleID = await fetchLastSaleID()
 
     switch (params.editingStatusOfNewSale) {
         case true:
             break;
     
         default:
+            const checkTime = document.getElementById('checkTime')
+            const checkDate = document.getElementById('checkDate')
+            const date = document.getElementById('date')
+            const time = document.getElementById('time')
+            const lastSaleID = await fetchLastSaleID()
+            
             setSaleID(lastSaleID+1)
             setTagID(getSaleID())
             setEmployeesField(employeesData)
@@ -533,17 +532,17 @@ async function init(){
             switchModeTime(time, checkTime.checked)
             renderAllSales()
             setButtonsOptions()
+
+            checkDate.addEventListener('click', () => {
+                switchModeTime(date, checkDate.checked)
+            })
+            
+            checkTime.addEventListener('click', () => {
+                switchModeTime(time, checkTime.checked)
+            })
             break;
     }
 }
-
-dateCheck.addEventListener('click', () => {
-    switchModeTime(dateField, dateCheck.checked)
-})
-
-timeCheck.addEventListener('click', () => {
-    switchModeTime(timeField, timeCheck.checked)
-})
 
 // Clic para abrir el modal del registro para el nuevo producto
 buttonAddSale.addEventListener('click', async () => {

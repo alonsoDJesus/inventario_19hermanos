@@ -350,32 +350,6 @@ async function getParams() {
     return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
 
-async function init(){
-    const checkTime = document.getElementById('checkTime')
-    const checkDate = document.getElementById('checkDate')
-    const date = document.getElementById('date')
-    const time = document.getElementById('time')
-    const params = await getParams()
-    const employeesData = await fetchEmployeesData()
-    const routesData = await fetchRoutesData()
-    const lastSaleID = await fetchLastSaleID()
-
-    switch (params.editingStatusOfNewSale) {
-        case true:
-            break;
-    
-        default:
-            setSaleID(lastSaleID+1)
-            setTagID(getSaleID())
-            setEmployeesField(employeesData)
-            setRoutesField(routesData)
-            switchModeTime(date, checkDate.checked)
-            switchModeTime(time, checkTime.checked)
-            renderAllSales()
-            break;
-    }
-}
-
 async function fetchEmployeesData(){
     const employeesData = await window.electronAPI.selectEmployees()
     return employeesData
@@ -423,9 +397,14 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
         switch (value) {
 
             case true:
-                sessionStorage.removeItem("index")
-                sessionStorage.removeItem("addedSales")
-                await goToSomewhere()
+                if (specialTask != undefined) {
+                    await specialTask()
+                }else{
+                    sessionStorage.removeItem("index")
+                    sessionStorage.removeItem("addedSales")
+                    await goToSomewhere()
+                }
+                
                 break;
          
             default:
@@ -435,6 +414,33 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
           }
     })
 }
+
+async function init(){
+    const checkTime = document.getElementById('checkTime')
+    const checkDate = document.getElementById('checkDate')
+    const date = document.getElementById('date')
+    const time = document.getElementById('time')
+    const params = await getParams()
+    const employeesData = await fetchEmployeesData()
+    const routesData = await fetchRoutesData()
+    const lastSaleID = await fetchLastSaleID()
+
+    switch (params.editingStatusOfNewSale) {
+        case true:
+            break;
+    
+        default:
+            setSaleID(lastSaleID+1)
+            setTagID(getSaleID())
+            setEmployeesField(employeesData)
+            setRoutesField(routesData)
+            switchModeTime(date, checkDate.checked)
+            switchModeTime(time, checkTime.checked)
+            renderAllSales()
+            break;
+    }
+}
+
 
 buttonShowOptions.onclick = function () {
     buttonSave.classList.toggle('button_save_active')
@@ -580,71 +586,47 @@ buttonSave.addEventListener('click', async () => {
     const statusValidation = getStatusValidationFields()
 
     if (saleDetail && statusValidation) {
+        const saveSaleDetailTask = async function () {
+            const newShift = {
+                Ruta_FK__turno: routes.selectedIndex,
+                Distribuidor_FK__turno: employees.selectedIndex
+            }
 
-        await swal({
-            icon: "warning",
-            title: "¿Seguro de guardar los cambios?",
-            padding: '1.4rem',
-            buttons: {
-                cancel: {
-                    text: 'Cancelar',
-                    value: null,
-                    visible: true,
-                    closeModal: true
-                },
-    
-                confirm: {
-                    text: "Aceptar",
-                    value: true,
-                    visible: true,
-                    closeModal: true
+            const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
+
+            if (typeof shiftInsertID == "number") {
+                const newSaleWithShift = {
+                    Venta_PK: saleID,
+                    Fecha__venta: dateField.value,
+                    Hora_inicio__venta: timeField.value,
+                    Turno_FK__venta: shiftInsertID
+                }
+
+                const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
+                if (typeof saleWithShiftInsertID == "number") {
+                    await window.electronAPI.insertSaleDetail(saleDetail)
+
+                    await swal({
+                        title: "Venta iniciada exitosamente",
+                        button: {
+                            text: 'Aceptar'
+                        }
+                    })
+
+                    sessionStorage.removeItem("index")
+                    sessionStorage.removeItem("addedSales")
+                    await window.electronAPI.navigateTo(links.home)
                 }
             }
-        }).then(async (value) => {
-            switch (value) {
- 
-                case true:
-
-                    const newShift = {
-                        Ruta_FK__turno: routes.selectedIndex,
-                        Distribuidor_FK__turno: employees.selectedIndex
-                    }
-
-                    const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
-
-                    if (typeof shiftInsertID == "number") {
-                        const newSaleWithShift = {
-                            Venta_PK: saleID,
-                            Fecha__venta: dateField.value,
-                            Hora_inicio__venta: timeField.value,
-                            Turno_FK__venta: shiftInsertID
-                        }
-
-                        const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
-                        if (typeof saleWithShiftInsertID == "number") {
-                            await window.electronAPI.insertSaleDetail(saleDetail)
-
-                            await swal({
-                                title: "Venta iniciada exitosamente",
-                                button: {
-                                    text: 'Aceptar'
-                                }
-                            })
-
-                            sessionStorage.removeItem("index")
-                            sessionStorage.removeItem("addedSales")
-                            await window.electronAPI.navigateTo(links.home)
-                        }
-                    }
-
-                    break;
-             
-                default:
-                    buttonSave.classList.toggle('button_save_active')
-                    buttonCancel.classList.toggle('button_cancel_active')
-                    break;
-              }
-        })
+        }
+        
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres guardar los datos?',
+            text: 'Los datos que ingresaste deben ser correctos',
+        }
+    
+        showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
     }else{
         const errorMessageForm = document.getElementById('errorMessageForm')
         errorMessageForm.classList.add('formulario__data-error')

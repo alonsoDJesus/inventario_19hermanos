@@ -444,8 +444,8 @@ buttonAddSale.addEventListener('click', async () => {
     let modalFormFields = []
     
     // En una lista se almacenan los campos que serán limpiados de sus validaciones
-    modalFormFields.push(fields[4])
     modalFormFields.push(fields[5])
+    modalFormFields.push(fields[6])
 
     modalFormFields.forEach(modalField => {
         // De cada campo se necesita su nombre y el propio campo para su limpieza
@@ -500,7 +500,7 @@ routes.addEventListener('change', () => {
 // Clic para seleccionar algun producto
 productsDescription.addEventListener('change', () => {
     let modalFormFields = []
-    modalFormFields.push(fields[5])
+    modalFormFields.push(fields[6])
     clearValidations(modalFormFields[0].name, modalFormFields[0])
     // Si no está seleccionado ningun producto
     if (productsDescription.selectedIndex == 0) {
@@ -539,7 +539,7 @@ productsDescription.addEventListener('change', () => {
             setDataOnFields()
 
             let modalFormFields = []
-            modalFormFields.push(fields[5])
+            modalFormFields.push(fields[6])
             clearValidations(modalFormFields[0].name, modalFormFields[0])
         }
     }

@@ -400,3 +400,21 @@ label{
     font-family: 'MPLUS1Code-Regular';
 }
 
+#description{
+    width: 81%;
+    border-top-left-radius: 0rem;
+    border-bottom-left-radius: 0rem;
+    display: inline-block;
+}
+
+#code{
+    width: 18%;
+    border-top-right-radius: 0rem;
+    border-bottom-right-radius: 0rem;
+    display: inline-block;
+    margin-right: 0;
+}
+
+#code::placeholder{
+    color: rgba(255, 255, 255, 0.648);
+}

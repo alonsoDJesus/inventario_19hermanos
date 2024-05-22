@@ -43,6 +43,7 @@ async function getProducts(){
     const products = await conn.query(`
         SELECT 	Producto_PK as id,
             Descripcion__producto as descrip,
+            Codigo__producto as codigo,
             Cantidad_piezas_por_caja__producto as piecesInBox,
             Precio_costo__producto as cost,
             Precio_venta__producto as sale,

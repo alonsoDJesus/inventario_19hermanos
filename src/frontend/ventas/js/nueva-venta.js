@@ -4,7 +4,6 @@ const dateField = document.getElementById('date')
 const timeField = document.getElementById('time')
 const layoutForm = document.getElementById('layoutForm')
 const buttonCloseModal = document.getElementById('buttonCloseModal')
-const buttonAceptModal = document.getElementById('buttonAceptModal')
 const buttonCancelModal = document.getElementById('buttonCancelModal')
 const lockFieldIcons = document.querySelectorAll('.lock-field-icon')
 const productsDescription = document.getElementById('description')
@@ -525,6 +524,7 @@ async function init() {
             const checkTime = document.getElementById('checkTime')
             const checkDate = document.getElementById('checkDate')
             const buttonAddSale = document.getElementById('buttonAddSale')
+            const buttonAceptModal = document.getElementById('buttonAceptModal')
             const date = document.getElementById('date')
             const time = document.getElementById('time')
             const lastSaleID = await fetchLastSaleID()
@@ -570,36 +570,36 @@ async function init() {
                     clearValidations(modalField.name, modalField)
                 })
             })
+
+            buttonAceptModal.addEventListener('click', async() => {
+    
+                if (fieldsCheck.description && fieldsCheck.quantity) {
+                    const addedSale = {
+                        Venta_FK__detalleventa: saleID,
+                        Producto_FK__detalleventa: productsDescription.selectedIndex,
+                        Cantidad_piezas_inicio__detalleventa: quantity.value,
+                        Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
+                        Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
+                        description: productsDescription.value,
+                        quantityBoxes: boxes.value
+                    }
+                    
+                    //setAddedSalesOnStorage(addedSale)
+            
+                    // Inserción de la venta en Session Storage
+                    const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
+                    saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
+                    await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
+                    
+                    layoutForm.classList.add('display-none')
+                    employees.focus()
+                    renderAllSales()
+                }
+            })
             break;
 
     }
 }
-
-buttonAceptModal.addEventListener('click', async() => {
-    
-    if (fieldsCheck.description && fieldsCheck.quantity) {
-        const addedSale = {
-            Venta_FK__detalleventa: saleID,
-            Producto_FK__detalleventa: productsDescription.selectedIndex,
-            Cantidad_piezas_inicio__detalleventa: quantity.value,
-            Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
-            Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
-            description: productsDescription.value,
-            quantityBoxes: boxes.value
-        }
-        
-        //setAddedSalesOnStorage(addedSale)
-
-        // Inserción de la venta en Session Storage
-        const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
-        saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
-        await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
-        
-        layoutForm.classList.add('display-none')
-        employees.focus()
-        renderAllSales()
-    }
-})
 
 buttonCloseModal.addEventListener('click', () => {
     layoutForm.classList.add('display-none')

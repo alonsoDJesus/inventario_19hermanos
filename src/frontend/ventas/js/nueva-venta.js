@@ -17,8 +17,8 @@ const cost = document.getElementById('cost')
 const sale = document.getElementById('sale')
 const stock= document.getElementById('stock')
 const boxes = document.getElementById('boxes')
-const buttonSave = document.getElementById('buttonSave')
-const buttonCancel = document.getElementById('buttonCancel')
+const buttonOption1 = document.getElementById('buttonOption1')
+const buttonOption2 = document.getElementById('buttonOption2')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
 /*
     Objeto para los campos:
@@ -346,6 +346,40 @@ function setRoutesField(routesData, selectedIndex = 0) {
     setOptionsOnSelectField(routes, routesData, "ruta", emptyOption, selectedIndex)
 }
 
+function cancelSaleDetail(){
+    const confirmContent = {
+        icon: 'warning',
+        title: '¿Seguro que quieres salir?',
+        text: 'Todo su avance se perderá',
+    }
+
+    goToSomeWhere = async function(){
+        await window.electronAPI.navigateTo(links.home)
+    }
+
+    showSwalConfirm(goToSomeWhere, confirmContent)
+}
+
+function setButtonsOptions(isReadOnly = false){
+    
+    if (!isReadOnly) {
+        buttonOption1.children[0].src = icons.checkWhite
+        buttonOption1.addEventListener('click', async () => {
+            await saveSaleDetail()
+        })
+
+        buttonOption2.children[0].src = icons.xmarkWhite
+        buttonOption2.addEventListener('click', () => {
+            cancelSaleDetail()
+        })
+    }
+
+    buttonShowOptions.onclick = function () {
+        buttonOption1.classList.toggle('button_option1_active')
+        buttonOption2.classList.toggle('button_option2_active')
+    }
+}
+
 async function getParams() {
     return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
@@ -408,11 +442,72 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
                 break;
          
             default:
-                buttonSave.classList.remove('button_save_active')
-                buttonCancel.classList.remove('button_cancel_active')
+                buttonOption1.classList.remove('button_save_active')
+                buttonOption2.classList.remove('button_cancel_active')
                 break;
           }
     })
+}
+
+async function saveSaleDetail(){
+    const saleDetail = await window.electronAPI.getFromSessionStorage("addedSales")
+    const statusValidation = getStatusValidationFields()
+
+    if (saleDetail && statusValidation) {
+        const saveSaleDetailTask = async function () {
+            const newShift = {
+                Ruta_FK__turno: routes.selectedIndex,
+                Distribuidor_FK__turno: employees.selectedIndex
+            }
+
+            const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
+
+            if (typeof shiftInsertID == "number") {
+                const newSaleWithShift = {
+                    Venta_PK: saleID,
+                    Fecha__venta: dateField.value,
+                    Hora_inicio__venta: timeField.value,
+                    Turno_FK__venta: shiftInsertID
+                }
+
+                const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
+                if (typeof saleWithShiftInsertID == "number") {
+                    await window.electronAPI.insertSaleDetail(saleDetail)
+
+                    await swal({
+                        title: "Venta iniciada exitosamente",
+                        button: {
+                            text: 'Aceptar'
+                        }
+                    })
+
+                    sessionStorage.removeItem("index")
+                    sessionStorage.removeItem("addedSales")
+                    await window.electronAPI.navigateTo(links.home)
+                }
+            }
+        }
+        
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres guardar los datos?',
+            text: 'Los datos que ingresaste deben ser correctos',
+        }
+    
+        showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
+    }else{
+        const errorMessageForm = document.getElementById('errorMessageForm')
+        errorMessageForm.classList.add('formulario__data-error')
+        errorMessageForm.classList.remove('display-none')
+
+        buttonOption1.classList.toggle('button_save_active')
+        buttonOption2.classList.toggle('button_cancel_active')
+
+        setTimeout(() => {
+            errorMessageForm.classList.remove('formulario__data-error')
+            errorMessageForm.classList.add('display-none')
+        }, 5000);
+    }
 }
 
 async function init(){
@@ -437,14 +532,9 @@ async function init(){
             switchModeTime(date, checkDate.checked)
             switchModeTime(time, checkTime.checked)
             renderAllSales()
+            setButtonsOptions()
             break;
     }
-}
-
-
-buttonShowOptions.onclick = function () {
-    buttonSave.classList.toggle('button_save_active')
-    buttonCancel.classList.toggle('button_cancel_active')
 }
 
 dateCheck.addEventListener('click', () => {
@@ -578,83 +668,6 @@ quantity.addEventListener('keyup', (e) =>  {
 // Cada vez que cambia la cantidad por medio de los botones del campo
 quantity.addEventListener('change', (e) => {
     regulateQuantity()
-})
-
-// Click en el botón guardar
-buttonSave.addEventListener('click', async () => {
-    const saleDetail = await window.electronAPI.getFromSessionStorage("addedSales")
-    const statusValidation = getStatusValidationFields()
-
-    if (saleDetail && statusValidation) {
-        const saveSaleDetailTask = async function () {
-            const newShift = {
-                Ruta_FK__turno: routes.selectedIndex,
-                Distribuidor_FK__turno: employees.selectedIndex
-            }
-
-            const shiftInsertID = await window.electronAPI.insertNewShift(newShift)
-
-            if (typeof shiftInsertID == "number") {
-                const newSaleWithShift = {
-                    Venta_PK: saleID,
-                    Fecha__venta: dateField.value,
-                    Hora_inicio__venta: timeField.value,
-                    Turno_FK__venta: shiftInsertID
-                }
-
-                const saleWithShiftInsertID = await window.electronAPI.insertNewSaleWithShift(newSaleWithShift)
-                if (typeof saleWithShiftInsertID == "number") {
-                    await window.electronAPI.insertSaleDetail(saleDetail)
-
-                    await swal({
-                        title: "Venta iniciada exitosamente",
-                        button: {
-                            text: 'Aceptar'
-                        }
-                    })
-
-                    sessionStorage.removeItem("index")
-                    sessionStorage.removeItem("addedSales")
-                    await window.electronAPI.navigateTo(links.home)
-                }
-            }
-        }
-        
-        const confirmContent = {
-            icon: 'warning',
-            title: '¿Seguro que quieres guardar los datos?',
-            text: 'Los datos que ingresaste deben ser correctos',
-        }
-    
-        showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
-    }else{
-        const errorMessageForm = document.getElementById('errorMessageForm')
-        errorMessageForm.classList.add('formulario__data-error')
-        errorMessageForm.classList.remove('display-none')
-
-        buttonSave.classList.toggle('button_save_active')
-        buttonCancel.classList.toggle('button_cancel_active')
-
-        setTimeout(() => {
-            errorMessageForm.classList.remove('formulario__data-error')
-            errorMessageForm.classList.add('display-none')
-        }, 5000);
-    }
-    
-})
-
-buttonCancel.addEventListener('click', async() => {
-    const confirmContent = {
-        icon: 'warning',
-        title: '¿Seguro que quieres salir?',
-        text: 'Todo su avance se perderá',
-    }
-
-    goToSomeWhere = async function(){
-        await window.electronAPI.navigateTo(links.home)
-    }
-
-    showSwalConfirm(goToSomeWhere, confirmContent)
 })
 
 window.addEventListener('load', () => {

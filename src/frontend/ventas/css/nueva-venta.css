@@ -269,13 +269,13 @@ label{
     bottom: 2rem;
 }
 
-.button_save_active{
+.button_option1_active{
     background-color: var(--secondary);
     transition: .5s;
     transform: translate(0, -120%);
 }
 
-.button_cancel_active{
+.button_option2_active{
     background-color: var(--secondary);
     transition: .5s;
     transform: translate(0, -240%);

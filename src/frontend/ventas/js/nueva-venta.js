@@ -581,8 +581,8 @@ async function init() {
                 })
             })
 
-            buttonAceptModal.addEventListener('click', async() => {
-    
+            buttonAceptModal.addEventListener('click', async () => {
+
                 if (fieldsCheck.description && fieldsCheck.quantity) {
                     const addedSale = {
                         Venta_FK__detalleventa: saleID,
@@ -593,14 +593,14 @@ async function init() {
                         description: productsDescription.value,
                         quantityBoxes: boxes.value
                     }
-                    
+
                     //setAddedSalesOnStorage(addedSale)
-            
+
                     // Inserción de la venta en Session Storage
                     const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
                     saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
                     await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
-                    
+
                     toggleModalForm(false)
                     renderAllSales()
                 }
@@ -609,7 +609,7 @@ async function init() {
             buttonCloseModal.addEventListener('click', () => {
                 toggleModalForm(false)
             })
-            
+
             buttonCancelModal.addEventListener('click', () => {
                 toggleModalForm(false)
             })
@@ -617,38 +617,39 @@ async function init() {
             employees.addEventListener('change', () => {
                 employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
             })
-            
+
             routes.addEventListener('change', () => {
                 routes.selectedIndex != 0 ? establecerCorrecto('routes', routes) : establecerIncorrecto('routes', routes, 'Selecciona una ruta');
             })
+
+            // Clic para seleccionar algun producto
+            productsDescription.addEventListener('change', () => {
+                clearValidations(fields[5].name, fields[5])
+                clearValidations(fields[6].name, fields[6])
+                // Si no está seleccionado ningun producto
+                if (productsDescription.selectedIndex == 0) {
+                    establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido') // Señalalo como incorrecto
+                    clearDataFromFields() // Limpia los datos de los campos
+                } else { // Si ha sido seleccionado algún producto, entonces...
+
+                    const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
+                    const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales) : -1
+
+                    if ((productRepeated == undefined && auxAddedSales != null) || !auxAddedSales) { // Caso 1: Si hay intento de reptición de registro
+                        establecerCorrecto('description', productsDescription) // Señalalo como correcto
+                        clearDataFromFields()
+                        setDataOnFields()
+                    } else { // Caso 2: no hay intento de duplicación de registro
+                        establecerIncorrecto('description', productsDescription, 'Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
+                        clearDataFromFields() // Limpia los datos de los campos
+                    }
+                }
+            });
+            
             break;
 
     }
 }
-
-// Clic para seleccionar algun producto
-productsDescription.addEventListener('change', () => {
-    clearValidations(fields[5].name, fields[5])
-    clearValidations(fields[6].name, fields[6])
-    // Si no está seleccionado ningun producto
-    if (productsDescription.selectedIndex == 0) {
-        establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido') // Señalalo como incorrecto
-        clearDataFromFields() // Limpia los datos de los campos
-    }else{ // Si ha sido seleccionado algún producto, entonces...
-
-            const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
-            const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales) : -1
-
-            if ((productRepeated == undefined && auxAddedSales != null) || !auxAddedSales) { // Caso 1: Si hay intento de reptición de registro
-                establecerCorrecto('description', productsDescription) // Señalalo como correcto
-                clearDataFromFields()
-                setDataOnFields()
-            }else{ // Caso 2: no hay intento de duplicación de registro
-                establecerIncorrecto('description', productsDescription, 'Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
-                clearDataFromFields() // Limpia los datos de los campos
-            }
-    }
-});
 
 // Cada vez que el usuario escriba una cantidad
 quantity.addEventListener('keyup', (e) =>  {

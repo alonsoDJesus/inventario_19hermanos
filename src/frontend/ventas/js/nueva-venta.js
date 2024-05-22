@@ -613,64 +613,40 @@ async function init() {
             buttonCancelModal.addEventListener('click', () => {
                 toggleModalForm(false)
             })
+
+            employees.addEventListener('change', () => {
+                employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
+            })
+            
+            routes.addEventListener('change', () => {
+                routes.selectedIndex != 0 ? establecerCorrecto('routes', routes) : establecerIncorrecto('routes', routes, 'Selecciona una ruta');
+            })
             break;
 
     }
 }
 
-employees.addEventListener('change', () => {
-    employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
-})
-
-routes.addEventListener('change', () => {
-    routes.selectedIndex != 0 ? establecerCorrecto('routes', routes) : establecerIncorrecto('routes', routes, 'Selecciona una ruta');
-})
-
 // Clic para seleccionar algun producto
 productsDescription.addEventListener('change', () => {
-    let modalFormFields = []
-    modalFormFields.push(fields[6])
-    clearValidations(modalFormFields[0].name, modalFormFields[0])
+    clearValidations(fields[5].name, fields[5])
+    clearValidations(fields[6].name, fields[6])
     // Si no está seleccionado ningun producto
     if (productsDescription.selectedIndex == 0) {
         establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido') // Señalalo como incorrecto
         clearDataFromFields() // Limpia los datos de los campos
     }else{ // Si ha sido seleccionado algún producto, entonces...
-        // Vamos a revisar si este producto que quiero seleccionar ya existe
-        if (sessionStorage.getItem("addedSales")) { // Si tengo elementos guardados en mi storage, entonces hay que revisar
+
             const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
+            const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales) : -1
 
-            /* Comprobaré si el elemento que deseo agregar ya se encuentra en mi lista de ventas de la siguiente forma:
-            - El criterio de busqueda será el selected index ya que es el valor que determina las claves del objeto de
-            ventas registradas
-            - Si al colocar selected index como criterio de búsqueda me sale un valor existente (algo que no sea indefined) 
-            entonces quiere decir que si existe, por lo tanto, si hay intento de repetición de elemento
-            - Si al colocar selected index como criterio de búsqueda me sale undefined, quiere decir  que no hay intento
-            duplicación de registro
-            
-            Manos a la obra.. evaluemos ambos casos:*/
-            if (searchRepeatedSale(auxAddedSales) != undefined) { // Caso 1: Si hay intento de reptición de registro
-                establecerIncorrecto('description', productsDescription, 'Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
-                clearDataFromFields() // Limpia los datos de los campos
-            }else{ // Caso 2: no hay intento de duplicación de registro
+            if ((productRepeated == undefined && auxAddedSales != null) || !auxAddedSales) { // Caso 1: Si hay intento de reptición de registro
                 establecerCorrecto('description', productsDescription) // Señalalo como correcto
-
-                /* Viene otra tarea: hay dos posibles casos cuando has seleccionado correctamente un producto:
-                - Caso 1. El campo de la cantidad de elementos está vacío: Si es así solamente establece los datos en los campos
-                - Caso 2. El campo de la cantidad de elementos tiene datos: Asegurate que ese numero no sobrepase el stock y actualiza las demas cantidades*/
                 clearDataFromFields()
                 setDataOnFields()
+            }else{ // Caso 2: no hay intento de duplicación de registro
+                establecerIncorrecto('description', productsDescription, 'Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
+                clearDataFromFields() // Limpia los datos de los campos
             }
-        }else{ // Si no tengo elementos almacenados, no vale la pena buscar, simplemente...
-            // Realiza lo mismo que se manejó en el caso 2 donde no hay intento de duplicación de registros
-            establecerCorrecto('description', productsDescription) // Señalalo como correcto
-            clearDataFromFields()
-            setDataOnFields()
-
-            let modalFormFields = []
-            modalFormFields.push(fields[6])
-            clearValidations(modalFormFields[0].name, modalFormFields[0])
-        }
     }
 });
 

@@ -2,9 +2,6 @@ const employees = document.getElementById('employees')
 const routes = document.getElementById('routes')
 const dateField = document.getElementById('date')
 const timeField = document.getElementById('time')
-const layoutForm = document.getElementById('layoutForm')
-const buttonCloseModal = document.getElementById('buttonCloseModal')
-const buttonCancelModal = document.getElementById('buttonCancelModal')
 const lockFieldIcons = document.querySelectorAll('.lock-field-icon')
 const productsDescription = document.getElementById('description')
 const fields = document.querySelectorAll('.field')
@@ -383,6 +380,20 @@ function setButtonsOptions(isReadOnly = false){
     }
 }
 
+function toggleModalForm(openModal = true){
+    const layoutForm = document.getElementById('layoutForm')
+    const modalForm = document.getElementById('modalForm')
+
+    layoutForm.classList.toggle('display-none') // Se muestra el modal
+    modalForm.classList.toggle('display-none')
+    
+    if (openModal) {
+        modalForm.reset() // Limpieza del formulario
+    } else{
+        employees.focus()
+    }
+}
+
 async function getParams() {
     return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
@@ -525,6 +536,8 @@ async function init() {
             const checkDate = document.getElementById('checkDate')
             const buttonAddSale = document.getElementById('buttonAddSale')
             const buttonAceptModal = document.getElementById('buttonAceptModal')
+            const buttonCloseModal = document.getElementById('buttonCloseModal')
+            const buttonCancelModal = document.getElementById('buttonCancelModal')
             const date = document.getElementById('date')
             const time = document.getElementById('time')
             const lastSaleID = await fetchLastSaleID()
@@ -548,13 +561,10 @@ async function init() {
 
             // Clic para abrir el modal del registro para el nuevo producto
             buttonAddSale.addEventListener('click', async () => {
-                const modalForm = document.getElementById('modalForm')
                 const allProductsData = await fetchProductsData() // Colocación de productos en el select
                 let modalFormFields = []
 
-                layoutForm.classList.remove('display-none') // Se muestra el modal
-                modalForm.classList.remove('display-none')
-                modalForm.reset() // Limpieza del formulario
+                toggleModalForm()
 
                 productsData = allProductsData
                 setProductsField(allProductsData)
@@ -591,25 +601,22 @@ async function init() {
                     saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
                     await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
                     
-                    layoutForm.classList.add('display-none')
-                    employees.focus()
+                    toggleModalForm(false)
                     renderAllSales()
                 }
+            })
+
+            buttonCloseModal.addEventListener('click', () => {
+                toggleModalForm(false)
+            })
+            
+            buttonCancelModal.addEventListener('click', () => {
+                toggleModalForm(false)
             })
             break;
 
     }
 }
-
-buttonCloseModal.addEventListener('click', () => {
-    layoutForm.classList.add('display-none')
-    employees.focus()
-})
-
-buttonCancelModal.addEventListener('click', () => {
-    layoutForm.classList.add('display-none')
-    employees.focus()
-})
 
 employees.addEventListener('change', () => {
     employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');

@@ -36,6 +36,10 @@ let saleID = 0
 let intervalID = 0
 let productsData
 
+function getStatusValidationFields(){
+    return fieldsCheck.employees && fieldsCheck.routes
+}
+
 function setSaleID(newSaleID){
     saleID = newSaleID
 }
@@ -70,7 +74,7 @@ function setAddedSalesOnStorage(addedSale){
 }
 //----------------------------------------------------------------------------
 
-function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault){
+function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault, selectedIndex){
     selectField.innerHTML = ''
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
@@ -79,6 +83,8 @@ function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault){
         option.setAttribute('id', data.id)
         selectField.appendChild(option)
     });
+
+    selectField.selectedIndex = selectedIndex
 }
 
 function setTagID(saleID){
@@ -328,33 +334,46 @@ function searchRepeatedSale(addedSales){
     return mySale
 }
 
-function setEmployeesField(employeesData){
+function setEmployeesField(employeesData, selectedIndex = 0){
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún empleado"
-    setOptionsOnSelectField(employees, employeesData, "nombre", emptyOption)
+    setOptionsOnSelectField(employees, employeesData, "nombre", emptyOption, selectedIndex)
 }
 
-function setRoutesField(routesData) {
+function setRoutesField(routesData, selectedIndex = 0) {
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione alguna ruta"
-    setOptionsOnSelectField(routes, routesData, "ruta", emptyOption)
+    setOptionsOnSelectField(routes, routesData, "ruta", emptyOption, selectedIndex)
+}
+
+async function getParams() {
+    return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
 
 async function init(){
+    const checkTime = document.getElementById('checkTime')
+    const checkDate = document.getElementById('checkDate')
+    const date = document.getElementById('date')
+    const time = document.getElementById('time')
+    const params = await getParams()
     const employeesData = await fetchEmployeesData()
     const routesData = await fetchRoutesData()
-    
-    setEmployeesField(employeesData)
-    setRoutesField(routesData)
-
     const lastSaleID = await fetchLastSaleID()
-    setSaleID(lastSaleID+1)
-    setTagID(getSaleID())
 
-    switchModeTime(dateField, dateCheck.checked)
-    switchModeTime(timeField, timeCheck.checked)
-
-    renderAllSales()
+    switch (params.editingStatusOfNewSale) {
+        case true:
+            break;
+    
+        default:
+            setSaleID(lastSaleID+1)
+            setTagID(getSaleID())
+            setEmployeesField(employeesData)
+            setRoutesField(routesData)
+            switchModeTime(date, checkDate.checked)
+            switchModeTime(time, checkTime.checked)
+            renderAllSales()
+            break;
+    }
 }
 
 async function fetchEmployeesData(){
@@ -379,11 +398,11 @@ async function getProducts(){
     setOptionsOnSelectField(productsDescription, productsData, "descrip", emptyOption)
 }
 
-async function confirmToExit(goToSomewhere, swalIcon){
+async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = undefined){
     await swal({
-        icon: swalIcon,
-        title: "¿Seguro que quiere salir?",
-        text: 'Su avance se perderá :(',
+        icon: confirmContent.icon,
+        title: confirmContent.title,
+        text: confirmContent.text,
         padding: '1.4rem',
         buttons: {
             cancel: {
@@ -508,7 +527,7 @@ productsDescription.addEventListener('change', () => {
         clearDataFromFields() // Limpia los datos de los campos
     }else{ // Si ha sido seleccionado algún producto, entonces...
         // Vamos a revisar si este producto que quiero seleccionar ya existe
-        if (sessionStorage.length != 0) { // Si tengo elementos guardados en mi storage, entonces hay que revisar
+        if (sessionStorage.getItem("addedSales")) { // Si tengo elementos guardados en mi storage, entonces hay que revisar
             const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
 
             /* Comprobaré si el elemento que deseo agregar ya se encuentra en mi lista de ventas de la siguiente forma:
@@ -557,9 +576,10 @@ quantity.addEventListener('change', (e) => {
 
 // Click en el botón guardar
 buttonSave.addEventListener('click', async () => {
-    const saleDetail = JSON.parse(sessionStorage.getItem("addedSales"))
+    const saleDetail = await window.electronAPI.getFromSessionStorage("addedSales")
+    const statusValidation = getStatusValidationFields()
 
-    if (saleDetail && fieldsCheck.employees && fieldsCheck.routes) {
+    if (saleDetail && statusValidation) {
 
         await swal({
             icon: "warning",
@@ -642,7 +662,17 @@ buttonSave.addEventListener('click', async () => {
 })
 
 buttonCancel.addEventListener('click', async() => {
-    confirmToExit(goToHome, "error")
+    const confirmContent = {
+        icon: 'warning',
+        title: '¿Seguro que quieres salir?',
+        text: 'Todo su avance se perderá',
+    }
+
+    goToSomeWhere = async function(){
+        await window.electronAPI.navigateTo(links.home)
+    }
+
+    showSwalConfirm(goToSomeWhere, confirmContent)
 })
 
 window.addEventListener('load', () => {
@@ -653,24 +683,42 @@ window.addEventListener('load', () => {
     let goToSomeWhere;
     
     navHome.addEventListener('click', () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.home)
         }
-        confirmToExit(goToSomeWhere, "warning")
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 
     navNewSale.addEventListener('click', () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.newSale)
         }
-        confirmToExit(goToSomeWhere, "warning")
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 
     navCompletedSales.addEventListener('click', () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.completedSales)
         }
-        confirmToExit(goToSomeWhere, "warning")
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 })
 

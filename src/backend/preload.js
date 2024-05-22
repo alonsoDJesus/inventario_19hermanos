@@ -12,6 +12,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
                 const completingSaleParamsString = JSON.stringify(completingSaleParams)
                 sessionStorage.setItem("completingSaleParams", completingSaleParamsString)
                 break;
+            
+            case '../ventas/nueva-venta.html':
+                if (id==-1) {
+                    const newSaleParams = {
+                        editingStatusOfNewSale: false,
+                    }
+
+                    const newSaleParamsString = JSON.stringify(newSaleParams)
+                    sessionStorage.setItem("newSaleParams", newSaleParamsString)
+                }
+                break;
         
             default:
                 break;
@@ -20,7 +31,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
         location.href = url
     },
 
-    getParams: (paramID) => {
+    getFromSessionStorage: (paramID) => {
         let params = sessionStorage.getItem(paramID)
         params = JSON.parse(params)
         return params

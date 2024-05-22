@@ -524,7 +524,7 @@ async function setsaleDetailToUpdate(id){
 }
     
 async function getParams() {
-    return await window.electronAPI.getParams("completingSaleParams")
+    return await window.electronAPI.getFromSessionStorage("completingSaleParams")
 }
 
 async function deleteParams() {

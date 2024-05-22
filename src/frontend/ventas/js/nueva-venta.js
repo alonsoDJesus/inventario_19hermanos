@@ -286,30 +286,32 @@ function renderAllSales() {
 }
 
 // Regulador de la cantidad ingresada por el usario
-function regulateQuantity(){
+function regulateQuantity() {
     try {
         quantity.value = quantity.value.replace('-', '') // Evita numeros negativos
 
-        let product = searchProductByIdAttribute()
-        if (quantity.value <= product.stock && quantity.value != '') { // Si no excede al stock
-            // Afecta las cantidades de stock disponible y de cajas a enviar
-            stock.value = product.stock - quantity.value
-            boxes.value = Math.ceil(quantity.value / product.piecesInBox)
+        if (fieldsCheck.description) {
+            let product = searchProductByIdAttribute()
+            if (quantity.value <= product.stock && quantity.value != '' && fieldsCheck.description) { // Si no excede al stock
+                // Afecta las cantidades de stock disponible y de cajas a enviar
+                stock.value = product.stock - quantity.value
+                boxes.value = Math.ceil(quantity.value / product.piecesInBox)
 
-            // Señalizalo como correcto
-            establecerCorrecto('quantity', quantity)
-        }else{ // Pero si excede al stock...
-            clearDataFromFields(false)
-            setDataOnFields() // Se restablecen los datos de los campos
+                // Señalizalo como correcto
+                establecerCorrecto('quantity', quantity)
+            } else { // Pero si excede al stock...
+                clearDataFromFields(false)
+                setDataOnFields() // Se restablecen los datos de los campos
 
-            let errorMessage
-            quantity.value == '' ? errorMessage = "Campo vacío" : errorMessage = "Stock superado"
-            establecerIncorrecto('quantity', quantity, errorMessage)
+                let errorMessage
+                quantity.value == '' ? errorMessage = "Campo vacío" : errorMessage = "Stock superado"
+                establecerIncorrecto('quantity', quantity, errorMessage)
+            }
         }
     } catch (error) { // Si ocurre algun error, entonces
         if (error instanceof TypeError) {
             // sentencias para manejar excepciones TypeError
-        } 
+        }
     }
 }
 
@@ -645,21 +647,21 @@ async function init() {
                     }
                 }
             });
-            
+
+            // Cada vez que el usuario escriba una cantidad
+            quantity.addEventListener('keyup', (e) => {
+                regulateQuantity() // Regulala en funcion del stock
+            })
+
+            // Cada vez que cambia la cantidad por medio de los botones del campo
+            quantity.addEventListener('change', (e) => {
+                regulateQuantity()
+            })
+
             break;
 
     }
 }
-
-// Cada vez que el usuario escriba una cantidad
-quantity.addEventListener('keyup', (e) =>  {
-    regulateQuantity() // Regulala en funcion del stock
-})
-
-// Cada vez que cambia la cantidad por medio de los botones del campo
-quantity.addEventListener('change', (e) => {
-    regulateQuantity()
-})
 
 window.addEventListener('load', () => {
     const navHome = document.getElementById('navHome')

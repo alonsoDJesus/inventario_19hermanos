@@ -19,5 +19,6 @@ const icons = {
 const links = {
     home: '../inicio/index.html',
     newSale: 'nueva-venta.html',
-    completedSales: 'ventas-finalizadas.html'
+    completedSales: 'ventas-finalizadas.html',
+    stock: '../inventario/html/inventario.html' 
 }

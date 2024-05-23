@@ -12,7 +12,7 @@ body.innerHTML = `
             <img src="${icons.box}" alt="" class="nav__icon" id="boxSolid">
             <p>Inventario</p>
             <ul class="nav__subitems">
-                <li>
+                <li id = "navStock">
                     <div class = "container-icon">
                         <img src="${icons.boxesPrimary}" alt="" class="nav__icon" id="boxSolid">
                     </div>

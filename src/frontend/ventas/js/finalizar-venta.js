@@ -648,6 +648,7 @@ window.addEventListener('load', () => {
     const navHome = document.getElementById('navHome')
     const navNewSale = document.getElementById('navNewSale')
     const navCompletedSales = document.getElementById('navCompletedSales')
+    const navStock = document.getElementById('navStock')
 
     let goToSomeWhere;
     
@@ -670,6 +671,14 @@ window.addEventListener('load', () => {
             await window.electronAPI.navigateTo(links.completedSales)
         }
         confirmToExit(goToSomeWhere, "warning")
+    })
+
+    navStock.addEventListener('click', async () => {
+        goToSomeWhere = async function(){
+            await window.electronAPI.navigateTo(links.stock)
+        }
+        confirmToExit(goToSomeWhere, "warning")
+        
     })
 })
 

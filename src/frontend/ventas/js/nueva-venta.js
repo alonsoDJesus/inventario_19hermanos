@@ -667,6 +667,7 @@ window.addEventListener('load', () => {
     const navHome = document.getElementById('navHome')
     const navNewSale = document.getElementById('navNewSale')
     const navCompletedSales = document.getElementById('navCompletedSales')
+    const navStock = document.getElementById('navStock')    
 
     let goToSomeWhere;
     
@@ -705,6 +706,19 @@ window.addEventListener('load', () => {
 
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.completedSales)
+        }
+        showSwalConfirm(goToSomeWhere, confirmContent)
+    })
+
+    navStock.addEventListener('click', async () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
+        goToSomeWhere = async function(){
+            await window.electronAPI.navigateTo(links.stock)
         }
         showSwalConfirm(goToSomeWhere, confirmContent)
     })

@@ -96,8 +96,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('select:lastSaleID') 
     },
 
-    selectProducts: () => {
-        return ipcRenderer.invoke('select:products') 
+    selectProducts: (searchCriteriaDeterminator) => {
+        return ipcRenderer.invoke('select:products', searchCriteriaDeterminator) 
     },
 
     selectSaleById: (id) => {

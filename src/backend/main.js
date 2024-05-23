@@ -38,27 +38,6 @@ async function getLastSaleID(){
     return lastSaleID[0].lastSaleID
 }
 
-async function getProducts(){
-    const conn = await getConnection()
-    const products = await conn.query(`
-        SELECT 	Producto_PK as id,
-            Descripcion__producto as descrip,
-            Codigo__producto as codigo,
-            Cantidad_piezas_por_caja__producto as piecesInBox,
-            Precio_costo__producto as cost,
-            Precio_venta__producto as sale,
-            Cantidad_existencias_actual_inventario__producto as stock
-        FROM producto;
-    `)
-
-    products.forEach(product => {
-        product.cost = Intl.NumberFormat().format(product.cost)
-        product.sale = Intl.NumberFormat().format(product.sale)
-    });
-
-    return products
-}
-
 async function setNewShift(newShift){
     const conn = await getConnection()
     try {
@@ -115,7 +94,6 @@ module.exports = {
     getEmployees,
     getRoutes,
     getLastSaleID,
-    getProducts,
     setNewShift,
     setNewSaleWithShift,
     setSaleDetail

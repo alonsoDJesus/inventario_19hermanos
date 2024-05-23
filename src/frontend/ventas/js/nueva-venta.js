@@ -416,7 +416,7 @@ async function fetchLastSaleID(){
 }
 
 async function fetchProductsData(){
-    const allProductsData = await window.electronAPI.selectProducts()
+    const allProductsData = await window.electronAPI.selectProducts('code')
     return allProductsData
 }
 

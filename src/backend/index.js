@@ -1,8 +1,9 @@
 const { app, screen, ipcMain } = require('electron')
-const { createWindow, getEmployees, getRoutes, getLastSaleID, getProducts, setNewShift, setNewSaleWithShift, setSaleDetail } = require('./main')
+const { createWindow, getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail } = require('./main')
 const { getInitialSales } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
+const { getProducts } = require('./controllers/inventario')
 const { getDirName } = require('../../ruta')
 
 require('electron-reload')(getDirName())
@@ -28,8 +29,8 @@ app.whenReady().then( () => {
         return await getLastSaleID()
     })
 
-    ipcMain.handle('select:products', async () => {
-        return await getProducts()
+    ipcMain.handle('select:products', async (event, searchCriteriaDeterminator) => {
+        return await getProducts(searchCriteriaDeterminator)
     }),
 
     ipcMain.handle('select:saleByID', async (event, id) => {

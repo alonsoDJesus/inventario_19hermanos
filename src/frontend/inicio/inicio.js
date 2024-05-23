@@ -42,7 +42,7 @@ function renderInitialSales(searchType = 'all') {
             `;
         });
     }else{
-        const notFoundMessage = searchType != 'all' ?  
+        const notFoundMessage = searchType == 'all' ?  
         `Aún no tienes ninguna venta. <br>Registra una dando clic en el botón de agregar.` : 
         `No se encontró alguna venta en esta fecha.`
         containerCards.innerHTML += `
@@ -70,7 +70,7 @@ async function getInitialSales(){
 
 async function getInitialSalesWithCriteria(dateCriteria){
     initialSales = await window.electronAPI.selectInitialSales(dateCriteria)
-    renderInitialSales()
+    renderInitialSales('byDate')
 }
 
 radioShowDate.addEventListener('click', () => {

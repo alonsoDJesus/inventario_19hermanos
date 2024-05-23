@@ -16,8 +16,174 @@
 </head>
 <body>
     <script src="../../menu/menu.js"></script>
+
+    <header>
+        <h1 id="title">Inventario de los Productos</h1>
+        <div class="input-group">
+            <img src="../../../../icons/sort-solid-white.svg" alt="" class="h-1rem sort-icon">
+            <select name="sortSelector" id="sortSelector" title="sortSelector" class="header__field pl-1rem">
+                <option disabled selected>Ordenar por</option>
+                <option>Código de Registro</option>
+                <option>Existencias en Stock</option>
+            </select>
+
+            <div class="position-relative">
+                <input type="text" name="searchField" id="searchField" title="searchField" class="display-inline-block header__field">
+                <div class="button-search display-inline-block" id="buttonSearch">
+                    <img src="../../../../icons/magnifying-glass-solid-white.svg" alt="" class="h-1rem">
+                </div>
+                <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem new-top-modal" id="searchField__val"></div>
+                <p class="formulario__input-error" id="searchField__warning"></p>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section class="products__container">
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <div class="data__containericon">
+                            <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        </div>
+                        <p>4 piezas por caja</p>
+                    </div>
+                    <div class="body__data">
+                        <div class="data__containericon">
+                            <img src="../../../../icons/dollar-sign-solid.svg" alt="" class="h-1rem">
+                        </div>
+                        <p>4 piezas por caja</p>
+                    </div>
+                    <div class="body__data">
+                        <div class="data__containericon">
+                            <img src="../../../../icons/dollar-sign-solid.svg" alt="" class="h-1rem">
+                        </div>
+                        <p>4 piezas por caja</p>
+                    </div>
+                    <div class="body__data">
+                        <div class="data__containericon">
+                            <img src="../../../../icons/circle-solid.svg" alt="" class="h-1rem">
+                        </div>
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                
+                <div class="card__footer">
+                    <div class="footer__containericon">
+                        <img src="../../../../icons/pen-to-square-solid.svg" alt="" class="h-1rem">
+                    </div>
+                    <div class="footer__containericon">
+                        <img src="../../../../icons/trash-solid.svg" alt="" class="h-1rem">
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+
+            <article class="card">
+                <div class="card__tag">001</div>
+                <div class="card__title">Lorem, ipsum dolor sit amet consectetur adipisicing elit. Lorem, ipsum dolor.
+                </div>
+                <hr>
+                <div class="card__body">
+                    <div class="body__data">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <p>4 piezas por caja</p>
+                    </div>
+                </div>
+                <div class="card__footer"></div>
+            </article>
+        </section>
+    </main>
     
     <script src="../../sweetalert/sweetalert.min.js"></script>
+    <script src="../../validacion-fields/validacion-fields.js"></script>
     <script src="../js/inventario.js"></script>
 </body>
 </html>

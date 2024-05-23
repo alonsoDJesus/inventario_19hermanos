@@ -1,0 +1,156 @@
+header{
+    width: 75%;
+    margin: auto;
+    margin-top: 3rem;
+    display: flex;
+    justify-content: space-between;
+}
+
+.input-group{
+    display: flex;
+    gap: 1rem;
+}
+
+.header__field{
+    height: 2.5rem;
+    border-radius: 0.4rem;
+    border: none;
+    color: var(--white);
+    font-family: 'OpenSans-Light';
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-top: .5rem;
+    transition: .1s ease all;
+    background-color: var(--secondary);
+}
+
+.header__field:focus{
+    border: 3px solid var(--forth);
+    outline: none;
+    box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+
+.button-search{
+    margin-left: 0.3rem;
+    padding: 0.65rem 1rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.button-search:hover{
+    background-color: var(--secondary);
+}
+
+.sort-icon{
+    position: relative;
+    top: 1.3rem;
+    left: 2.6rem;
+}
+
+main{
+    width: 75%;
+    margin: 0 auto;
+    height: 100%;
+    margin-top: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+.products__container{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+}
+
+.card{
+    background-color: var(--secondary);
+    width: 100%;
+    border-radius: .8rem;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: .8rem;
+}
+
+.card__tag{
+    background-color: var(--forth);
+    font-family: 'MPLUS1Code-Regular';
+    padding: .2rem;
+    border-radius: .3rem;
+    width: 30%;
+}
+
+.card__title{
+    font-family: 'OpenSans-SemiBold';
+    color: var(--white);
+    height: 4rem;
+    overflow-y: hidden;
+}
+
+.card hr{
+    border: var(--forth) solid .1rem;
+    width: 18%;
+}
+
+.card__body{
+    display: flex;
+    flex-direction: column;
+    gap: .2rem;
+}
+
+.body__data{
+    display: flex;
+    align-items: center;
+    gap: .8rem;
+    font-family: 'OpenSans-Regular';
+    color: var(--white);
+}
+
+.data__containericon{
+    width: 10%;
+    display: flex;
+    justify-content: center;
+}
+
+.card__footer{
+    display: flex;
+    gap: .2rem;
+}
+
+.footer__containericon{
+    display: flex;
+    justify-content: center;
+    padding: .5rem;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.footer__containericon:hover{
+    background-color: var(--primary);
+}
+
+.position-relative{
+    position: relative;
+}
+
+.h-1rem{
+    height: 1rem;
+}
+
+.h-1halfrem{
+    height: 1.5rem;
+}
+
+.pl-1rem{
+    padding-left: 2rem;
+}
+
+.display-inline-block{
+    display: inline-block;
+}
+
+#searchField__val{
+    top: 1.2rem;
+    right: 3.5rem;
+}

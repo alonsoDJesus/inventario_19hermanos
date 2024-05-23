@@ -26,3 +26,18 @@ const establecerIncorrecto = (nameField, field, errorMessage) => {
     warningMessage.classList.add('formulario__input-error-activo') // Se le agrega una clase que lo hace visible
     warningMessage.innerText = errorMessage // En su texto interior se le da un mensaje de error
 }
+
+function clearValidations(nameField, field){
+    // Se ocultan los íconos
+    document.getElementById(`${nameField}__val`).classList.remove('opacity-1');
+    document.getElementById(`${nameField}__val`).classList.add('opacity-0');
+
+    // Se eliminan los íconos de correcto o incorrecto
+    document.getElementById(`${nameField}__val`).classList.remove('icon-wrong');
+    document.getElementById(`${nameField}__val`).classList.remove('icon-check');
+
+    // Se eliminan mensajes de error
+    field.parentNode.children[`${nameField}__warning`].classList.remove('formulario__input-error-activo')
+
+    fieldsCheck[nameField] = false; // En el objeto de los campos se señala una entrada incorrecta
+}

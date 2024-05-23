@@ -12,7 +12,7 @@ async function getProducts(searchCriteriaDeterminator){
             break;
         
         default:
-            searchCriteriaString = `WHERE Codigo__producto = ${searchCriteriaDeterminator}`
+            searchCriteriaString = `WHERE Codigo__producto = '${searchCriteriaDeterminator}'`
             break;
     }
     try {

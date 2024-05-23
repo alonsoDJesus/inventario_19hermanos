@@ -75,6 +75,14 @@ contextBridge.exposeInMainWorld('electronAPI', {
         const salesString = JSON.stringify(sales)
         sessionStorage.setItem("addedSales", salesString) 
     },
+
+    testByRegexp: (value, valueType) => {
+        const expressions = {
+            codeProduct: /^[A-ZÁ-Úa-zá-ú0-9_ ]+$/
+        }
+        
+        return expressions[valueType].test(value)
+    },
     
     selectInitialSales: (criteria) => {
         return ipcRenderer.invoke('select:initialSales', criteria) 

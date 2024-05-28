@@ -56,7 +56,7 @@ main{
     margin-bottom: 1rem;
 }
 
-.products__container{
+.view-grid-4{
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
@@ -130,6 +130,39 @@ main{
     background-color: var(--primary);
 }
 
+.card__message-notfound{
+    display: inline-block;
+    width: 100%;
+    margin: 2.2rem 0;
+    text-align: center;
+    font-family: 'Caveat-Regular';
+    font-size: 1.8rem;
+    color: var(--white);
+    line-height: 1.5rem;
+}
+
+.stock__floatbutton{
+    background-color: var(--forth);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    width: 4rem;
+    height: 4rem;
+    box-shadow: 0 0.3rem 0.5rem black;
+    z-index: 100;
+    position: fixed;
+    right: 5.5rem;
+    transition: .5s;
+    transform: translate(0, 0);
+    bottom: 2rem;
+}
+
+.stock__floatbutton:hover{
+    background-color: var(--forth_o);
+}
+
 .position-relative{
     position: relative;
 }
@@ -140,6 +173,10 @@ main{
 
 .h-1halfrem{
     height: 1.5rem;
+}
+
+.h-2rem{
+    height: 2rem;
 }
 
 .pl-1rem{

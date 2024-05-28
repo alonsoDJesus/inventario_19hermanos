@@ -25,7 +25,9 @@ async function getProducts(searchCriteriaDeterminator){
                 Cantidad_piezas_por_caja__producto as piecesInBox,
                 Precio_costo__producto as cost,
                 Precio_venta__producto as sale,
-                Cantidad_existencias_actual_inventario__producto as stock
+                Cantidad_existencias_actual_inventario__producto as stock,
+                Cantidad_existencias_maximas_inventario__producto as maxStock,
+                Cantidad_existencias_minimas_inventario__producto as minStock
             FROM producto
             ${searchCriteriaString}
         `)
@@ -33,6 +35,7 @@ async function getProducts(searchCriteriaDeterminator){
         products.forEach(product => {
             product.cost = Intl.NumberFormat().format(product.cost)
             product.sale = Intl.NumberFormat().format(product.sale)
+            product.stock = Intl.NumberFormat().format(product.stock)
         });
 
         return products

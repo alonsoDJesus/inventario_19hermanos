@@ -7,13 +7,19 @@ const icons = {
     edit: '../../../../icons/pen-to-square-solid.svg',
     delete: '../../../../icons/trash-solid.svg',
     boxesPrimary: '../../../../icons/boxes-stacked-solid-primary.svg',
+    boxesWhite: '../../../../icons/boxes-stacked-solid.svg',
     bottlePrimary: '../../../../icons/bottle-water-solid-primary.svg',
     truckPrimary: '../../../../icons/truck-solid-primary.svg',
     hourglassStartPrimary: '../../../../icons/hourglass-start-solid-primary.svg',
     hourglassEndPrimary: '../../../../icons/hourglass-end-solid-primary.svg',
     addressCardPrimary: '../../../../icons/address-card-solid-primary.svg',
     checkWhite: '../../../../icons/check-solid-white.svg',
-    xmarkWhite: '../../../../icons/xmark-solid-white.svg'
+    xmarkWhite: '../../../../icons/xmark-solid-white.svg',
+    dollarWhite: '../../../../icons/dollar-sign-solid.svg',
+    circle: '../../../../icons/circle-solid.svg',
+    circleGreen: '../../../../icons/circle-solid-green.svg',
+    circleRed: '../../../../icons/circle-solid-red.svg',
+    circleYellow: '../../../../icons/circle-solid-yellow.svg',
 }
 
 const links = {

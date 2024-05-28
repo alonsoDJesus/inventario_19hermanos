@@ -10,6 +10,7 @@ const cost = document.getElementById('cost')
 const sale = document.getElementById('sale')
 const stock= document.getElementById('stock')
 const boxes = document.getElementById('boxes')
+const code = document.getElementById('code')
 const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
@@ -68,7 +69,6 @@ function setAddedSalesOnStorage(addedSale){
 //----------------------------------------------------------------------------
 
 function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault, selectedIndex){
-    console.log(dataset)
     selectField.innerHTML = ''
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
@@ -397,6 +397,24 @@ function toggleModalForm(openModal = true){
     }
 }
 
+function setSelectionFieldAsWrong(errorMessage){
+    establecerIncorrecto('description', productsDescription, errorMessage) // Señalalo como incorrecto
+    clearDataFromFields() // Limpia los datos de los campos
+}
+
+function checkProductRepetition(){
+    const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
+    const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales) : -1
+
+    if ((productRepeated == undefined && auxAddedSales != null) || !auxAddedSales) { // Caso 1: Si hay intento de reptición de registro
+        establecerCorrecto('description', productsDescription) // Señalalo como correcto
+        clearDataFromFields()
+        setDataOnFields()
+    } else { // Caso 2: no hay intento de duplicación de registro
+        setSelectionFieldAsWrong('Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
+    }
+}
+
 async function getParams() {
     return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
@@ -631,32 +649,24 @@ async function init() {
                 clearValidations(fields[6].name, fields[6])
                 // Si no está seleccionado ningun producto
                 if (productsDescription.selectedIndex == 0) {
-                    establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido') // Señalalo como incorrecto
-                    clearDataFromFields() // Limpia los datos de los campos
+                    setSelectionFieldAsWrong('Seleccione un producto válido') // Señalalo como incorrecto
                 } else { // Si ha sido seleccionado algún producto, entonces...
-
-                    const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
-                    const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales) : -1
-
-                    if ((productRepeated == undefined && auxAddedSales != null) || !auxAddedSales) { // Caso 1: Si hay intento de reptición de registro
-                        establecerCorrecto('description', productsDescription) // Señalalo como correcto
-                        clearDataFromFields()
-                        setDataOnFields()
-                    } else { // Caso 2: no hay intento de duplicación de registro
-                        establecerIncorrecto('description', productsDescription, 'Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
-                        clearDataFromFields() // Limpia los datos de los campos
-                    }
+                    checkProductRepetition()
                 }
             });
 
             // Cada vez que el usuario escriba una cantidad
-            quantity.addEventListener('keyup', (e) => {
+            quantity.addEventListener('keyup', () => {
                 regulateQuantity() // Regulala en funcion del stock
             })
 
             // Cada vez que cambia la cantidad por medio de los botones del campo
-            quantity.addEventListener('change', (e) => {
+            quantity.addEventListener('change', () => {
                 regulateQuantity()
+            })
+
+            code.addEventListener('keyup', (e) => {
+                console.log(e.code)
             })
 
             break;

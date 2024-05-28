@@ -163,7 +163,7 @@ function init() {
                 searchProduct()
             } else {
                 const checkValue = window.electronAPI.testByRegexp(searchField.value, 'codeProduct')
-                if (searchField.value.length > 0 && searchField.value.length < 10 && checkValue) {
+                if (checkValue) {
                     establecerCorrecto(searchField.name, searchField)
                 } else {
                     const errorMessage = 'El código es demasiado largo\no escribiste algun símbolo raro'

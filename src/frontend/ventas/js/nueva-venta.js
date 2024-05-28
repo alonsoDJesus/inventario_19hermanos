@@ -23,7 +23,8 @@ const fieldsCheck = {
     description: false,
     quantity: false,
     employees: false,
-    routes: false
+    routes: false,
+    code: false
 }
 
 let saleID = 0
@@ -559,6 +560,8 @@ async function init() {
             const buttonAceptModal = document.getElementById('buttonAceptModal')
             const buttonCloseModal = document.getElementById('buttonCloseModal')
             const buttonCancelModal = document.getElementById('buttonCancelModal')
+            const buttonSearchProduct = document.getElementById('buttonSearchProduct')
+            const imgButton = document.querySelector('#buttonSearchProduct img')
             const date = document.getElementById('date')
             const time = document.getElementById('time')
             const lastSaleID = await fetchLastSaleID()
@@ -594,6 +597,7 @@ async function init() {
                 // Limpieza de validaciones
 
                 // En una lista se almacenan los campos que serán limpiados de sus validaciones
+                modalFormFields.push(fields[4])
                 modalFormFields.push(fields[5])
                 modalFormFields.push(fields[6])
                 modalFormFields.forEach(modalField => {
@@ -666,7 +670,42 @@ async function init() {
             })
 
             code.addEventListener('keyup', (e) => {
-                console.log(e.code)
+                if(e.code == 'NumpadEnter' || e.code == 'Enter'){
+                    if (fieldsCheck.code) {
+                        
+                    }
+                }else{
+                    const checkValue = window.electronAPI.testByRegexp(code.value, 'codeProduct')
+
+                    if (checkValue) {
+                        clearValidations(code.name, code)
+                        fieldsCheck.code = true
+                    } else {
+                        fieldsCheck.code = false
+                        productsDescription.selectedIndex = 0
+
+                        let errorMessage = ''
+                        if (code.value.length == 0) {
+                            errorMessage = 'Campo Vacío'    
+                        }else if(code.value.length > 10){
+                            errorMessage = 'Código muy largo' 
+                        }else{
+                            errorMessage = 'Símbolos raros' 
+                        }
+
+                        establecerIncorrecto(code.name, code, errorMessage)
+                    }
+                }
+
+                console.log(fieldsCheck.code)
+            })
+
+            buttonSearchProduct.addEventListener('mouseenter', () => {
+                imgButton.src = icons.searchPrimary
+            })
+
+            buttonSearchProduct.addEventListener('mouseleave', () => {
+                imgButton.src = icons.searchWhite
             })
 
             break;

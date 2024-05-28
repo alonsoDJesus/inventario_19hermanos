@@ -68,11 +68,12 @@ function setAddedSalesOnStorage(addedSale){
 //----------------------------------------------------------------------------
 
 function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault, selectedIndex){
+    console.log(dataset)
     selectField.innerHTML = ''
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
         const option = document.createElement('option')
-        option.text = data[keyName]
+        option.text = data['codigo'] ? `${data['codigo']} ${data[keyName]}`: data[keyName]
         option.setAttribute('id', data.id)
         selectField.appendChild(option)
     });

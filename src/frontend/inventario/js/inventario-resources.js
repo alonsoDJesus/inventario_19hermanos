@@ -26,5 +26,6 @@ const links = {
     home: '../../inicio/index.html',
     newSale: '../../ventas/nueva-venta.html',
     completedSales: '../../ventas/ventas-finalizadas.html',
-    stock: '../html/inventario.html'
+    stock: '../html/inventario.html',
+    newProduct: '../html/registrar-producto.html'
 }

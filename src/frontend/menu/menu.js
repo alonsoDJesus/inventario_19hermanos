@@ -18,7 +18,7 @@ body.innerHTML = `
                     </div>
                     <p>Ver todos los productos</p>
                 </li>
-                <li>
+                <li id="navNewProduct">
                     <div class = "container-icon">
                         <img src="${icons.bottlePrimary}" alt="" class="nav__icon" id="boxSolid">
                     </div>

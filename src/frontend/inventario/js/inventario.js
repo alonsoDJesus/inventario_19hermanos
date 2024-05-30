@@ -247,6 +247,7 @@ window.addEventListener('load', () => {
     const navNewSale = document.getElementById('navNewSale')
     const navCompletedSales = document.getElementById('navCompletedSales')
     const navStock = document.getElementById('navStock')
+    const navNewProduct = document.getElementById('navNewProduct')
     
     navHome.addEventListener('click', async  () => {
         await window.electronAPI.navigateTo(links.home)
@@ -262,5 +263,9 @@ window.addEventListener('load', () => {
 
     navStock.addEventListener('click', async () => {
         await window.electronAPI.navigateTo(links.stock)
+    })
+
+    navNewProduct.addEventListener('click', async() => {
+        await window.electronAPI.navigateTo(links.newProduct)
     })
 })

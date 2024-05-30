@@ -157,6 +157,18 @@ function searchProductByIdAttribute() {
     return productFounded
 }
 
+function searchProductByCode(code){
+    let productFounded
+
+    productsData.forEach(product => {
+        if(product.codigo == code){
+            productFounded = product
+        }
+    })
+
+    return productFounded
+}
+
 function verifyStock(){
     if (stock.value < 0) {
         quantity.value = ''
@@ -170,7 +182,7 @@ function setDataOnFields() {
     product = searchProductByIdAttribute()  
     cost.value = `$ ${product.cost}`
     sale.value = `$ ${product.sale}`
-    stock.value = product.stock
+    stock.value = parseInt(product.stock)
 }
 
 // Limppieza de datos de los campos
@@ -291,13 +303,13 @@ function renderAllSales() {
 function regulateQuantity() {
     try {
         quantity.value = quantity.value.replace('-', '') // Evita numeros negativos
-
         if (fieldsCheck.description) {
             let product = searchProductByIdAttribute()
-            if (quantity.value <= product.stock && quantity.value != '' && fieldsCheck.description) { // Si no excede al stock
+
+            if (parseInt(quantity.value) <= parseInt(product.stock) && quantity.value != '' && fieldsCheck.description) { // Si no excede al stock
                 // Afecta las cantidades de stock disponible y de cajas a enviar
-                stock.value = product.stock - quantity.value
-                boxes.value = Math.ceil(quantity.value / product.piecesInBox)
+                stock.value = parseInt(product.stock) - parseInt(quantity.value)
+                boxes.value = Math.ceil(parseInt(quantity.value) / parseInt(product.piecesInBox))
 
                 // Señalizalo como correcto
                 establecerCorrecto('quantity', quantity)
@@ -416,6 +428,24 @@ function checkProductRepetition(){
     }
 }
 
+function selectProductByCode(){
+    if (fieldsCheck.code) {
+        clearValidations('description', productsDescription)
+        clearValidations('quantity', quantity)
+        clearDataFromFields()
+
+        productSearched = searchProductByCode(code.value)
+
+        if(productSearched != undefined){
+            productsDescription.selectedIndex = productSearched.id
+            checkProductRepetition()
+        }else{
+            productsDescription.selectedIndex = 0
+            establecerIncorrecto(code.name, code, 'Producto no encontrado')
+        }
+    }
+}
+
 async function getParams() {
     return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
@@ -468,6 +498,7 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
                 if (specialTask != undefined) {
                     await specialTask()
                 }else{
+                    await window.electronAPI.deleteParams("newSaleParams")
                     sessionStorage.removeItem("index")
                     sessionStorage.removeItem("addedSales")
                     await goToSomewhere()
@@ -517,6 +548,7 @@ async function saveSaleDetail(){
 
                     sessionStorage.removeItem("index")
                     sessionStorage.removeItem("addedSales")
+                    await window.electronAPI.deleteParams("newSaleParams")
                     await window.electronAPI.navigateTo(links.home)
                 }
             }
@@ -657,6 +689,11 @@ async function init() {
                 } else { // Si ha sido seleccionado algún producto, entonces...
                     checkProductRepetition()
                 }
+
+                productSelected = searchProductByIdAttribute()
+                code.value = productSelected.codigo
+                clearValidations(code.name, code)
+                
             });
 
             // Cada vez que el usuario escriba una cantidad
@@ -671,9 +708,7 @@ async function init() {
 
             code.addEventListener('keyup', (e) => {
                 if(e.code == 'NumpadEnter' || e.code == 'Enter'){
-                    if (fieldsCheck.code) {
-                        
-                    }
+                    selectProductByCode()
                 }else{
                     const checkValue = window.electronAPI.testByRegexp(code.value, 'codeProduct')
 
@@ -697,7 +732,10 @@ async function init() {
                     }
                 }
 
-                console.log(fieldsCheck.code)
+            })
+
+            buttonSearchProduct.addEventListener('click', () => {
+                selectProductByCode()
             })
 
             buttonSearchProduct.addEventListener('mouseenter', () => {

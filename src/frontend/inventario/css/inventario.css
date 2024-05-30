@@ -191,3 +191,37 @@ main{
     top: 1.2rem;
     right: 3.5rem;
 }
+
+#warningStokMessage{
+    position: static;
+    width: 100%;
+    margin-bottom: 1rem;
+    transition: .3s;
+    gap: 1rem;
+}
+
+#warningStokMessage div{
+    display: flex;
+    align-items: center;
+}
+
+#warningStokMessage div:nth-child(2){
+    gap: 1rem;
+}
+
+#warningStokMessage img {
+    cursor: pointer;
+}
+
+#buttonGenerateSupllyList{
+    appearance: none;
+    border: none;
+    background-color: var(--primary);
+    height: 1.5rem;
+    width: 10rem;
+    color: var(--warning);
+    font-family: 'OpenSans-Regular';
+    font-size: 1rem;
+    border-radius: .4rem;
+    cursor: pointer;
+}

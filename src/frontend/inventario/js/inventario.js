@@ -8,14 +8,47 @@ const optionsFormat = {
 const format = new Intl.NumberFormat('en-US', optionsFormat);
 
 let allProducts = []
+let quantityProductsToSupply = {
+    lowLevelQuantity: 0,
+    midLevelQuantity: 0
+}
+
+function showWarningStockMessage(){
+    let showMessage = false
+    const warningStockMessageContainer = document.querySelector('#warningStokMessage')
+    const warningStockMessage = document.querySelector('#warningStokMessage p')
+    
+    if(quantityProductsToSupply.lowLevelQuantity != 0){
+        warningStockMessage.innerText = `¡Tienes ${quantityProductsToSupply.lowLevelQuantity} ${quantityProductsToSupply.lowLevelQuantity == 1 ? 'producto' :'productos'} a punto de agotarse`
+        warningStockMessageContainer.classList.remove('display-none')
+        showMessage = true
+    }
+
+    if(quantityProductsToSupply.midLevelQuantity != 0){
+        const midLevelQuantityString = `${quantityProductsToSupply.midLevelQuantity} ${quantityProductsToSupply.midLevelQuantity == 1 ? 'producto' :'productos'} abajo del nivel óptimo de existencias`
+        warningStockMessage.innerText = warningStockMessage.innerText != "" ? warningStockMessage.innerText += ` y ${midLevelQuantityString} `: `¡Tienes ${midLevelQuantityString}`
+        showMessage = true
+    }
+
+    if(showMessage){
+        const closeButtonWarningMessage = document.querySelectorAll('#warningStokMessage img')
+        closeButtonWarningMessage[1].onclick = () => warningStockMessageContainer.classList.add('display-none')
+        warningStockMessage.innerText+='!'
+        warningStockMessageContainer.classList.remove('display-none')
+    }
+
+    
+}
 
 function determinateColorStockIndicator(stock, minStock, maxStock){
 
     if (stock <= minStock) {
+        quantityProductsToSupply.lowLevelQuantity++
         return icons.circleRed
     } else{
         const midPoint = (minStock + maxStock) / 2
         if(stock <= midPoint){
+            quantityProductsToSupply.midLevelQuantity++
             return icons.circleYellow
         }else{
             return icons.circleGreen
@@ -67,7 +100,7 @@ function renderProducts(searchType) {
                 let arrayBodyData = [
                     [icons.boxesWhite, `${product.piecesInBox} ${product.piecesInBox == 1 ? 'pieza' : 'piezas'} por caja`],
                     [icons.dollarWhite, `Costo: ${format.format(parseFloat(product.cost).toFixed(2))}`],
-                    [icons.dollarWhite, `Costo: ${format.format(parseFloat(product.sale).toFixed(2))}`],
+                    [icons.dollarWhite, `Venta: ${format.format(parseFloat(product.sale).toFixed(2))}`],
                     [determinateColorStockIndicator(product.stock, product.minStock, product.maxStock), `Existencias: ${product.stock}`],
                 ]
 
@@ -146,7 +179,7 @@ function renderProducts(searchType) {
     }
 }
 
-function init() {
+async function init() {
     const sortSelector = document.getElementById('sortSelector')
     const searchField = document.getElementById('searchField')
     const buttonSearch = document.getElementById('buttonSearch')
@@ -181,7 +214,9 @@ function init() {
         console.log('redirigiendo')
     })
 
-    fetchProductsWithCriteria('code')
+    await fetchProductsWithCriteria('code')
+
+    showWarningStockMessage()
 }
 
 async function fetchProductsWithCriteria(searchCriteriaDeterminator, searchType = 'all'){

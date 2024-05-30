@@ -206,10 +206,16 @@ function getFinalUtilityData(value) {
 }
 
 function cancelSaleDetail() {
+    const confirmContent = {
+        icon: 'warning',
+        title: '¿Seguro que quieres salir?',
+        text: 'Todo su avance se perderá',
+    }
+
     goToSomeWhere = async function(){
         await window.electronAPI.navigateTo(links.home)
     }
-    confirmToExit(goToSomeWhere, "error")
+    showSwalConfirm(goToSomeWhere, confirmContent)
 }
 
 function setButtonsOptions(isReadOnly = false){
@@ -538,37 +544,55 @@ async function getSaleDataById(id){
 async function saveSaleDetail() {
     const statusValidation = getStatusValidationFields()
 
-    if (statusValidation){
-        const saleDataToUpdate = {
-            Hora_fin__venta: getFieldTimeFinish(),
-            Venta_total_global__venta: getFinalSaleData(),
-            Costo_total_global__venta: getFinalCostData(),
-            Utilidad_total_global__venta: getFinalUtilityData()
+    if (statusValidation) {
+        const saveSaleDetailTask = async function () {
+            const saleDataToUpdate = {
+                Hora_fin__venta: getFieldTimeFinish(),
+                Venta_total_global__venta: getFinalSaleData(),
+                Costo_total_global__venta: getFinalCostData(),
+                Utilidad_total_global__venta: getFinalUtilityData()
+            }
+
+            const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, saleID)
+
+            if (typeof saleUpdatedID == "number" && saleUpdatedID == 1) {
+                const cardFields = document.querySelectorAll('.card__field')
+                const productsIds = document.querySelectorAll('.description')
+                const confirmationsAffectedRows = []
+
+                cardFields.forEach(async (cardField, index) => {
+                    const saleDetailToUpdate = {
+                        Cantidad_piezas_fin__detalleventa: parseInt(cardField.value),
+                        Cantidad_piezas_vendidas__detalleventa: getSaledPieces(index + 1),
+                        Venta_total__detalleventa: getTotalSalePerProduct(index + 1),
+                        Costo_total__detalleventa: getTotalCostPerProduct(index + 1),
+                        Utilidad__detalleventa: getTotalUtilityPerProduct(index + 1)
+                    }
+
+                    const productId = parseInt(productsIds[index].id)
+                    await window.electronAPI.updateSaleDetail(saleDetailToUpdate, saleID, productId)
+                })
+
+                await swal({
+                    title: "Venta iniciada exitosamente",
+                    button: {
+                        text: 'Aceptar'
+                    }
+                })
+
+                await window.electronAPI.deleteParams('completingSaleParams')
+                await window.electronAPI.navigateTo(links.home)
+            }
         }
 
-        const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, saleID)
-
-        if(typeof saleUpdatedID == "number" && saleUpdatedID == 1){
-            const cardFields = document.querySelectorAll('.card__field')
-            const productsIds = document.querySelectorAll('.description')
-            const confirmationsAffectedRows = []
-
-            cardFields.forEach( async (cardField, index) => {
-                const saleDetailToUpdate = {
-                    Cantidad_piezas_fin__detalleventa: parseInt(cardField.value),
-                    Cantidad_piezas_vendidas__detalleventa: getSaledPieces(index+1),
-                    Venta_total__detalleventa: getTotalSalePerProduct(index+1),
-                    Costo_total__detalleventa: getTotalCostPerProduct(index+1),
-                    Utilidad__detalleventa: getTotalUtilityPerProduct(index+1)
-                }
-
-                const productId = parseInt(productsIds[index].id)
-                await window.electronAPI.updateSaleDetail(saleDetailToUpdate, saleID, productId)
-            }) 
-            
-            
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres guardar los datos?',
+            text: 'Los datos que ingresaste deben ser correctos',
         }
-        
+
+        showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
+
     }
     //const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, )
 
@@ -607,11 +631,11 @@ async function init(){
     }
 }
 
-async function confirmToExit(goToSomewhere, swalIcon){
+async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = undefined){
     await swal({
-        icon: swalIcon,
-        title: "¿Seguro que quiere salir?",
-        text: 'Su avance se perderá :(',
+        icon: confirmContent.icon,
+        title: confirmContent.title,
+        text: confirmContent.text,
         padding: '1.4rem',
         buttons: {
             cancel: {
@@ -632,13 +656,18 @@ async function confirmToExit(goToSomewhere, swalIcon){
         switch (value) {
 
             case true:
-                await deleteParams()
-                await goToSomewhere()
+                if (specialTask != undefined) {
+                    await specialTask()
+                }else{
+                    await window.electronAPI.deleteParams('completingSaleParams')
+                    await goToSomewhere()
+                }
+                
                 break;
          
             default:
-                buttonOption1.classList.toggle('floatbutton__option1-active')
-                buttonOption2.classList.toggle('floatbutton__option2-active')
+                buttonOption1.classList.remove('floatbutton__option1-active')
+                buttonOption2.classList.remove('floatbutton__option2-active')
                 break;
           }
     })
@@ -653,32 +682,58 @@ window.addEventListener('load', () => {
     let goToSomeWhere;
     
     navHome.addEventListener('click', () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.home)
         }
-        confirmToExit(goToSomeWhere, "warning")
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 
     navNewSale.addEventListener('click', () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+        
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.newSale)
         }
-        confirmToExit(goToSomeWhere, "warning")
+
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 
     navCompletedSales.addEventListener('click', () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.completedSales)
         }
-        confirmToExit(goToSomeWhere, "warning")
+
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 
     navStock.addEventListener('click', async () => {
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres salir?',
+            text: 'Todo su avance se perderá',
+        }
+
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.stock)
         }
-        confirmToExit(goToSomeWhere, "warning")
         
+        showSwalConfirm(goToSomeWhere, confirmContent)
     })
 })
 

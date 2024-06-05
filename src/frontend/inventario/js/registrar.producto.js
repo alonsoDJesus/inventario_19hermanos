@@ -16,7 +16,7 @@ async function checkForm(event){
             if(event.target.value == ""){
                 clearValidations(event.target.name, event.target)
             }else{
-                checkTextField('codeProduct', event.target, event.target.name);
+                checkCodeField('codeProduct', event.target, event.target.name);
             }
         break;
 
@@ -24,7 +24,7 @@ async function checkForm(event){
             if(event.target.value == ""){
                 clearValidations(event.target.name, event.target)
             }else{
-                checkTextField('nameProduct', event.target, event.target.name)
+                checkDescriptionField('nameProduct', event.target, event.target.name)
             }
         break;
 
@@ -112,7 +112,21 @@ async function checkForm(event){
     }
 }
 
-async function checkTextField (nameRegExp, field, fieldName){
+async function checkCodeField(){
+    const code = document.getElementById('code')
+
+    if ( await window.electronAPI.testByRegexp(code.value, 'codeProduct')){
+        const isRepeatedCode = await window.electronAPI.existsProductWithCode(code.value)
+        if (!isRepeatedCode) 
+            establecerCorrecto(code.name, code)
+        else
+            establecerIncorrecto(code.name, code, "Código repetido")
+    }else {
+        establecerIncorrecto(code.name, code, "No puedes escribir símbolos o números raros.")
+    }
+}
+
+async function checkDescriptionField (nameRegExp, field, fieldName){
     if(await window.electronAPI.testByRegexp(field.value, nameRegExp)){
         establecerCorrecto(fieldName, field);
         

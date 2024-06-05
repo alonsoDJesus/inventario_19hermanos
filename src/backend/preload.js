@@ -143,4 +143,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
     updateSaleDetail: (saleUpdated, saleId, productId) => {
         return ipcRenderer.invoke('update:saleDetail', saleUpdated, saleId, productId) 
     },
+
+    existsProductWithCode: (productCode) => {
+        return ipcRenderer.invoke('exists:productWithCode', productCode) 
+    }
 })

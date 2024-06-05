@@ -8,10 +8,11 @@ const fieldsCheck = {
     code: false,
     percent: false,
     sale: false,
-    initalStock: false,
+    initialStock: false,
     maxStock: false,
     minStock: false,
-    piecesInBox: false
+    piecesInBox: false,
+    boxesQuantity: false
 }
 
 async function checkForm(event){
@@ -335,8 +336,20 @@ async function checkPiecesInBoxField(){
         clearValidations(boxesQuantity.name, boxesQuantity)
 
         const errorMessage = testByRegExp ?  "No puedes poner una cantidad de 0." : "No puedes escribir símbolos o números raros."
-        establecerIncorrecto(piecesInBox.name, piecesInBox) 
+        establecerIncorrecto(piecesInBox.name, piecesInBox, errorMessage) 
     }
+}
+
+function getStatusValidationFields(){
+    const initialValue = true
+    const fieldsCheckArray = Object.values(fieldsCheck)
+    const statusValidation = fieldsCheckArray.reduce( (acumulator, currentValue) => {
+        return acumulator && currentValue
+    },
+    initialValue
+    )
+
+    return statusValidation
 }
 
 function disableField(field){
@@ -363,7 +376,7 @@ function setButtonsOptions(isReadOnly = false){
     if (!isReadOnly) {
         buttonOption1.children[0].src = icons.checkWhite
         buttonOption1.addEventListener('click', () => {
-            //saveSaleDetail()
+            saveSaleDetail()
         })
 
         buttonOption2.children[0].src = icons.xmarkWhite
@@ -389,6 +402,62 @@ function cancelSaleDetail() {
         await window.electronAPI.navigateTo(links.home)
     }
     showSwalConfirm(goToSomeWhere, confirmContent)
+}
+
+function saveSaleDetail() {
+    const statusValidation = getStatusValidationFields()
+
+    if (statusValidation) {
+        const saveProductTask = async () => {
+            const fields = document.querySelectorAll('.form__field')
+
+            const productData = {
+                Codigo__producto: fields[0].value,
+                Descripcion__producto: fields[1].value,
+                Precio_costo__producto: parseFloat(fields[2].value),
+                Precio_venta__producto: parseFloat(fields[4].value),
+                Cantidad_piezas_por_caja__producto: parseInt(fields[8].value),
+                Cantidad_existencias_actual_inventario__producto: parseInt(fields[5].value),
+                Cantidad_existencias_minimas_inventario__producto: parseInt(fields[6].value),
+                Cantidad_existencias_maximas_inventario__producto: parseInt(fields[7].value),
+            }
+            
+            const productInsertedId = await window.electronAPI.insertNewProduct(productData)
+
+            if (typeof productInsertedId == "number"){
+                await swal({
+                    title: "Producto dado de alta exitosamente",
+                    button: {
+                        text: 'Aceptar'
+                    }
+                })
+
+                await window.electronAPI.deleteParams('newProductParams')
+                await window.electronAPI.navigateTo(links.home)
+            }
+        }
+
+        const confirmContent = {
+            icon: 'warning',
+            title: '¿Seguro que quieres guardar los datos?',
+            text: 'Los datos que ingresaste deben ser correctos',
+        }
+
+        showSwalConfirm(undefined, confirmContent, saveProductTask)
+
+    } else{
+        const errorMessageForm = document.getElementById('errorMessageForm')
+        errorMessageForm.classList.add('formulario__data-error')
+        errorMessageForm.classList.remove('display-none')
+
+        buttonOption1.classList.toggle('floatbutton__option1-active')
+        buttonOption2.classList.toggle('floatbutton__option2-active')
+
+        setTimeout(() => {
+            errorMessageForm.classList.remove('formulario__data-error')
+            errorMessageForm.classList.add('display-none')
+        }, 5000);
+    }
 }
 
 window.addEventListener('load', () => {

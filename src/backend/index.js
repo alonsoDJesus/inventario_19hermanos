@@ -4,7 +4,7 @@ const { getInitialSales } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
 const { getProducts } = require('./controllers/inventario')
-const { existsProductWithCode } = require('./controllers/registrar-producto')
+const { existsProductWithCode, setNewProduct } = require('./controllers/registrar-producto')
 const { getDirName } = require('../../ruta')
 
 require('electron-reload')(getDirName())
@@ -53,6 +53,10 @@ app.whenReady().then( () => {
     ipcMain.handle('insert:saleDetail', async (event, saleDetail) => {
         return await setSaleDetail(saleDetail)
     }),
+
+    ipcMain.handle('insert:product', async (event, productData) => {
+        return await setNewProduct(productData)
+    })
 
     ipcMain.handle('update:sale', async (event, saleUpdated, id) => {
         return await updateSaleById(saleUpdated, id)

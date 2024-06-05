@@ -12,6 +12,19 @@ async function existsProductWithCode(productCode){
     }
 }
 
+async function setNewProduct(productData){
+
+    try {
+        const conn = await getConnection()
+        const productInserted = await conn.query(`INSERT INTO producto SET ?`, productData)
+
+        return productInserted.insertId
+    } catch (error) {
+        return error
+    }
+}
+
 module.exports = {
-    existsProductWithCode
+    existsProductWithCode,
+    setNewProduct
 }

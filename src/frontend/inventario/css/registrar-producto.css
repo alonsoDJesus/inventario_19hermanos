@@ -120,3 +120,9 @@ input::placeholder {
 .right-2{
     right: 2.3rem;
 }
+
+#errorMessageForm{
+    width: 70%;
+    bottom: 6rem;
+    left: 15%;
+}

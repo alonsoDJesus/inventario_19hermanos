@@ -136,6 +136,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('insert:saleDetail', saleDetail) 
     },
 
+    insertNewProduct: (productData) => {
+        return ipcRenderer.invoke('insert:product', productData) 
+    },
+
     updateSale: (saleUpdated, id) => {
         return ipcRenderer.invoke('update:sale', saleUpdated, id) 
     },

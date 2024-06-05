@@ -1,3 +1,7 @@
+const buttonOption1 = document.getElementById('buttonOption1')
+const buttonOption2 = document.getElementById('buttonOption2')
+const buttonOptions = document.getElementById('buttonShowOptions')
+
 const fieldsCheck = {
     description: false,
     cost: false,
@@ -243,6 +247,7 @@ async function init(){
     switch(params.visualizationStatus){
         case 'create':
             enableFieldListeners()
+            setButtonsOptions()
             break;
         
         case 'edit':
@@ -351,6 +356,39 @@ function enableFieldListeners(){
         field.addEventListener('keyup', (event) => checkForm(event))
         field.addEventListener('change', (event) => checkForm(event))
     } )
+}
+
+function setButtonsOptions(isReadOnly = false){
+    
+    if (!isReadOnly) {
+        buttonOption1.children[0].src = icons.checkWhite
+        buttonOption1.addEventListener('click', () => {
+            //saveSaleDetail()
+        })
+
+        buttonOption2.children[0].src = icons.xmarkWhite
+        buttonOption2.addEventListener('click', () => {
+            cancelSaleDetail()
+        })
+    }
+
+    buttonOptions.onclick = function () {
+        buttonOption1.classList.toggle('floatbutton__option1-active')
+        buttonOption2.classList.toggle('floatbutton__option2-active')
+    }
+}
+
+function cancelSaleDetail() {
+    const confirmContent = {
+        icon: 'warning',
+        title: '¿Seguro que quieres salir?',
+        text: 'Todo su avance se perderá',
+    }
+
+    goToSomeWhere = async function(){
+        await window.electronAPI.navigateTo(links.home)
+    }
+    showSwalConfirm(goToSomeWhere, confirmContent)
 }
 
 window.addEventListener('load', () => {

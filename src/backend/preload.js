@@ -1,20 +1,19 @@
 const { contextBridge, ipcRenderer } = require('electron/renderer')
 
 contextBridge.exposeInMainWorld('electronAPI', {
-    navigateTo: (url, id=-1) => {
-        switch (url) {
-            case '../ventas/finalizar-venta.html':
-                const completingSaleParams = {
-                    editingStatusOfCompletingSale: true,
-                    index: id
-                }
+    navigateTo: (url, id = -1, visitMode = 'none') => {
+        if (url.includes('finalizar-venta.html')) {
+            const completingSaleParams = {
+                editingStatusOfCompletingSale: true,
+                index: id
+            }
 
-                const completingSaleParamsString = JSON.stringify(completingSaleParams)
-                sessionStorage.setItem("completingSaleParams", completingSaleParamsString)
-                break;
-            
-            case '../ventas/nueva-venta.html':
-                if (id==-1) {
+            const completingSaleParamsString = JSON.stringify(completingSaleParams)
+            sessionStorage.setItem("completingSaleParams", completingSaleParamsString)
+
+        } else {
+            if (url.includes('nueva-venta.html')) {
+                if (id == -1) {
                     const newSaleParams = {
                         editingStatusOfNewSale: false,
                     }
@@ -22,11 +21,17 @@ contextBridge.exposeInMainWorld('electronAPI', {
                     const newSaleParamsString = JSON.stringify(newSaleParams)
                     sessionStorage.setItem("newSaleParams", newSaleParamsString)
                 }
-                break;
-        
-            default:
-                break;
-        }
+            } else{
+                if (url.includes('registrar-producto.html')){
+                    const newProductParams = {
+                        visualizationStatus: visitMode
+                    }
+
+                    const newProductParamsString = JSON.stringify(newProductParams)
+                    sessionStorage.setItem("newProductParams", newProductParamsString)
+                }
+            } 
+        }   
 
         location.href = url
     },
@@ -78,7 +83,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     testByRegexp: (value, valueType) => {
         const expressions = {
-            codeProduct: /^[A-ZÁ-Úa-zá-ú0-9_ ]{1,10}$/
+            codeProduct: /^[A-ZÁ-Úa-zá-ú0-9_ ]{1,10}$/,
+            nameProduct: /^([A-ZÁ-Ú]?[a-zá-ú0-9]+[\.\, ]*)+$/,
+            numbers: /^[0-9]+(\.[0-9]+)?$/,
+            intNumbers: /^[0-9]+$/
         }
         
         return expressions[valueType].test(value)

@@ -136,7 +136,7 @@ window.addEventListener('load', () => {
     })
 
     navNewProduct.addEventListener('click', async() => {
-        await window.electronAPI.navigateTo(links.newProduct)
+        await window.electronAPI.navigateTo(links.newProduct, -1, 'create')
     })
 })
 

@@ -820,7 +820,7 @@ window.addEventListener('load', () => {
         }
 
         goToSomeWhere = async function(){
-            await window.electronAPI.navigateTo(links.newProduct)
+            await window.electronAPI.navigateTo(links.newProduct, -1,  'create')
         }
         
         showSwalConfirm(goToSomeWhere, confirmContent)

@@ -1,0 +1,84 @@
+header{
+    width: 70%;
+    margin: auto;
+    margin-top: 3rem;
+}
+
+main{
+    width: 70%;
+    margin: 0 auto;
+    height: 100%;
+    margin-top: 1.4rem;
+    margin-bottom: 1rem;
+}
+
+form{
+    background-color: var(--secondary);
+    border-radius: 1.4rem;
+    padding: 1.4rem;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+}
+
+.input__group:nth-child(2){
+    grid-column: 2 / 4;
+}
+
+.label__group{
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    padding-left: 0.2rem;
+}
+
+label{
+    font-family: 'OpenSans-Regular';
+    color: var(--white);
+    font-size: 1.3rem;
+}
+
+.form__field{
+    width: 100%;
+    height: 2.5rem;
+    border-radius: 0.4rem;
+    border: none;
+    color: var(--white);
+    font-family: 'OpenSans-Light';
+    font-size: 1rem;
+    padding: 0 1rem;
+    margin-top: .5rem;
+    transition: .1s ease all;
+    background-color: var(--primary);
+    cursor: pointer;
+}
+
+.form__field:focus{
+    border: 3px solid var(--forth);
+    outline: none;
+    box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+
+.h-1rem{
+    height: 1rem;
+}
+
+.position-relative{
+    position: relative;
+}
+
+input::placeholder {
+    color: rgba(255, 255, 255, 0.648);
+}
+
+.icon-wrong{
+    top: 2.95rem;
+}
+
+.icon-check{
+    top: 3rem;
+}
+
+.right-2{
+    right: 2.3rem;
+}

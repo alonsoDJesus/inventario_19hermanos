@@ -10,7 +10,7 @@ const establecerCorrecto = (nameField, field) => {
 }
 
 // Señalización de entrada incorrecta de datos
-const establecerIncorrecto = (nameField, field, errorMessage) => {
+const establecerIncorrecto = (nameField, field, errorMessage = '') => {
     // Se muestran iconos
     document.getElementById(`${nameField}__val`).classList.remove('opacity-0');
     document.getElementById(`${nameField}__val`).classList.add('opacity-1');
@@ -24,7 +24,7 @@ const establecerIncorrecto = (nameField, field, errorMessage) => {
     // Se uuestra el mensaje de error
     const warningMessage = field.parentNode.children[`${nameField}__warning`] // Se obtiene el elemento (en este caso un parrafo)
     warningMessage.classList.add('formulario__input-error-activo') // Se le agrega una clase que lo hace visible
-    warningMessage.innerText = errorMessage // En su texto interior se le da un mensaje de error
+    errorMessage != '' ? warningMessage.innerText = errorMessage : ''  // En su texto interior se le da un mensaje de error
 }
 
 function clearValidations(nameField, field){

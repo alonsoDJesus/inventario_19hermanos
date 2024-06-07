@@ -2,6 +2,7 @@ const radioShowDate = document.getElementById('radioShowDate')
 const radioShowAll = document.getElementById('radioShowAll')
 const dateField = document.getElementById('date')
 const buttonSearch = document.getElementById('buttonSearch')
+const buttonAddSale = document.getElementById('buttonAddSale')
 
 let initialSales = undefined
 let fieldsCheck = {
@@ -103,6 +104,10 @@ buttonSearch.addEventListener('click', async () => {
             }
         })
     }
+})
+
+buttonAddSale.addEventListener('click', async () => {
+    await window.electronAPI.navigateTo(links.newSale)    
 })
 
 getInitialSales();

@@ -245,6 +245,7 @@ init()
 window.addEventListener('load', () => {
     const navHome = document.getElementById('navHome')
     const navNewSale = document.getElementById('navNewSale')
+    const navInitiatedSales = document.getElementById('navInitiatedSales')
     const navCompletedSales = document.getElementById('navCompletedSales')
     const navStock = document.getElementById('navStock')
     const navNewProduct = document.getElementById('navNewProduct')
@@ -255,6 +256,10 @@ window.addEventListener('load', () => {
  
     navNewSale.addEventListener('click', async () => {
         await window.electronAPI.navigateTo(links.newSale)
+    })
+
+    navInitiatedSales.addEventListener('click', async () => {
+        await window.electronAPI.navigateTo(links.home)
     })
  
     navCompletedSales.addEventListener('click', async () => {

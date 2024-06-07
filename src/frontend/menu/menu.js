@@ -36,11 +36,11 @@ body.innerHTML = `
                     </div>
                     <p>Nueva venta</p>
                 </li>
-                <li>
+                <li id="navInitiatedSales">
                     <div class = "container-icon">
                         <img src="${icons.hourglassStartPrimary}" alt="" class="nav__icon" id="boxSolid">
                     </div>
-                    <p>Ver ventas iniciadas</p>
+                    <p>Ver salidas de producto</p>
                 </li>
                 <li id="navCompletedSales">
                     <div class = "container-icon">

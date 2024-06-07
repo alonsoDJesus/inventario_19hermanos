@@ -14,6 +14,8 @@ const code = document.getElementById('code')
 const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
+const codeRoute = document.getElementById('codeRoute')
+let routesData = []
 /*
     Objeto para los campos:
     - Almacena true si un campo tiene un dato correcto y un false si no lo tiene
@@ -24,7 +26,8 @@ const fieldsCheck = {
     quantity: false,
     employees: false,
     routes: false,
-    code: false
+    code: false,
+    codeRoute: false
 }
 
 let saleID = 0
@@ -121,7 +124,7 @@ function getCurrentDate() {
 function switchModeTime(checkField, checked){
     if (checked) {
         checkField.readOnly = false
-
+        clearValidations(checkField.name, checkField)
         if (checkField.id == 'time') {
             clearInterval(intervalID)
             intervalID = 0
@@ -131,7 +134,7 @@ function switchModeTime(checkField, checked){
         }
     } else {
         checkField.readOnly = true
-
+        establecerCorrecto(checkField.name, checkField)
         if (checkField.id == 'time' && intervalID == 0) {
             intervalID = setInterval(() => {
                 getCurrentTime()
@@ -157,6 +160,18 @@ function searchProductByIdAttribute() {
     return productFounded
 }
 
+function searchRouteByIdAttribute() {
+    let routeFounded
+    
+    routesData.forEach(route => {
+        if (route.id == routes.selectedIndex) {
+            routeFounded = route
+        }
+    })
+
+    return routeFounded
+}
+
 function searchProductByCode(code){
     let productFounded
 
@@ -167,6 +182,18 @@ function searchProductByCode(code){
     })
 
     return productFounded
+}
+
+function searchRouteByCode(code){
+    let routeFounded
+
+    routesData.forEach(route => {
+        if(route.codigo == code){
+            routeFounded = route
+        }
+    })
+
+    return routeFounded
 }
 
 function verifyStock(){
@@ -306,7 +333,7 @@ function regulateQuantity() {
         if (fieldsCheck.description) {
             let product = searchProductByIdAttribute()
 
-            if (parseInt(quantity.value) <= parseInt(product.stock) && quantity.value != '' && fieldsCheck.description) { // Si no excede al stock
+            if (parseInt(quantity.value) <= parseInt(product.stock) && quantity.value != '' && parseInt(quantity.value) != 0) { // Si no excede al stock
                 // Afecta las cantidades de stock disponible y de cajas a enviar
                 stock.value = parseInt(product.stock) - parseInt(quantity.value)
                 boxes.value = Math.ceil(parseInt(quantity.value) / parseInt(product.piecesInBox))
@@ -318,7 +345,7 @@ function regulateQuantity() {
                 setDataOnFields() // Se restablecen los datos de los campos
 
                 let errorMessage
-                quantity.value == '' ? errorMessage = "Campo vacío" : errorMessage = "Stock superado"
+                quantity.value == '' ? errorMessage = "Campo vacío" : (parseInt(quantity.value) == 0 ? errorMessage = "No se acepta 0" : errorMessage = "Stock superado")
                 establecerIncorrecto('quantity', quantity, errorMessage)
             }
         }
@@ -443,6 +470,30 @@ function selectProductByCode(){
             productsDescription.selectedIndex = 0
             establecerIncorrecto(code.name, code, 'Producto no encontrado')
         }
+    }
+}
+
+function selectRouteByCode(){
+    if(fieldsCheck.codeRoute){
+        clearValidations('routes', routes)
+        let routeSearched = searchRouteByCode(codeRoute.value)
+
+        if( routeSearched != undefined ){
+            routes.selectedIndex = routeSearched.id
+            establecerCorrecto(routes.name, routes)
+        } else{
+            routes.selectedIndex = 0
+            clearValidations(routes.name, routes)
+            establecerIncorrecto(codeRoute.name, codeRoute, 'Ruta no encontrada')
+        }
+    }
+}
+
+function validateDate(){
+    if(dateField.value != ''){
+        const dateRegistered = new Date(dateField.value)
+        year = dateRegistered.getFullYear()
+        year >= 2024 && year < 2500 ? establecerCorrecto('date', dateField) : establecerIncorrecto('date', dateField, 'Fecha Incorrecta')
     }
 }
 
@@ -579,7 +630,7 @@ async function saveSaleDetail(){
 async function init() {
     const params = await getParams()
     const employeesData = await fetchEmployeesData()
-    const routesData = await fetchRoutesData()
+    routesData = await fetchRoutesData()
 
     switch (params.editingStatusOfNewSale) {
         case true:
@@ -606,6 +657,8 @@ async function init() {
             switchModeTime(time, checkTime.checked)
             renderAllSales()
             setButtonsOptions()
+            validateDate()
+            establecerCorrecto(time.name, time)
 
             checkDate.addEventListener('click', () => {
                 switchModeTime(date, checkDate.checked)
@@ -629,9 +682,9 @@ async function init() {
                 // Limpieza de validaciones
 
                 // En una lista se almacenan los campos que serán limpiados de sus validaciones
-                modalFormFields.push(fields[4])
                 modalFormFields.push(fields[5])
                 modalFormFields.push(fields[6])
+                modalFormFields.push(fields[7])
                 modalFormFields.forEach(modalField => {
                     // De cada campo se necesita su nombre y el propio campo para su limpieza
                     clearValidations(modalField.name, modalField)
@@ -676,7 +729,16 @@ async function init() {
             })
 
             routes.addEventListener('change', () => {
-                routes.selectedIndex != 0 ? establecerCorrecto('routes', routes) : establecerIncorrecto('routes', routes, 'Selecciona una ruta');
+                if(routes.selectedIndex != 0){
+                    let routeSearched = searchRouteByIdAttribute()
+                    
+                    codeRoute.value = routeSearched.codigo
+                    establecerCorrecto('routes', routes)
+                }else{
+                    codeRoute.value = ''
+                    clearValidations(codeRoute.name, codeRoute)
+                    establecerIncorrecto('routes', routes, 'Selecciona una ruta')
+                }
             })
 
             // Clic para seleccionar algun producto
@@ -734,6 +796,39 @@ async function init() {
 
             })
 
+            codeRoute.onkeydown = (e) => {
+                if(e.code == 'NumpadEnter' || e.code == 'Enter'){
+                    e.preventDefault()
+                }
+            }
+
+            codeRoute.addEventListener('keyup', (e) => {
+                if(e.code == 'NumpadEnter' || e.code == 'Enter'){
+                    selectRouteByCode()
+                }else{
+                    const checkValue = window.electronAPI.testByRegexp(codeRoute.value, 'codeProduct')
+
+                    if (checkValue) {
+                        clearValidations(codeRoute.name, codeRoute)
+                        fieldsCheck.codeRoute = true
+                    } else {
+                        fieldsCheck.codeRoute = false
+                        routes.selectedIndex = 0
+
+                        let errorMessage = ''
+                        if (codeRoute.value.length == 0) {
+                            errorMessage = 'Campo Vacío'    
+                        }else if(codeRoute.value.length > 10){
+                            errorMessage = 'Código muy largo' 
+                        }else{
+                            errorMessage = 'Símbolos raros' 
+                        }
+
+                        establecerIncorrecto(codeRoute.name, codeRoute, errorMessage)
+                    }
+                }
+            })
+
             buttonSearchProduct.addEventListener('click', () => {
                 selectProductByCode()
             })
@@ -746,6 +841,11 @@ async function init() {
                 imgButton.src = icons.searchWhite
             })
 
+            dateField.addEventListener('keyup', validateDate)
+
+            time.addEventListener('keyup', () => {
+                establecerCorrecto(time.name, time)
+            })
             break;
 
     }

@@ -1,6 +1,10 @@
 const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonOptions = document.getElementById('buttonShowOptions')
+const percentIconLock = document.getElementById('percent__icon-lock')
+const saleIconLock = document.getElementById('sale__icon-lock')
+const piecesInBoxIconLock = document.getElementById('piecesInBox__icon-lock')
+const boxesQuantityIconLock = document.getElementById('boxesQuantity__icon-lock')
 
 const fieldsCheck = {
     description: false,
@@ -34,23 +38,32 @@ async function checkForm(event){
         break;
 
         case 'cost':
+            ocultarMensajeCaution(event.target.name, event.target)
             if(event.target.value == ""){
                 const sale = document.getElementById('sale')
                 const percent = document.getElementById('percent')
-                clearValidations(event.target.name, event.target)
+                
                 disableField(sale)
+                saleIconLock.classList.remove('display-none')
+
                 disableField(percent)
+                percentIconLock.classList.remove('display-none')
+
+                clearValidations(event.target.name, event.target)
+
             }else{
                 checkCostField('numbers', event.target, event.target.name);
             }
         break;
 
         case 'percent':
+            const sale = document.getElementById('sale')
             if(event.target.value == ""){
                 clearValidations(event.target.name, event.target)
+                clearValidations(sale.name, sale)
+                sale.value = ""
             }else{
                 const testByRegExp = await window.electronAPI.testByRegexp(event.target.value, 'numbers')
-                const sale = document.getElementById('sale')
                 checkSaleFields(testByRegExp && parseFloat(event.target.value) > 0, event.target, sale, testByRegExp);
             }
         break;
@@ -67,12 +80,14 @@ async function checkForm(event){
         break;
 
         case 'initialStock':
+            ocultarMensajeCaution(event.target.name, event.target)
             if(event.target.value == ""){
                 const piecesInBox = document.getElementById('piecesInBox')
                 const boxesQuantity = document.getElementById('boxesQuantity')
                 clearValidations(event.target.name, event.target)
                 disableField(piecesInBox)
                 disableField(boxesQuantity)
+                piecesInBoxIconLock.classList.remove('display-none')
             }else{
                 checkInitialStockField()
             }
@@ -148,7 +163,9 @@ async function checkCostField(nameRegExp, field, fieldName){
 
     if( testByRegExp && parseFloat(field.value) > 0){
         sale.readOnly = false
+        saleIconLock.classList.add('display-none')
         percent.readOnly = false
+        percentIconLock.classList.add('display-none')
         establecerCorrecto(fieldName, field)
 
         if (fieldsCheck.percent){
@@ -157,7 +174,9 @@ async function checkCostField(nameRegExp, field, fieldName){
         }
     }else{
         disableField(sale)
+        saleIconLock.classList.remove('display-none')
         disableField(percent)
+        percentIconLock.classList.remove('display-none')
 
         determinateErrorMessageInNumberFields({testByRegExp: testByRegExp, fieldName: fieldName, field: field})
     }
@@ -170,12 +189,12 @@ async function checkSaleFields(statusQuantity, fieldModified, fieldToModify, tes
 
             switch (fieldToModify.id) {
                 case 'sale':
-                    let salePrice = parseFloat(cost.value) + parseFloat(cost.value) * (parseFloat(fieldModified.value) / 100.0)
+                    let salePrice = roundToTwo(parseFloat(cost.value) + parseFloat(cost.value) * (parseFloat(fieldModified.value) / 100.0))
                     fieldToModify.value = salePrice 
                     break;
             
                 default:
-                    let gainPercent = (( parseFloat(fieldModified.value) - parseFloat(cost.value) ) / cost.value) * 100
+                    let gainPercent = roundToTwo((( parseFloat(fieldModified.value) - parseFloat(cost.value) ) / cost.value) * 100)
                     fieldToModify.value = gainPercent
                     break;
             }
@@ -249,6 +268,36 @@ async function init(){
         case 'create':
             enableFieldListeners()
             setButtonsOptions()
+
+            saleIconLock.addEventListener('click', () => {
+                const cost = document.getElementById('cost')
+                
+                cost.focus()
+                mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+            })
+
+            percentIconLock.addEventListener('click', () => {
+                const cost = document.getElementById('cost')
+                
+                cost.focus()
+                mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+            })
+
+            piecesInBoxIconLock.addEventListener('click', () => {
+                const initialStock = document.getElementById('initialStock')
+                
+                initialStock.focus()
+                mostrarMensajeCaution(initialStock.name, initialStock, 'Primero debes ingresar el stock inicial')
+            })
+
+            boxesQuantityIconLock.addEventListener('click', () => {
+                const boxesQuantity = document.getElementById('boxesQuantity')
+                mostrarMensajeCaution(boxesQuantity.name, boxesQuantity, 'Este dato no puede editarse, es automático')
+
+                setTimeout(() => {
+                    ocultarMensajeCaution(boxesQuantity.name, boxesQuantity)
+                }, 5000);
+            })
             break;
         
         case 'edit':
@@ -310,6 +359,7 @@ async function checkInitialStockField(){
     if( testByRegExp && parseInt(initialStock.value) > 0 ){
         establecerCorrecto(initialStock.name, initialStock)
         piecesInBox.readOnly = false
+        piecesInBoxIconLock.classList.add('display-none')
 
         if(piecesInBox.value != "")
             checkPiecesInBoxField()
@@ -339,6 +389,10 @@ async function checkPiecesInBoxField(){
         establecerIncorrecto(piecesInBox.name, piecesInBox, errorMessage) 
     }
 }
+
+function roundToTwo(num) {
+    return +(Math.round(num + 'e+2') + 'e-2');
+  }
 
 function getStatusValidationFields(){
     const initialValue = true

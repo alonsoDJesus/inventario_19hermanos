@@ -21,7 +21,8 @@ async function getRoutes(){
     const routes = await conn.query(`
         SELECT
 	        Ruta_PK as id,
-	        Nombre__ruta as ruta 
+	        Nombre__ruta as ruta,
+            Codigo__ruta as codigo 
         FROM ruta;
     `)
 

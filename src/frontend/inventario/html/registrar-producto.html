@@ -50,8 +50,12 @@
                     <img src="../../../../icons/dollar-sign-solid.svg" alt="" class="h-1rem">
                     <label for="cost" class="fs-2">Precio de Costo</label>
                 </div>
-                <input id="cost" name="cost" type="number" class="form__field" placeholder="40.00" title="Agregue aqui el precio que le cuesta adquirir el producto">
+                <input id="cost" name="cost" type="tel" class="form__field" placeholder="40.00" title="Agregue aqui el precio que le cuesta adquirir el producto">
                 <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="cost__val"></div>
+                <div class="display-none" id="cost__caution">
+                    <img src="../../../../icons/triangle-exclamation-solid.svg" alt="" class="h-1rem">
+                    <p>Revisa que todos los datos sean correctos</p>
+                </div>
                 <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                 <p class="formulario__input-error" id="cost__warning">No se aceptan símbolos raros</p>
             </div>
@@ -61,7 +65,8 @@
                     <img src="../../../../icons/percent-solid.svg" alt="" class="h-1rem">
                     <label for="percent" class="fs-2">Porcentaje de Ganancia</label>
                 </div>
-                <input id="percent" name="percent" type="number" class="form__field" placeholder="40.5%" title="Este es el porcentaje utilidad" readonly>
+                <input id="percent" name="percent" type="tel" class="form__field" placeholder="40.5%" title="Este es el porcentaje utilidad" readonly>
+                <img src="../../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="percent__icon-lock" title="Para debloquear, ingrese un precio de costo">
                 <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="percent__val"></div>
                 <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                 <p class="formulario__input-error" id="percent__warning">No se aceptan símbolos raros</p>
@@ -72,7 +77,8 @@
                     <img src="../../../../icons/dollar-sign-solid.svg" alt="" class="h-1rem">
                     <label for="sale" class="fs-2">Precio de Venta</label>
                 </div>
-                <input id="sale" name="sale" type="number" class="form__field" placeholder="40.00" title="Agregue aqui el precio al que vende usted su producto" readonly>
+                <input id="sale" name="sale" type="tel" class="form__field" placeholder="40.00" title="Agregue aqui el precio al que vende usted su producto" readonly>
+                <img src="../../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="sale__icon-lock" title="Para debloquear, ingrese un precio de costo">
                 <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="sale__val"></div>
                 <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                 <p class="formulario__input-error" id="sale__warning">No se aceptan símbolos raros</p>
@@ -85,6 +91,10 @@
                 </div>
                 <input id="initialStock" name="initialStock" type="tel" class="form__field" placeholder="80" title="Agregue aqui la cantidad de piezas iniciales de su producto a registrar">
                 <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="initialStock__val"></div>
+                <div class="display-none" id="initialStock__caution">
+                    <img src="../../../../icons/triangle-exclamation-solid.svg" alt="" class="h-1rem">
+                    <p>Revisa que todos los datos sean correctos</p>
+                </div>
                 <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                 <p class="formulario__input-error" id="initialStock__warning">No se aceptan símbolos raros</p>
             </div>
@@ -117,6 +127,7 @@
                     <label for="piecesInBox" class="fs-1">Piezas x caja</label>
                 </div>
                 <input id="piecesInBox" name="piecesInBox" type="tel" class="form__field" placeholder="4" title="Selecciona cuantas piezas vienen en una sola caja" readonly></i>
+                <img src="../../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="piecesInBox__icon-lock" title="Para debloquear, ingrese un stock inicial">
                 <div class="formulario__validacion-estado icon-wrong opacity-0 right-2" id="piecesInBox__val"></div>
                 <p class="formulario__input-error" id="piecesInBox__warning">No se aceptan símbolos raros</p>
             </div>
@@ -127,7 +138,12 @@
                     <label for="boxesQuantity" class="fs-2">Cantidad de cajas</label>
                 </div>
                 <input id="boxesQuantity" name="boxesQuantity" type="number" class="form__field" placeholder="4" title="Aquí aparece automáticamente cuantas cajas tienes de un determinado producto." readonly>
+                <img src="../../../../icons/readme-white.svg" alt="" class="h-1rem lock-field-icon" id="boxesQuantity__icon-lock" title="Este campo no se puede editar, se calcula automáticamente.">
                 <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="boxesQuantity__val"></div>
+                <div class="display-none" id="boxesQuantity__caution">
+                    <img src="../../../../icons/triangle-exclamation-solid.svg" alt="" class="h-1rem">
+                    <p>Revisa que todos los datos sean correctos</p>
+                </div>
                 <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                 <p class="formulario__input-error" id="boxesQuantity__warning">No se aceptan símbolos raros</p>
             </div>

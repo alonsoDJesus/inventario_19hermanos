@@ -27,6 +27,18 @@ const establecerIncorrecto = (nameField, field, errorMessage = '') => {
     errorMessage != '' ? warningMessage.innerText = errorMessage : ''  // En su texto interior se le da un mensaje de error
 }
 
+const mostrarMensajeCaution= (nameField, field, errorMessage = "") => {
+    document.querySelector(`#${nameField}__caution p`).innerText = errorMessage
+
+    document.getElementById(`${nameField}__caution`).classList.remove('display-none');
+    document.getElementById(`${nameField}__caution`).classList.add('formulario__data-error');
+}
+
+const ocultarMensajeCaution= (nameField, field) => {
+    document.getElementById(`${nameField}__caution`).classList.add('display-none');
+    document.getElementById(`${nameField}__caution`).classList.remove('formulario__data-error');
+}
+
 function clearValidations(nameField, field){
     // Se ocultan los íconos
     document.getElementById(`${nameField}__val`).classList.remove('opacity-1');

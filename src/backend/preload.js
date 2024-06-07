@@ -84,7 +84,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     testByRegexp: (value, valueType) => {
         const expressions = {
             codeProduct: /^[A-ZÁ-Úa-zá-ú0-9_ ]{1,10}$/,
-            nameProduct: /^([A-ZÁ-Ú]?[a-zá-ú0-9]+[\.\, ]*)+$/,
+            nameProduct: /^([A-ZÁ-Úa-zá-ú0-9]+[\.\, ]*)+$/,
             numbers: /^[0-9]+(\.[0-9]+)?$/,
             intNumbers: /^[0-9]+$/
         }

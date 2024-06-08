@@ -8,9 +8,15 @@ const optionsFormat = {
 const format = new Intl.NumberFormat('en-US', optionsFormat);
 
 let allProducts = []
+let lowLevelProducts = [], midLevelProducts = [], highLevelProducts =[]
 let quantityProductsToSupply = {
     lowLevelQuantity: 0,
     midLevelQuantity: 0
+}
+
+function setQuantityProductsToSupply(){
+    quantityProductsToSupply.lowLevelQuantity = lowLevelProducts.length
+    quantityProductsToSupply.midLevelQuantity = midLevelProducts.length
 }
 
 function showWarningStockMessage(){
@@ -40,20 +46,22 @@ function showWarningStockMessage(){
     
 }
 
-function determinateColorStockIndicator(stock, minStock, maxStock){
-
-    if (stock <= minStock) {
-        quantityProductsToSupply.lowLevelQuantity++
-        return icons.circleRed
+function levelClassifier(){
+    allProducts.forEach((product) => {
+        if (product.stock <= product.minStock) {
+        product.levelIndicator = icons.circleRed
+        lowLevelProducts.push(product)
     } else{
-        const midPoint = (minStock + maxStock) / 2
-        if(stock <= midPoint){
-            quantityProductsToSupply.midLevelQuantity++
-            return icons.circleYellow
+        const midPoint = (product.minStock + product.maxStock) / 2
+        if(product.stock <= midPoint){
+            product.levelIndicator = icons.circleYellow
+            midLevelProducts.push(product)
         }else{
-            return icons.circleGreen
+            product.levelIndicator = icons.circleGreen
+            highLevelProducts.push(product)
         }
     }
+    })
 }
 
 function searchProduct(){
@@ -101,7 +109,7 @@ function renderProducts(searchType) {
                     [icons.boxesWhite, `${product.piecesInBox} ${product.piecesInBox == 1 ? 'pieza' : 'piezas'} por caja`],
                     [icons.dollarWhite, `Costo: ${format.format(parseFloat(product.cost).toFixed(2))}`],
                     [icons.dollarWhite, `Venta: ${format.format(parseFloat(product.sale).toFixed(2))}`],
-                    [determinateColorStockIndicator(product.stock, product.minStock, product.maxStock), `Existencias: ${product.stock}`],
+                    [product.levelIndicator, `Existencias: ${product.stock}`],
                 ]
 
                 arrayBodyData.forEach( (singleBodyData) => {
@@ -213,6 +221,7 @@ async function init() {
     buttonAddProduct.addEventListener('click', async () => {
         await window.electronAPI.navigateTo(links.newProduct, -1, 'create')
     })
+   
 
     await fetchProductsWithCriteria('code')
 
@@ -220,18 +229,38 @@ async function init() {
 }
 
 async function fetchProductsWithCriteria(searchCriteriaDeterminator, searchType = 'all'){
+    lowLevelProducts = []
+    midLevelProducts = []
+    highLevelProducts = []
+
     allProducts = await window.electronAPI.selectProducts(searchCriteriaDeterminator)
+
+    levelClassifier()
+    setQuantityProductsToSupply()
+
+    switch (searchCriteriaDeterminator) {
+        case 'stock':
+            allProducts = lowLevelProducts.concat(midLevelProducts, highLevelProducts)
+            break;
+    
+        default:
+            lowLevelProducts = []
+            midLevelProducts = []
+            highLevelProducts = []
+            break;
+    }
+
     renderProducts(searchType)
 }
 
 function determinateSearchCriteriaBySelector(){
     switch (sortSelector.selectedIndex) {
         case 1:
-            fetchProductsWithCriteria('code')
+            fetchProductsWithCriteria('code', 'all')
             break;
     
         case 2:
-            fetchProductsWithCriteria('stock')
+            fetchProductsWithCriteria('stock', 'all')
             break;
         
         default:

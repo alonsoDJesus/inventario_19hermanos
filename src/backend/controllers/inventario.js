@@ -30,6 +30,7 @@ async function getProducts(searchCriteriaDeterminator){
                 Cantidad_existencias_minimas_inventario__producto as minStock
             FROM producto
             ${searchCriteriaString}
+            LIMIT 20
         `)
 
         products.forEach(product => {

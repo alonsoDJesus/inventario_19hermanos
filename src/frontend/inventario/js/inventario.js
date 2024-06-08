@@ -210,8 +210,8 @@ async function init() {
         searchProduct()
     })
 
-    buttonAddProduct.addEventListener('click', () => {
-        console.log('redirigiendo')
+    buttonAddProduct.addEventListener('click', async () => {
+        await window.electronAPI.navigateTo(links.newProduct)
     })
 
     await fetchProductsWithCriteria('code')

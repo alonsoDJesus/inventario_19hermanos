@@ -211,7 +211,7 @@ async function init() {
     })
 
     buttonAddProduct.addEventListener('click', async () => {
-        await window.electronAPI.navigateTo(links.newProduct)
+        await window.electronAPI.navigateTo(links.newProduct, -1, 'create')
     })
 
     await fetchProductsWithCriteria('code')

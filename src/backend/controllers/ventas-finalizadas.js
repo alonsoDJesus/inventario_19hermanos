@@ -1,14 +1,14 @@
 const { getConnection } = require('../database')
 
 async function getCompletedSales(criteria = ''){
-    let searchCriteriaString = criteria != '' ? `AND Fecha__venta = '${criteria}'` : '';
+    let searchCriteriaString = criteria != '' ? `AND Fecha_inicio__venta = '${criteria}'` : '';
 
     const conn = await getConnection()
     const completedSales = await conn.query(`
         SELECT 	Venta_PK as id, 
                 CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre, 
                 Nombre__ruta as ruta,
-                Fecha__venta as fecha, 
+                Fecha_inicio__venta as fecha, 
                 Hora_inicio__venta as salida,
                 Hora_fin__venta as llegada,
                 Venta_total_global__venta as venta,

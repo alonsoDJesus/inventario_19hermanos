@@ -1,7 +1,7 @@
 const { getConnection } = require('../database')
 
 async function getPiecesInitialSales(criteria = ''){
-    let searchCriteriaString = criteria != '' ? `AND Fecha__venta = '${criteria}'` : '';
+    let searchCriteriaString = criteria != '' ? `AND Fecha_inicio__venta = '${criteria}'` : '';
 
     const conn = await getConnection()
     const piecesInitialSales = await conn.query(`
@@ -19,14 +19,14 @@ async function getPiecesInitialSales(criteria = ''){
 }
 
 async function getInitialSales(criteria = ''){
-    let searchCriteriaString = criteria != '' ? `AND Fecha__venta = '${criteria}'` : '';
+    let searchCriteriaString = criteria != '' ? `AND Fecha_inicio__venta = '${criteria}'` : '';
 
     const conn = await getConnection()
     const initialSales = await conn.query(`
         SELECT 	Venta_PK as id, 
             CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre, 
             Nombre__ruta as ruta, 
-            Fecha__venta as fecha,
+            Fecha_inicio__venta as fecha,
             Hora_inicio__venta as salida
         FROM venta
         INNER JOIN turno ON Turno_FK__venta = Turno_PK

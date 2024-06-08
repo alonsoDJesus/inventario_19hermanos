@@ -8,7 +8,7 @@ async function getSaleById(id){
             SELECT
                 CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre,
                 Nombre__ruta as ruta,
-                Fecha__venta as fecha,
+                Fecha_inicio__venta as fecha,
                 Hora_inicio__venta as salida
             FROM venta 
             INNER JOIN turno ON Turno_FK__venta = Turno_PK

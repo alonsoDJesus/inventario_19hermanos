@@ -1,8 +1,9 @@
 const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonOptions = document.getElementById('buttonShowOptions')
-
 const timeFinishField = document.getElementById('timeFinish')
+const dateFinishField = document.getElementById('dateFinish')
+
 const fieldsCheck = {
     timeFinish: false
 }
@@ -96,7 +97,7 @@ function setFieldRoute(routeName){
     establecerCorrecto('route', route)
 }
 
-function setFieldDate(dateValue){
+function setFieldStartDate(dateValue){
     const date = document.getElementById('date')
     date.value = dateValue
 
@@ -114,6 +115,12 @@ function setFieldTimeFinish(time){
     timeFinishField.value = time
 
     establecerCorrecto('timeFinish', timeFinishField)
+}
+
+function setFieldDateFinish(date){
+    dateFinishField.value = date
+
+    establecerCorrecto('dateFinish', dateFinishField)
 }
 
 function getFieldTimeFinish(){
@@ -251,21 +258,41 @@ function getCurrentTime() {
     return `${hour}:${minutes}:${seconds}`
 }
 
-function switchModeTime(checked){
-    const lockTimeIcon = document.querySelector('.lock-field-icon')
-    lockTimeIcon.classList.toggle('display-none')
+function getCurrentDate() {
+    let date = new Date()
+    today = date.getDate()
+    month = date.getMonth()
+    year = date.getFullYear()
+
+    today = today >= 1 && today < 10 ? `0${today}` : `${today}`
+    month = month >= 0 && month < 10 ? `0${month + 1}` : `${month + 1}`
+    return `${year}-${month}-${today}`
+}
+
+function switchModeTime(checkField, checked){
 
     if (checked) {
-        timeFinishField.readOnly = false
-        clearInterval(intervalID)
-        intervalID = 0
+        checkField.readOnly = false
+        clearValidations(checkField.name, checkField)
+        if (checkField.id == 'timeFinish') {
+            clearInterval(intervalID)
+            intervalID = 0
+            document.getElementById('timeFinishFieldLockedIcon').classList.toggle('display-none')
+        }else{
+            document.getElementById('dateFinishFieldLockedIcon').classList.toggle('display-none')
+        }
     } else {
-        timeFinishField.readOnly = true
-
-        if (intervalID == 0) {
+        checkField.readOnly = true
+        establecerCorrecto(checkField.name, checkField)
+        if (checkField.id == 'timeFinish' && intervalID == 0) {
             intervalID = setInterval(() => {
                 setFieldTimeFinish(getCurrentTime())
             }, 1000);
+
+            document.getElementById('timeFinishFieldLockedIcon').classList.toggle('display-none')
+        } else{
+            setFieldDateFinish(getCurrentDate())
+            document.getElementById('dateFinishFieldLockedIcon').classList.toggle('display-none')
         }
     }
 }
@@ -600,6 +627,7 @@ async function saveSaleDetail() {
 
 async function init(){
     const checkTime = document.getElementById('checkTime')
+    const checkDate = document.getElementById('checkDate')
     
     const params = await getParams()
     const saleDataFetched = await getSaleDataById(params.index)
@@ -608,7 +636,7 @@ async function init(){
 
     setFieldName(saleDataFetched.nombre)
     setFieldRoute(saleDataFetched.ruta)
-    setFieldDate(saleDataFetched.fecha)
+    setFieldStartDate(saleDataFetched.fecha)
     setFieldTimeStart(saleDataFetched.salida)
     await setsaleDetailToUpdate(params.index)
 
@@ -616,13 +644,20 @@ async function init(){
         case true:
             setTitle("Finalizar Venta")
             setTagID(params.index)
-            switchModeTime(checkTime.checked)
+
+            console.log(timeFinishField)
+            switchModeTime(timeFinishField, checkTime.checked)
+            switchModeTime(dateFinishField, checkDate.checked)
             renderSaleDetail()
             setButtonsOptions()
             setSaleID(params.index)
 
             checkTime.addEventListener('click', () => {
-                switchModeTime(checkTime.checked)
+                switchModeTime(timeFinishField, checkTime.checked)
+            })
+
+            checkDate.addEventListener('click', () => {
+                switchModeTime(dateFinishField, checkDate.checked)
             })
             break;
     

@@ -52,7 +52,7 @@
                     <div class="input__group position-relative">
                         <div class="label__group">
                             <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
-                            <label for="date" class="fs-1">Fecha</label>
+                            <label for="date" class="fs-1">Fecha de Salida</label>
                         </div>
                         <input type="date" id="date" class="completingsale__field bg-primary" readonly></input>
                         <div class="formulario__validacion-estado icon-wrong opacity-0" id="date__val"></div>
@@ -70,16 +70,32 @@
                     </div>
 
                     <div class="input__group position-relative">
-                        <div class="checkbox__group">
-                            <input type="checkbox" id="checkTime" name="checkTime" />
-                            <label for="checkTime">Registrar hora manualmente</label>
+                        <div class="label__group">
+                            <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
+                            <label for="dateFinish" class="fs-1">Fecha de llegada</label>
                         </div>
+                        <div class="checkbox__group">
+                            <input type="checkbox" id="checkDate" name="checkDate" />
+                            <label for="checkDate">Registrar fecha manualmente</label>
+                        </div>
+                        <input type="date" id="dateFinish" name="dateFinish" class="completingsale__field bg-primary" title="Aqui se registra la hora de llegada"></input>
+                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon display-none" id="dateFinishFieldLockedIcon">
+                        
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="dateFinish__val"></div>
+                        <p class="formulario__input-error" id="dateFinish__warning">Seleccione un producto válido</p>
+                    </div>
+
+                    <div class="input__group position-relative">
                         <div class="label__group">
                             <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
                             <label for="timeFinish" class="fs-1">Hora de Llegada</label>
                         </div>
-                        <input type="time" id="timeFinish" class="completingsale__field bg-primary"></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon display-none">
+                        <div class="checkbox__group">
+                            <input type="checkbox" id="checkTime" name="checkTime" />
+                            <label for="checkTime">Registrar hora manualmente</label>
+                        </div>
+                        <input type="time" id="timeFinish" name="timeFinish" class="completingsale__field bg-primary"></input>
+                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon display-none" id="timeFinishFieldLockedIcon">
                         
                         <div class="formulario__validacion-estado icon-wrong opacity-0" id="timeFinish__val"></div>
                         <p class="formulario__input-error" id="timeFinish__warning">Seleccione un producto válido</p>

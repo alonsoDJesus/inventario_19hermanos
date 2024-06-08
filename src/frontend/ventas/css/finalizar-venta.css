@@ -363,7 +363,7 @@ hgroup{
 }
 
 /*Corrección provisional a los íconos de validacion*/
-#timeFinish__val{
+#timeFinish__val, #dateFinish__val{
     top: 4.1rem;
     right: 2.4rem;
 }

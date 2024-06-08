@@ -373,7 +373,7 @@ hgroup{
     right: 2.3rem;
 }
 
-.formulario__input-error-activo{
+.error-cellfield{
     position: absolute;
     width: 11rem;
     bottom: -1.2rem;

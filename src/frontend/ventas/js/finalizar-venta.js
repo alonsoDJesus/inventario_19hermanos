@@ -5,7 +5,8 @@ const timeFinishField = document.getElementById('timeFinish')
 const dateFinishField = document.getElementById('dateFinish')
 
 const fieldsCheck = {
-    timeFinish: false
+    timeFinish: false,
+    dateFinish: false
 }
 const optionsFormat = {
     style: 'currency',
@@ -125,6 +126,10 @@ function setFieldDateFinish(date){
 
 function getFieldTimeFinish(){
     return timeFinishField.value
+}
+
+function getFieldDateFinish(){
+    return dateFinishField.value
 }
 
 function getInitialPieces(index){
@@ -415,6 +420,7 @@ function renderSaleDetail(isReadOnly = false) {
 
         const paragraphValidation = document.createElement('p')
         paragraphValidation.classList.add('formulario__input-error')
+        paragraphValidation.classList.add('error-cellfield')
         paragraphValidation.id = `finalPieces${index+1}__warning`
         paragraphValidation.innerText = "Cantidad Excedente"
 
@@ -574,6 +580,7 @@ async function saveSaleDetail() {
     if (statusValidation) {
         const saveSaleDetailTask = async function () {
             const saleDataToUpdate = {
+                Fecha_fin__venta: getFieldDateFinish(),
                 Hora_fin__venta: getFieldTimeFinish(),
                 Venta_total_global__venta: getFinalSaleData(),
                 Costo_total_global__venta: getFinalCostData(),
@@ -644,8 +651,6 @@ async function init(){
         case true:
             setTitle("Finalizar Venta")
             setTagID(params.index)
-
-            console.log(timeFinishField)
             switchModeTime(timeFinishField, checkTime.checked)
             switchModeTime(dateFinishField, checkDate.checked)
             renderSaleDetail()
@@ -658,6 +663,18 @@ async function init(){
 
             checkDate.addEventListener('click', () => {
                 switchModeTime(dateFinishField, checkDate.checked)
+            })
+
+            timeFinishField.addEventListener('keyup', () => {
+                establecerCorrecto(timeFinishField.name, timeFinishField)
+            })
+
+            dateFinishField.addEventListener('keyup', () => {
+                if(dateFinishField.value != ''){
+                    const dateRegistered = new Date(dateFinishField.value)
+                    year = dateRegistered.getFullYear()
+                    year >= 2024 && year < 2500 ? establecerCorrecto(dateFinishField.name, dateFinishField) : establecerIncorrecto(dateFinishField.name, dateFinishField, 'Fecha Incorrecta')
+                }
             })
             break;
     

@@ -3,6 +3,9 @@ const radioShowAll = document.getElementById('radioShowAll')
 const dateField = document.getElementById('date')
 const buttonSearch = document.getElementById('buttonSearch')
 const buttonAddSale = document.getElementById('buttonAddSale')
+const containerCards = document.getElementById('containerCards')
+
+let cards
 
 let initialSales = undefined
 let fieldsCheck = {
@@ -14,13 +17,12 @@ async function goToCompletingSale(event, id) {
 }
 
 function renderInitialSales(searchType = 'all') {
-    const containerCards = document.getElementById('containerCards')
 
     containerCards.innerHTML = ''
     if (initialSales && initialSales.length != 0) {
         initialSales.forEach(sale => {
             containerCards.innerHTML += `
-                <div class = "card">
+                <div class = "card" id = "${sale.id}">
 
                     <div class="card_body">
                         <div class="card_data">
@@ -108,6 +110,16 @@ buttonSearch.addEventListener('click', async () => {
 
 buttonAddSale.addEventListener('click', async () => {
     await window.electronAPI.navigateTo(links.newSale)    
+})
+
+containerCards.addEventListener('click', async (event) => {
+    let card
+    
+    if(event.target.closest('.card_button') == null){
+        card = event.target.closest('.card')
+        
+        await window.electronAPI.navigateTo(links.newSale, card.id, 'view')
+    }
 })
 
 getInitialSales();

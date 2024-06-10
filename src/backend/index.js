@@ -1,5 +1,6 @@
 const { app, screen, ipcMain } = require('electron')
-const { createWindow, getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail } = require('./main')
+const { createWindow } = require('./main')
+const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById } = require('./controllers/nueva-venta')
 const { getInitialSales } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
@@ -41,6 +42,10 @@ app.whenReady().then( () => {
     ipcMain.handle('select:saleDetailByID', async (event, id) => {
         return await getSaleDetailById(id)
     }),
+
+    ipcMain.handle('select:initiatedSaleByID', async (event, id) => {
+        return await getInitiatedSaleById(id)
+    })
 
     ipcMain.handle('insert:newShift', async (event, newShift) => {
         return await setNewShift(newShift)

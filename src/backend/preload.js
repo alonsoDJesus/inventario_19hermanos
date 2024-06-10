@@ -13,14 +13,21 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
         } else {
             if (url.includes('nueva-venta.html')) {
+                let newSaleParams
                 if (id == -1) {
-                    const newSaleParams = {
-                        editingStatusOfNewSale: false,
+                    newSaleParams = {
+                        statusOfNewSale: 'create',
                     }
-
-                    const newSaleParamsString = JSON.stringify(newSaleParams)
-                    sessionStorage.setItem("newSaleParams", newSaleParamsString)
+                } else{
+                    if (visitMode == 'view') {
+                        newSaleParams = {
+                           statusOfNewSale: 'view'
+                        }
+                    }
                 }
+
+                const newSaleParamsString = JSON.stringify(newSaleParams)
+                sessionStorage.setItem("newSaleParams", newSaleParamsString)
             } else{
                 if (url.includes('registrar-producto.html')){
                     const newProductParams = {
@@ -122,6 +129,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     selectSaleDetailById: (id) => {
         return ipcRenderer.invoke('select:saleDetailByID', id) 
+    },
+
+    selectInitiatedSaleById: (id) => {
+        return ipcRenderer.invoke('select:initiatedSaleByID', id) 
     },
 
     insertNewShift: (newShift) => {

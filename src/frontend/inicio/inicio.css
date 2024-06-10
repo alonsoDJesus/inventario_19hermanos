@@ -135,6 +135,7 @@ input[type="date"]{
     width: 98%;
     margin-bottom: 1rem;
     padding: 0 1.9rem   0 1.9rem;
+    cursor: pointer;
 }
 
 .text_example{

@@ -632,8 +632,9 @@ async function init() {
     const employeesData = await fetchEmployeesData()
     routesData = await fetchRoutesData()
 
-    switch (params.editingStatusOfNewSale) {
-        case true:
+    switch (params.statusOfNewSale) {
+        case 'view':
+            console.log('quieres ver una venta')
             break;
 
         default:

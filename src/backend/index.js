@@ -1,6 +1,6 @@
 const { app, screen, ipcMain } = require('electron')
 const { createWindow } = require('./main')
-const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById } = require('./controllers/nueva-venta')
+const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById, getInitiatedSaleDetailById } = require('./controllers/nueva-venta')
 const { getInitialSales } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
@@ -13,23 +13,23 @@ require('electron-reload')(getDirName())
 app.whenReady().then( () => {
     ipcMain.handle('select:initialSales', async (event, criteria) => {
         return await getInitialSales(criteria)
-    })
+    }),
 
     ipcMain.handle('select:completedSales', async (event, criteria) => {
         return await getCompletedSales(criteria)
-    })
+    }),
 
     ipcMain.handle('select:employees', async () => {
         return await getEmployees()
-    })
+    }),
 
     ipcMain.handle('select:routes', async () => {
         return await getRoutes()
-    })
+    }),
 
     ipcMain.handle('select:lastSaleID', async () => {
         return await getLastSaleID()
-    })
+    }),
 
     ipcMain.handle('select:products', async (event, searchCriteriaDeterminator) => {
         return await getProducts(searchCriteriaDeterminator)
@@ -45,7 +45,11 @@ app.whenReady().then( () => {
 
     ipcMain.handle('select:initiatedSaleByID', async (event, id) => {
         return await getInitiatedSaleById(id)
-    })
+    }),
+
+    ipcMain.handle('select:initiatedSaleDetailByID', async (event, id) => {
+        return await getInitiatedSaleDetailById(id)
+    }),
 
     ipcMain.handle('insert:newShift', async (event, newShift) => {
         return await setNewShift(newShift)

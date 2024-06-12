@@ -118,7 +118,7 @@ containerCards.addEventListener('click', async (event) => {
     if(event.target.closest('.card_button') == null){
         card = event.target.closest('.card')
         
-        await window.electronAPI.navigateTo(links.newSale, card.id, 'view')
+        await window.electronAPI.navigateTo(links.newSale, card.id, 'edit')
     }
 })
 

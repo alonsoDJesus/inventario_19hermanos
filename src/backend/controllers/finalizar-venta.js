@@ -51,7 +51,7 @@ async function getSaleDetailById(id){
 
         return saleDetail
     } catch (error) {
-        console.log(error)
+        return error
     }
 }
 

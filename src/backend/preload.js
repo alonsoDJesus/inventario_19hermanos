@@ -19,9 +19,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
                         statusOfNewSale: 'create',
                     }
                 } else{
-                    if (visitMode == 'view') {
+                    if (visitMode == 'edit') {
                         newSaleParams = {
-                           statusOfNewSale: 'view'
+                           statusOfNewSale: visitMode,
+                           saleId: id
                         }
                     }
                 }
@@ -55,7 +56,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     prepareSaleDetailOnSessionStorage: () => {
         const sessionStorageSales = sessionStorage.getItem("addedSales")
-    
+
         if (sessionStorageSales) {
             // Recupera las ventas del session storage
             const auxAddedSales = JSON.parse(sessionStorageSales) // Prepara objeto
@@ -83,6 +84,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
 
     setSaleDetailOnSessionStorage: (sales, addedSale, index) => {
+        console.log(sales)
         sales[index] = addedSale
         const salesString = JSON.stringify(sales)
         sessionStorage.setItem("addedSales", salesString) 
@@ -133,6 +135,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     selectInitiatedSaleById: (id) => {
         return ipcRenderer.invoke('select:initiatedSaleByID', id) 
+    },
+
+    selectInitiatedSaleDetailById: (id) => {
+        return ipcRenderer.invoke('select:initiatedSaleDetailByID', id) 
     },
 
     insertNewShift: (newShift) => {

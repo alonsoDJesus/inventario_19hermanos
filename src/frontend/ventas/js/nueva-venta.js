@@ -15,6 +15,7 @@ const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
 const codeRoute = document.getElementById('codeRoute')
+
 let routesData = []
 /*
     Objeto para los campos:
@@ -28,6 +29,10 @@ const fieldsCheck = {
     routes: false,
     code: false,
     codeRoute: false
+}
+
+const initiatedSale = {
+
 }
 
 let saleID = 0
@@ -46,30 +51,30 @@ function getSaleID(){
     return saleID
 }
 //---------------------------------------------------Código a borrar
-function sendSalesToStorage(sales, addedSale, index){
-    sales[index] = addedSale
-    const salesString = JSON.stringify(sales)
-    sessionStorage.setItem("addedSales", salesString)
-}
+// function sendSalesToStorage(sales, addedSale, index){
+//     sales[index] = addedSale
+//     const salesString = JSON.stringify(sales)
+//     sessionStorage.setItem("addedSales", salesString)
+// }
 
-function setAddedSalesOnStorage(addedSale){
-    const sessionStorageSales = sessionStorage.getItem("addedSales")
-    
-    if (sessionStorageSales) {
-        // Recupera las ventas del session storage
-        const auxAddedSales = JSON.parse(sessionStorageSales)
-        let index = parseInt(sessionStorage.getItem("index"))
-        index++
-        sendSalesToStorage(auxAddedSales, addedSale, index)
-        sessionStorage.setItem("index", `${index}`)
+// function setAddedSalesOnStorage(addedSale){
+//     const sessionStorageSales = sessionStorage.getItem("addedSales")
 
-    } else {
-        // Crea todo un objeto y establecelo en sessionStorage
-        const transientSale = new Object()
-        sessionStorage.setItem("index", "1")
-        sendSalesToStorage(transientSale, addedSale, 1)
-    }
-}
+//     if (sessionStorageSales) {
+//         // Recupera las ventas del session storage
+//         const auxAddedSales = JSON.parse(sessionStorageSales)
+//         let index = parseInt(sessionStorage.getItem("index"))
+//         index++
+//         sendSalesToStorage(auxAddedSales, addedSale, index)
+//         sessionStorage.setItem("index", `${index}`)
+
+//     } else {
+//         // Crea todo un objeto y establecelo en sessionStorage
+//         const transientSale = new Object()
+//         sessionStorage.setItem("index", "1")
+//         sendSalesToStorage(transientSale, addedSale, 1)
+//     }
+// }
 //----------------------------------------------------------------------------
 
 function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault, selectedIndex){
@@ -101,7 +106,7 @@ function getCurrentTime() {
     let hour = date.getHours()
     let minutes = date.getMinutes()
     let seconds = date.getSeconds()
-    
+
     hour = hour >= 0 && hour < 10 ? `0${hour}` : `${hour}`
     minutes = minutes >= 0 && minutes < 10 ? `0${minutes}` : `${minutes}`
     seconds = seconds >= 0 && seconds < 10 ? `0${seconds}` : `${seconds}`
@@ -121,7 +126,7 @@ function getCurrentDate() {
 }
 
 
-function switchModeTime(checkField, checked){
+function switchModeTime(checkField, checked, visitMode = 'create', dateFounded = '', timeFounded = ''){
     if (checked) {
         checkField.readOnly = false
         clearValidations(checkField.name, checkField)
@@ -136,13 +141,21 @@ function switchModeTime(checkField, checked){
         checkField.readOnly = true
         establecerCorrecto(checkField.name, checkField)
         if (checkField.id == 'time' && intervalID == 0) {
-            intervalID = setInterval(() => {
-                getCurrentTime()
-            }, 1000);
+            if( visitMode == "edit"){
+                timeField.value = timeFounded
+            } else{
+                intervalID = setInterval(() => {
+                    getCurrentTime()
+                }, 1000);
+            }
 
             lockFieldIcons[1].classList.remove('display-none')
         } else {
-            getCurrentDate()
+            if( visitMode == "edit"){
+                dateField.value = dateFounded
+            } else{
+                getCurrentDate()
+            }
             lockFieldIcons[0].classList.remove('display-none')
         }
     }
@@ -150,7 +163,7 @@ function switchModeTime(checkField, checked){
 
 function searchProductByIdAttribute() {
     let productFounded
-    
+
     productsData.forEach(product => {
         if (product.id == productsDescription.selectedIndex) {
             productFounded = product
@@ -162,7 +175,7 @@ function searchProductByIdAttribute() {
 
 function searchRouteByIdAttribute() {
     let routeFounded
-    
+
     routesData.forEach(route => {
         if (route.id == routes.selectedIndex) {
             routeFounded = route
@@ -206,7 +219,7 @@ function verifyStock(){
 }
 
 function setDataOnFields() {
-    product = searchProductByIdAttribute()  
+    product = searchProductByIdAttribute()
     cost.value = `$ ${product.cost}`
     sale.value = `$ ${product.sale}`
     stock.value = parseInt(product.stock)
@@ -223,8 +236,8 @@ function clearDataFromFields(wantToCleanQuantity = true){
 
 function isEmptyForm(fields) {
     let isEmpty = true, index = 0
-    
-    
+
+
     while (fields[index] != undefined && isEmpty == true) {
         if (fields[index].type == "select-one") {
             isEmpty = fields[index].selectedIndex == 0
@@ -318,12 +331,12 @@ function renderAllSales() {
             cardBody.appendChild(cardButtons) // La sección de botones se añade al contenido de la tarjeta
 
             card.appendChild(cardBody) // La sección de contenido en general es añadida la tarjeta como tal
-            
+
             // La tarjeta es añadida al espacio de tarjetas
             containerSales.appendChild(card)
         }
     }
-    
+
 }
 
 // Regulador de la cantidad ingresada por el usario
@@ -358,7 +371,7 @@ function regulateQuantity() {
 
 function searchRepeatedSale(addedSales){
     let mySale = undefined, index = 1
-    
+
     while (addedSales[index] != undefined) {
         if (productsDescription.selectedIndex == addedSales[index].Producto_FK__detalleventa) {
             mySale = addedSales[index]
@@ -373,12 +386,16 @@ function searchRepeatedSale(addedSales){
 function setEmployeesField(employeesData, selectedIndex = 0){
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún empleado"
+    emptyOption.disabled = true
+    emptyOption.selected = true
     setOptionsOnSelectField(employees, employeesData, "nombre", emptyOption, selectedIndex)
 }
 
 function setRoutesField(routesData, selectedIndex = 0) {
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione alguna ruta"
+    emptyOption.disabled = true
+    emptyOption.selected = true
     setOptionsOnSelectField(routes, routesData, "ruta", emptyOption, selectedIndex)
 }
 
@@ -386,6 +403,8 @@ function setRoutesField(routesData, selectedIndex = 0) {
 function setProductsField(allProductsData, selectedIndex = 0){
     const emptyOption = document.createElement('option')
     emptyOption.text = "Seleccione algún producto"
+    emptyOption.disabled = true
+    emptyOption.selected = true
     setOptionsOnSelectField(productsDescription, allProductsData, "descrip", emptyOption, selectedIndex)
 }
 
@@ -404,7 +423,7 @@ function cancelSaleDetail(){
 }
 
 function setButtonsOptions(isReadOnly = false){
-    
+
     if (!isReadOnly) {
         buttonOption1.children[0].src = icons.checkWhite
         buttonOption1.addEventListener('click', async () => {
@@ -429,7 +448,7 @@ function toggleModalForm(openModal = true){
 
     layoutForm.classList.toggle('display-none') // Se muestra el modal
     modalForm.classList.toggle('display-none')
-    
+
     if (openModal) {
         modalForm.reset() // Limpieza del formulario
     } else{
@@ -497,6 +516,26 @@ function validateDate(){
     }
 }
 
+async function setInitiatedSaleDetailOnSessionStorage({saleId: saleId, productId: productId, quantityOfPieces: quantityOfPieces, salePrice: salePrice, costPrice: costPrice, description: description, quantityOfBoxes: quantityOfBoxes}) {
+    
+    const addedSale = {
+        Venta_FK__detalleventa: saleId,
+        Producto_FK__detalleventa: productId,
+        Cantidad_piezas_inicio__detalleventa: quantityOfPieces,
+        Precio_venta_al_momento__detalleventa: salePrice,
+        Precio_costo_al_momento__detalleventa: costPrice,
+        description: description,
+        quantityBoxes: quantityOfBoxes
+    }
+
+    // Inserción de la venta en Session Storage
+    const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
+    saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
+    await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
+
+    //setAddedSalesOnStorage(addedSale)
+}
+
 async function getParams() {
     return await window.electronAPI.getFromSessionStorage("newSaleParams")
 }
@@ -554,9 +593,9 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
                     sessionStorage.removeItem("addedSales")
                     await goToSomewhere()
                 }
-                
+
                 break;
-         
+
             default:
                 buttonOption1.classList.remove('button_save_active')
                 buttonOption2.classList.remove('button_cancel_active')
@@ -604,13 +643,13 @@ async function saveSaleDetail(){
                 }
             }
         }
-        
+
         const confirmContent = {
             icon: 'warning',
             title: '¿Seguro que quieres guardar los datos?',
             text: 'Los datos que ingresaste deben ser correctos',
         }
-    
+
         showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
     }else{
         const errorMessageForm = document.getElementById('errorMessageForm')
@@ -629,31 +668,79 @@ async function saveSaleDetail(){
 
 async function init() {
     const params = await getParams()
+    const buttonAddSale = document.getElementById('buttonAddSale')
+    const buttonAceptModal = document.getElementById('buttonAceptModal')
+    const buttonCloseModal = document.getElementById('buttonCloseModal')
+    const buttonCancelModal = document.getElementById('buttonCancelModal')
+    const buttonSearchProduct = document.getElementById('buttonSearchProduct')
+    const imgButton = document.querySelector('#buttonSearchProduct img')
+    const date = document.getElementById('date')
+    const time = document.getElementById('time')
+    const checkTime = document.getElementById('checkTime')
+    const checkDate = document.getElementById('checkDate')
     const employeesData = await fetchEmployeesData()
+
     routesData = await fetchRoutesData()
 
+    setEmployeesField(employeesData)
+    setRoutesField(routesData)
+
     switch (params.statusOfNewSale) {
-        case 'view':
-            console.log('quieres ver una venta')
+        case 'edit':
+            const title = document.querySelector('h1')
+            const saleInitiatedData = await window.electronAPI.selectInitiatedSaleById(params.saleId)
+            const initiatedSaleDetailData = await window.electronAPI.selectInitiatedSaleDetailById(params.saleId)
+
+            title.innerText = "Editar Venta"
+
+            setSaleID(params.saleId)
+            setTagID(getSaleID())
+
+            employees.selectedIndex = saleInitiatedData.vendedorId
+            codeRoute.value = saleInitiatedData.codigoRuta
+            routes.selectedIndex = saleInitiatedData.rutaId
+            establecerCorrecto(employees.name, employees)
+            establecerCorrecto(codeRoute.name, codeRoute)
+            establecerCorrecto(routes.name, routes)
+
+            checkDate.parentElement.children[1].innerText = 'Editar fecha'
+            checkTime.parentElement.children[1].innerText = 'Editar hora'
+            switchModeTime(date, checkDate.checked, 'edit', saleInitiatedData.fechaInicio)
+            switchModeTime(time, checkTime.checked, 'edit', '', saleInitiatedData.horaInicio)
+            establecerCorrecto(date.name, date)
+            establecerCorrecto(time.name, time)
+
+            if(await window.electronAPI.getFromSessionStorage("addedSales") == null){
+                for (let index = 0; index < initiatedSaleDetailData.length; index++) {
+                    const saleDetailFounded = initiatedSaleDetailData[index];
+                    await setInitiatedSaleDetailOnSessionStorage({
+                        saleId: parseInt(saleID),
+                        productId: saleDetailFounded.idProducto,
+                        quantityOfPieces: saleDetailFounded.piezasEntregadas,
+                        salePrice: parseFloat(saleDetailFounded.precioVenta),
+                        costPrice: parseFloat(saleDetailFounded.precioCosto),
+                        description: saleDetailFounded.descripcion,
+                        quantityOfBoxes: Math.ceil( parseInt(saleDetailFounded.piezasEntregadas) / parseInt(saleDetailFounded.piezasEnCaja) )
+                    })
+                }
+            }
+
+            renderAllSales()
+
+            checkDate.addEventListener('click', () => {
+                switchModeTime(date, checkDate.checked, 'edit', saleInitiatedData.fechaInicio)
+            })
+
+            checkTime.addEventListener('click', () => {
+                switchModeTime(time, checkTime.checked, 'edit', '', saleInitiatedData.horaInicio)
+            })
             break;
 
         default:
-            const checkTime = document.getElementById('checkTime')
-            const checkDate = document.getElementById('checkDate')
-            const buttonAddSale = document.getElementById('buttonAddSale')
-            const buttonAceptModal = document.getElementById('buttonAceptModal')
-            const buttonCloseModal = document.getElementById('buttonCloseModal')
-            const buttonCancelModal = document.getElementById('buttonCancelModal')
-            const buttonSearchProduct = document.getElementById('buttonSearchProduct')
-            const imgButton = document.querySelector('#buttonSearchProduct img')
-            const date = document.getElementById('date')
-            const time = document.getElementById('time')
             const lastSaleID = await fetchLastSaleID()
 
             setSaleID(lastSaleID + 1)
             setTagID(getSaleID())
-            setEmployeesField(employeesData)
-            setRoutesField(routesData)
             switchModeTime(date, checkDate.checked)
             switchModeTime(time, checkTime.checked)
             renderAllSales()
@@ -695,23 +782,32 @@ async function init() {
             buttonAceptModal.addEventListener('click', async () => {
 
                 if (fieldsCheck.description && fieldsCheck.quantity) {
-                    const addedSale = {
-                        Venta_FK__detalleventa: saleID,
-                        Producto_FK__detalleventa: productsDescription.selectedIndex,
-                        Cantidad_piezas_inicio__detalleventa: quantity.value,
-                        Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
-                        Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
+                    await setInitiatedSaleDetailOnSessionStorage({
+                        saleId: saleID,
+                        productId: productsDescription.selectedIndex,
+                        quantityOfPieces: quantity.value,
+                        salePrice: parseFloat(sale.value.replace('$', '').trim()),
+                        costPrice: parseFloat(cost.value.replace('$', '').trim()),
                         description: productsDescription.value,
-                        quantityBoxes: boxes.value
-                    }
+                        quantityOfBoxes: boxes.value
+                    })
+                    // const addedSale = {
+                    //     Venta_FK__detalleventa: saleID,
+                    //     Producto_FK__detalleventa: productsDescription.selectedIndex,
+                    //     Cantidad_piezas_inicio__detalleventa: quantity.value,
+                    //     Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
+                    //     Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
+                    //     description: productsDescription.value,
+                    //     quantityBoxes: boxes.value
+                    // }
 
-                    //setAddedSalesOnStorage(addedSale)
+                    // //setAddedSalesOnStorage(addedSale)
 
-                    // Inserción de la venta en Session Storage
-                    const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
-                    saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
-                    await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
-
+                    // // Inserción de la venta en Session Storage
+                    // const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
+                    // saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
+                    // await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
+                    
                     toggleModalForm(false)
                     renderAllSales()
                 }
@@ -732,7 +828,7 @@ async function init() {
             routes.addEventListener('change', () => {
                 if(routes.selectedIndex != 0){
                     let routeSearched = searchRouteByIdAttribute()
-                    
+
                     codeRoute.value = routeSearched.codigo
                     establecerCorrecto('routes', routes)
                 }else{
@@ -756,7 +852,7 @@ async function init() {
                 productSelected = searchProductByIdAttribute()
                 code.value = productSelected.codigo
                 clearValidations(code.name, code)
-                
+
             });
 
             // Cada vez que el usuario escriba una cantidad
@@ -784,50 +880,17 @@ async function init() {
 
                         let errorMessage = ''
                         if (code.value.length == 0) {
-                            errorMessage = 'Campo Vacío'    
+                            errorMessage = 'Campo Vacío'
                         }else if(code.value.length > 10){
-                            errorMessage = 'Código muy largo' 
+                            errorMessage = 'Código muy largo'
                         }else{
-                            errorMessage = 'Símbolos raros' 
+                            errorMessage = 'Símbolos raros'
                         }
 
                         establecerIncorrecto(code.name, code, errorMessage)
                     }
                 }
 
-            })
-
-            codeRoute.onkeydown = (e) => {
-                if(e.code == 'NumpadEnter' || e.code == 'Enter'){
-                    e.preventDefault()
-                }
-            }
-
-            codeRoute.addEventListener('keyup', (e) => {
-                if(e.code == 'NumpadEnter' || e.code == 'Enter'){
-                    selectRouteByCode()
-                }else{
-                    const checkValue = window.electronAPI.testByRegexp(codeRoute.value, 'codeProduct')
-
-                    if (checkValue) {
-                        clearValidations(codeRoute.name, codeRoute)
-                        fieldsCheck.codeRoute = true
-                    } else {
-                        fieldsCheck.codeRoute = false
-                        routes.selectedIndex = 0
-
-                        let errorMessage = ''
-                        if (codeRoute.value.length == 0) {
-                            errorMessage = 'Campo Vacío'    
-                        }else if(codeRoute.value.length > 10){
-                            errorMessage = 'Código muy largo' 
-                        }else{
-                            errorMessage = 'Símbolos raros' 
-                        }
-
-                        establecerIncorrecto(codeRoute.name, codeRoute, errorMessage)
-                    }
-                }
             })
 
             buttonSearchProduct.addEventListener('click', () => {
@@ -850,6 +913,40 @@ async function init() {
             break;
 
     }
+
+    codeRoute.onkeydown = (e) => {
+        if(e.code == 'NumpadEnter' || e.code == 'Enter'){
+            e.preventDefault()
+        }
+    }
+
+    codeRoute.addEventListener('keyup', (e) => {
+        if(e.code == 'NumpadEnter' || e.code == 'Enter'){
+            selectRouteByCode()
+        }else{
+            const checkValue = window.electronAPI.testByRegexp(codeRoute.value, 'codeProduct')
+
+            if (checkValue) {
+                clearValidations(codeRoute.name, codeRoute)
+                fieldsCheck.codeRoute = true
+            } else {
+                fieldsCheck.codeRoute = false
+                routes.selectedIndex = 0
+
+                let errorMessage = ''
+                if (codeRoute.value.length == 0) {
+                    errorMessage = 'Campo Vacío'
+                }else if(codeRoute.value.length > 10){
+                    errorMessage = 'Código muy largo'
+                }else{
+                    errorMessage = 'Símbolos raros'
+                }
+
+                clearValidations(routes.name, routes)
+                establecerIncorrecto(codeRoute.name, codeRoute, errorMessage)
+            }
+        }
+    })
 }
 
 window.addEventListener('load', () => {
@@ -858,10 +955,10 @@ window.addEventListener('load', () => {
     const navCompletedSales = document.getElementById('navCompletedSales')
     const navInitiatedSales = document.getElementById('navInitiatedSales')
     const navStock = document.getElementById('navStock')
-    const navNewProduct = document.getElementById('navNewProduct')    
+    const navNewProduct = document.getElementById('navNewProduct')
 
     let goToSomeWhere;
-    
+
     navHome.addEventListener('click', () => {
         const confirmContent = {
             icon: 'warning',
@@ -938,7 +1035,7 @@ window.addEventListener('load', () => {
         goToSomeWhere = async function(){
             await window.electronAPI.navigateTo(links.newProduct, -1,  'create')
         }
-        
+
         showSwalConfirm(goToSomeWhere, confirmContent)
     })
 })

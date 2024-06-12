@@ -337,6 +337,7 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
                     await specialTask()
                 }else{
                     //await window.electronAPI.deleteParams("newSaleParams")
+                    await window.electronAPI.deleteParams("newProductParams")
                     //sessionStorage.removeItem("index")
                     //sessionStorage.removeItem("addedSales")
                     await goToSomewhere()
@@ -485,7 +486,7 @@ function saveSaleDetail() {
                         text: 'Aceptar'
                     }
                 })
-
+                
                 await window.electronAPI.deleteParams('newProductParams')
                 await window.electronAPI.navigateTo(links.home)
             }

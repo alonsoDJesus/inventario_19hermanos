@@ -35,7 +35,7 @@ function renderInitialSales(searchType = 'all') {
                         </div>
 
                         <div class="card_buttons">
-                            <div class="card_button" onclick="goToCompletingSale(event, ${sale.id})"><div></div></div>
+                            <div class="card_button" id = "editNewSaleButton" onclick="goToCompletingSale(event, ${sale.id})"><div></div></div>
                             <div class="card_button"><div></div></div>
                             <div class="card_button"><div></div></div>
                         </div>
@@ -115,7 +115,7 @@ buttonAddSale.addEventListener('click', async () => {
 containerCards.addEventListener('click', async (event) => {
     let card
     
-    if(event.target.closest('.card_button') == null){
+    if(event.target.closest('#editNewSaleButton') == null){
         card = event.target.closest('.card')
         
         await window.electronAPI.navigateTo(links.newSale, card.id, 'edit')

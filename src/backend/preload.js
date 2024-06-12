@@ -84,7 +84,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
     },
 
     setSaleDetailOnSessionStorage: (sales, addedSale, index) => {
-        console.log(sales)
         sales[index] = addedSale
         const salesString = JSON.stringify(sales)
         sessionStorage.setItem("addedSales", salesString) 

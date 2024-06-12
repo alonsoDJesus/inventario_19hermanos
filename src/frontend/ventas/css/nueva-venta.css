@@ -223,14 +223,24 @@ label{
 }
 
 .card__buttons{
-    width: 7%;
     display: flex;
     justify-content: space-between;
+    gap: 1rem;
 }
 
 .card__button{
-    height: 1.2rem;
+    height: 2rem;
+    width: 2rem;
     cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: .3s;
+}
+
+.card__button:hover{
+    background-color: var(--primary);
 }
 
 .number{

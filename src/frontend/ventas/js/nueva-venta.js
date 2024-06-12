@@ -317,16 +317,20 @@ function renderAllSales() {
             const cardButtons = document.createElement('div')
             cardButtons.classList.add('card__buttons')
 
-            // <img src="${icons.up}" alt="" class="card_button">
-            const edit = document.createElement('img')
-            edit.src = `${icons.edit}`
-            edit.classList.add('card__button')
-            cardButtons.appendChild(edit)
+            const cardButtonsSources = [icons.edit, icons.delete]
 
-            const trash = document.createElement('img')
-            trash.src = `${icons.delete}`
-            trash.classList.add('card__button')
-            cardButtons.appendChild(trash)
+            cardButtonsSources.forEach( (source) => {
+                const cardButton = document.createElement('div')
+                cardButton.classList.add('card__button')
+
+                    const cardButtonImage = document.createElement('img')
+                    cardButtonImage.src = source
+                    cardButtonImage.classList.add('h-1rem')
+                
+                cardButton.onclick = source == icons.edit ? editProductSale : deleteProductSale
+                cardButton.appendChild(cardButtonImage)               
+                cardButtons.appendChild(cardButton)
+            })
 
             cardBody.appendChild(cardButtons) // La sección de botones se añade al contenido de la tarjeta
 
@@ -422,19 +426,17 @@ function cancelSaleDetail(){
     showSwalConfirm(goToSomeWhere, confirmContent)
 }
 
-function setButtonsOptions(isReadOnly = false){
+function setButtonsOptions(statusOfNewSale = 'create') {
 
-    if (!isReadOnly) {
-        buttonOption1.children[0].src = icons.checkWhite
-        buttonOption1.addEventListener('click', async () => {
-            await saveSaleDetail()
-        })
+    buttonOption1.children[0].src = icons.checkWhite
+    buttonOption1.addEventListener('click', async () => {
+        statusOfNewSale == 'create' ? await saveSaleDetail() : updateSaleDetail()
+    })
 
-        buttonOption2.children[0].src = icons.xmarkWhite
-        buttonOption2.addEventListener('click', () => {
-            cancelSaleDetail()
-        })
-    }
+    buttonOption2.children[0].src = icons.xmarkWhite
+    buttonOption2.addEventListener('click', () => {
+        cancelSaleDetail()
+    })
 
     buttonShowOptions.onclick = function () {
         buttonOption1.classList.toggle('button_option1_active')
@@ -514,6 +516,14 @@ function validateDate(){
         year = dateRegistered.getFullYear()
         year >= 2024 && year < 2500 ? establecerCorrecto('date', dateField) : establecerIncorrecto('date', dateField, 'Fecha Incorrecta')
     }
+}
+
+async function editProductSale(){
+    console.log('si funciona')
+}
+
+async function deleteProductSale(){
+    console.log('eliminar')
 }
 
 async function setInitiatedSaleDetailOnSessionStorage({saleId: saleId, productId: productId, quantityOfPieces: quantityOfPieces, salePrice: salePrice, costPrice: costPrice, description: description, quantityOfBoxes: quantityOfBoxes}) {
@@ -707,8 +717,6 @@ async function init() {
             checkTime.parentElement.children[1].innerText = 'Editar hora'
             switchModeTime(date, checkDate.checked, 'edit', saleInitiatedData.fechaInicio)
             switchModeTime(time, checkTime.checked, 'edit', '', saleInitiatedData.horaInicio)
-            establecerCorrecto(date.name, date)
-            establecerCorrecto(time.name, time)
 
             if(await window.electronAPI.getFromSessionStorage("addedSales") == null){
                 for (let index = 0; index < initiatedSaleDetailData.length; index++) {
@@ -726,6 +734,7 @@ async function init() {
             }
 
             renderAllSales()
+            setButtonsOptions('edit')
 
             checkDate.addEventListener('click', () => {
                 switchModeTime(date, checkDate.checked, 'edit', saleInitiatedData.fechaInicio)
@@ -745,8 +754,6 @@ async function init() {
             switchModeTime(time, checkTime.checked)
             renderAllSales()
             setButtonsOptions()
-            validateDate()
-            establecerCorrecto(time.name, time)
 
             checkDate.addEventListener('click', () => {
                 switchModeTime(date, checkDate.checked)
@@ -754,161 +761,6 @@ async function init() {
 
             checkTime.addEventListener('click', () => {
                 switchModeTime(time, checkTime.checked)
-            })
-
-            // Clic para abrir el modal del registro para el nuevo producto
-            buttonAddSale.addEventListener('click', async () => {
-                const allProductsData = await fetchProductsData() // Colocación de productos en el select
-                let modalFormFields = []
-
-                toggleModalForm()
-
-                productsData = allProductsData
-                setProductsField(allProductsData)
-                productsDescription.focus() // Cambia el enfoque al select de los productos
-
-                // Limpieza de validaciones
-
-                // En una lista se almacenan los campos que serán limpiados de sus validaciones
-                modalFormFields.push(fields[5])
-                modalFormFields.push(fields[6])
-                modalFormFields.push(fields[7])
-                modalFormFields.forEach(modalField => {
-                    // De cada campo se necesita su nombre y el propio campo para su limpieza
-                    clearValidations(modalField.name, modalField)
-                })
-            })
-
-            buttonAceptModal.addEventListener('click', async () => {
-
-                if (fieldsCheck.description && fieldsCheck.quantity) {
-                    await setInitiatedSaleDetailOnSessionStorage({
-                        saleId: saleID,
-                        productId: productsDescription.selectedIndex,
-                        quantityOfPieces: quantity.value,
-                        salePrice: parseFloat(sale.value.replace('$', '').trim()),
-                        costPrice: parseFloat(cost.value.replace('$', '').trim()),
-                        description: productsDescription.value,
-                        quantityOfBoxes: boxes.value
-                    })
-                    // const addedSale = {
-                    //     Venta_FK__detalleventa: saleID,
-                    //     Producto_FK__detalleventa: productsDescription.selectedIndex,
-                    //     Cantidad_piezas_inicio__detalleventa: quantity.value,
-                    //     Precio_venta_al_momento__detalleventa: parseFloat(sale.value.replace('$', '').trim()),
-                    //     Precio_costo_al_momento__detalleventa: parseFloat(cost.value.replace('$', '').trim()),
-                    //     description: productsDescription.value,
-                    //     quantityBoxes: boxes.value
-                    // }
-
-                    // //setAddedSalesOnStorage(addedSale)
-
-                    // // Inserción de la venta en Session Storage
-                    // const saleDetail = await window.electronAPI.prepareSaleDetailOnSessionStorage() // Se preparan los datos para insercion
-                    // saleDetail.newAddedSale = addedSale // Se añade el objeto del nuevo producto a registrar
-                    // await window.electronAPI.setSaleDetailOnSessionStorage(saleDetail.objectSales, saleDetail.newAddedSale, saleDetail.i) // Se almacenan los datos
-                    
-                    toggleModalForm(false)
-                    renderAllSales()
-                }
-            })
-
-            buttonCloseModal.addEventListener('click', () => {
-                toggleModalForm(false)
-            })
-
-            buttonCancelModal.addEventListener('click', () => {
-                toggleModalForm(false)
-            })
-
-            employees.addEventListener('change', () => {
-                employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
-            })
-
-            routes.addEventListener('change', () => {
-                if(routes.selectedIndex != 0){
-                    let routeSearched = searchRouteByIdAttribute()
-
-                    codeRoute.value = routeSearched.codigo
-                    establecerCorrecto('routes', routes)
-                }else{
-                    codeRoute.value = ''
-                    clearValidations(codeRoute.name, codeRoute)
-                    establecerIncorrecto('routes', routes, 'Selecciona una ruta')
-                }
-            })
-
-            // Clic para seleccionar algun producto
-            productsDescription.addEventListener('change', () => {
-                clearValidations(fields[5].name, fields[5])
-                clearValidations(fields[6].name, fields[6])
-                // Si no está seleccionado ningun producto
-                if (productsDescription.selectedIndex == 0) {
-                    setSelectionFieldAsWrong('Seleccione un producto válido') // Señalalo como incorrecto
-                } else { // Si ha sido seleccionado algún producto, entonces...
-                    checkProductRepetition()
-                }
-
-                productSelected = searchProductByIdAttribute()
-                code.value = productSelected.codigo
-                clearValidations(code.name, code)
-
-            });
-
-            // Cada vez que el usuario escriba una cantidad
-            quantity.addEventListener('keyup', () => {
-                regulateQuantity() // Regulala en funcion del stock
-            })
-
-            // Cada vez que cambia la cantidad por medio de los botones del campo
-            quantity.addEventListener('change', () => {
-                regulateQuantity()
-            })
-
-            code.addEventListener('keyup', (e) => {
-                if(e.code == 'NumpadEnter' || e.code == 'Enter'){
-                    selectProductByCode()
-                }else{
-                    const checkValue = window.electronAPI.testByRegexp(code.value, 'codeProduct')
-
-                    if (checkValue) {
-                        clearValidations(code.name, code)
-                        fieldsCheck.code = true
-                    } else {
-                        fieldsCheck.code = false
-                        productsDescription.selectedIndex = 0
-
-                        let errorMessage = ''
-                        if (code.value.length == 0) {
-                            errorMessage = 'Campo Vacío'
-                        }else if(code.value.length > 10){
-                            errorMessage = 'Código muy largo'
-                        }else{
-                            errorMessage = 'Símbolos raros'
-                        }
-
-                        establecerIncorrecto(code.name, code, errorMessage)
-                    }
-                }
-
-            })
-
-            buttonSearchProduct.addEventListener('click', () => {
-                selectProductByCode()
-            })
-
-            buttonSearchProduct.addEventListener('mouseenter', () => {
-                imgButton.src = icons.searchPrimary
-            })
-
-            buttonSearchProduct.addEventListener('mouseleave', () => {
-                imgButton.src = icons.searchWhite
-            })
-
-            dateField.addEventListener('keyup', validateDate)
-
-            time.addEventListener('keyup', () => {
-                establecerCorrecto(time.name, time)
             })
             break;
 
@@ -947,6 +799,151 @@ async function init() {
             }
         }
     })
+
+    routes.addEventListener('change', () => {
+        if(routes.selectedIndex != 0){
+            let routeSearched = searchRouteByIdAttribute()
+
+            codeRoute.value = routeSearched.codigo
+            establecerCorrecto('routes', routes)
+        }else{
+            codeRoute.value = ''
+            clearValidations(codeRoute.name, codeRoute)
+            establecerIncorrecto('routes', routes, 'Selecciona una ruta')
+        }
+    })
+
+    dateField.addEventListener('keyup', validateDate)
+    dateField.addEventListener('change', validateDate)
+
+    time.addEventListener('keyup', () => {
+        establecerCorrecto(time.name, time)
+    })
+
+    time.addEventListener('change', () => {
+        establecerCorrecto(time.name, time)
+    })
+
+    // Clic para abrir el modal del registro para el nuevo producto
+    buttonAddSale.addEventListener('click', async () => {
+        const allProductsData = await fetchProductsData() // Colocación de productos en el select
+        let modalFormFields = []
+
+        toggleModalForm()
+
+        productsData = allProductsData
+        setProductsField(allProductsData)
+        productsDescription.focus() // Cambia el enfoque al select de los productos
+
+        // Limpieza de validaciones
+
+        // En una lista se almacenan los campos que serán limpiados de sus validaciones
+        modalFormFields.push(fields[5])
+        modalFormFields.push(fields[6])
+        modalFormFields.push(fields[7])
+        modalFormFields.forEach(modalField => {
+            // De cada campo se necesita su nombre y el propio campo para su limpieza
+            clearValidations(modalField.name, modalField)
+        })
+    })
+
+    buttonCloseModal.addEventListener('click', () => {
+        toggleModalForm(false)
+    })
+
+    buttonCancelModal.addEventListener('click', () => {
+        toggleModalForm(false)
+    })
+
+    employees.addEventListener('change', () => {
+        employees.selectedIndex != 0 ? establecerCorrecto('employees', employees) : establecerIncorrecto('employees', employees, 'Selecciona un empleado');
+    })
+
+    // Cada vez que el usuario escriba una cantidad
+    quantity.addEventListener('keyup', () => {
+        regulateQuantity() // Regulala en funcion del stock
+    })
+
+    // Cada vez que cambia la cantidad por medio de los botones del campo
+    quantity.addEventListener('change', () => {
+        regulateQuantity()
+    })
+
+    buttonSearchProduct.addEventListener('click', () => {
+        selectProductByCode()
+    })
+
+    buttonSearchProduct.addEventListener('mouseenter', () => {
+        imgButton.src = icons.searchPrimary
+    })
+
+    buttonSearchProduct.addEventListener('mouseleave', () => {
+        imgButton.src = icons.searchWhite
+    })
+
+    code.addEventListener('keyup', (e) => {
+        if(e.code == 'NumpadEnter' || e.code == 'Enter'){
+            selectProductByCode()
+        }else{
+            const checkValue = window.electronAPI.testByRegexp(code.value, 'codeProduct')
+
+            if (checkValue) {
+                clearValidations(code.name, code)
+                fieldsCheck.code = true
+            } else {
+                fieldsCheck.code = false
+                productsDescription.selectedIndex = 0
+
+                let errorMessage = ''
+                if (code.value.length == 0) {
+                    errorMessage = 'Campo Vacío'
+                }else if(code.value.length > 10){
+                    errorMessage = 'Código muy largo'
+                }else{
+                    errorMessage = 'Símbolos raros'
+                }
+
+                establecerIncorrecto(code.name, code, errorMessage)
+            }
+        }
+
+    })
+
+    // Clic para seleccionar algun producto
+    productsDescription.addEventListener('change', () => {
+        clearValidations(fields[5].name, fields[5])
+        clearValidations(fields[6].name, fields[6])
+        // Si no está seleccionado ningun producto
+        if (productsDescription.selectedIndex == 0) {
+            setSelectionFieldAsWrong('Seleccione un producto válido') // Señalalo como incorrecto
+        } else { // Si ha sido seleccionado algún producto, entonces...
+            checkProductRepetition()
+        }
+
+        productSelected = searchProductByIdAttribute()
+        code.value = productSelected.codigo
+        clearValidations(code.name, code)
+
+    });
+
+    buttonAceptModal.addEventListener('click', async () => {
+
+        if (fieldsCheck.description && fieldsCheck.quantity) {
+            await setInitiatedSaleDetailOnSessionStorage({
+                saleId: saleID,
+                productId: productsDescription.selectedIndex,
+                quantityOfPieces: quantity.value,
+                salePrice: parseFloat(sale.value.replace('$', '').trim()),
+                costPrice: parseFloat(cost.value.replace('$', '').trim()),
+                description: productsDescription.value,
+                quantityOfBoxes: boxes.value
+            })
+            
+            toggleModalForm(false)
+            renderAllSales()
+        }
+    })
+
 }
 
 window.addEventListener('load', () => {

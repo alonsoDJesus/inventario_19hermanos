@@ -85,7 +85,7 @@ input[type="date"]{
     background-color: var(--secondary);
     border-radius: 1.4rem;
     padding: 1.4rem;
-    height: 35rem;
+    /*height: 35rem;*/
 }
 
 .container__headers{
@@ -132,7 +132,7 @@ input[type="date"]{
     background-color: var(--third);
     border-radius: 1.2rem;
     height: 7.5rem;
-    width: 98%;
+    width: 100%;
     margin-bottom: 1rem;
     padding: 0 1.9rem   0 1.9rem;
     cursor: pointer;
@@ -165,7 +165,7 @@ input[type="date"]{
 .card_data{
     width: 90%;
     display: flex;
-    gap: 10%;
+    gap: 9.7%;
 }
 
 .data{

@@ -31,7 +31,7 @@ function renderInitialSales(searchType = 'all') {
                             <p class="data">${sale.ruta}</p>
                             <p class="data">${sale.fecha}</p>
                             <p class="data">${sale.salida}</p>
-                            <p class="data">${sale.cantidad_piezas}</p>
+                            <p class="data">${sale.cantidad_cajas}</p>
                         </div>
 
                         <div class="card_buttons">

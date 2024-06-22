@@ -1,22 +1,22 @@
 const { getConnection } = require('../database')
 
-async function getPiecesInitialSales(criteria = ''){
-    let searchCriteriaString = criteria != '' ? `AND Fecha_inicio__venta = '${criteria}'` : '';
+// async function getPiecesInitialSales(criteria = ''){
+//     let searchCriteriaString = criteria != '' ? `AND Fecha_inicio__venta = '${criteria}'` : '';
 
-    const conn = await getConnection()
-    const piecesInitialSales = await conn.query(`
-        SELECT Venta_FK__detalleventa as id, 
-        SUM(Cantidad_piezas_inicio__detalleventa) as cantidad_piezas
-        FROM detalleventa
-        INNER JOIN venta
-        ON Venta_PK = Venta_FK__detalleventa
-        WHERE Cantidad_piezas_fin__detalleventa IS NULL ${searchCriteriaString}
-        GROUP BY Venta_FK__detalleventa
-        ORDER BY Venta_FK__detalleventa DESC;
-    `)
-
-    return piecesInitialSales
-}
+//     const conn = await getConnection()
+//     const piecesInitialSales = await conn.query(`
+//         SELECT Venta_FK__detalleventa as id, 
+//         SUM(Cantidad_piezas_inicio__detalleventa) as cantidad_piezas
+//         FROM detalleventa
+//         INNER JOIN venta
+//         ON Venta_PK = Venta_FK__detalleventa
+//         WHERE Cantidad_piezas_fin__detalleventa IS NULL ${searchCriteriaString}
+//         GROUP BY Venta_FK__detalleventa
+//         ORDER BY Venta_FK__detalleventa DESC;
+//     `)
+    
+//     return piecesInitialSales
+// }
 
 async function getInitialSales(criteria = ''){
     let searchCriteriaString = criteria != '' ? `AND Fecha_inicio__venta = '${criteria}'` : '';
@@ -27,19 +27,17 @@ async function getInitialSales(criteria = ''){
             CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre, 
             Nombre__ruta as ruta, 
             Fecha_inicio__venta as fecha,
-            Hora_inicio__venta as salida
+            Hora_inicio__venta as salida,
+            Cajas_inicio__venta as cantidad_cajas
         FROM venta
         INNER JOIN turno ON Turno_FK__venta = Turno_PK
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
-        WHERE Hora_fin__venta IS NULL ${searchCriteriaString}
+        WHERE Hora_registro__venta IS NULL ${searchCriteriaString}
         ORDER BY Venta_PK DESC;
         `)
-
-    const piecesOfInitialSales = await getPiecesInitialSales(criteria)
     
     for (let index = 0; index < initialSales.length; index++) {
-        initialSales[index].cantidad_piezas = piecesOfInitialSales[index].cantidad_piezas
         
         let fecha = new Date(initialSales[index].fecha)
         dia = fecha.getDate()

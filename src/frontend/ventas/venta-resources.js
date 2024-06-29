@@ -15,7 +15,9 @@ const icons = {
     checkWhite: '../../../icons/check-solid-white.svg',
     xmarkWhite: '../../../icons/xmark-solid-white.svg',
     searchPrimary: '../../../icons/magnifying-glass-solid.svg',
-    searchWhite: '../../../icons/magnifying-glass-solid-white.svg'
+    searchWhite: '../../../icons/magnifying-glass-solid-white.svg',
+    lockIcon: '../../../icons/lock-solid.svg',
+    lockOpen: '../../../icons/lock-open-solid.svg'
 }
 
 const links = {

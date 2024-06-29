@@ -50,7 +50,7 @@ function renderCompletedSales(searchType = 'all') {
     }else{
         const notFoundMessage = searchType != 'all' ?  
         `No se encontró alguna venta en esta fecha.` :
-        `Aún no tienes ninguna venta finalizada. <br>Las ventas finalizadas irán aparaciendo automáticamente.` 
+        `Aún no tienes ninguna venta liquidada. <br>Las ventas finalizadas irán aparaciendo automáticamente.` 
 
         containerCards.innerHTML += `
             <div class="card">

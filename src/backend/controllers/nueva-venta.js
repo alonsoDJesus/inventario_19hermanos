@@ -45,7 +45,9 @@ async function getInitiatedSaleById(id){
                 Codigo__ruta as codigoRuta,
                 Ruta_FK__turno as rutaId,
                 Fecha_inicio__venta as fechaInicio,
-                Hora_inicio__venta as horaInicio
+                Hora_inicio__venta as horaInicio,
+                Cajas_inicio__venta as cantidadCajas,
+                Turno_FK__venta as turnoId
             FROM venta 
             INNER JOIN turno ON Turno_FK__venta = Turno_PK
             INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
@@ -93,39 +95,70 @@ async function getInitiatedSaleDetailById(id){
     }
 }
 
-async function setNewShift(newShift){
+
+async function deleteProductFromSaleDetail(saleId, productId){
     const conn = await getConnection()
     try {
-        const shiftInserted = await conn.query('INSERT INTO turno SET ?', newShift)
-        return shiftInserted.insertId
+        const deletedProduct = await conn.query('DELETE FROM detalleventa WHERE Venta_FK__detalleventa = ? AND Producto_FK__detalleventa = ?', [saleId, productId])
     } catch (error) {
         return error
     }
 }
 
-async function setNewSaleWithShift(newSaleWithShift){
+async function saveShift(shiftData, existentShiftId){
     const conn = await getConnection()
     try {
-        const saleWithShiftInserted = await conn.query('INSERT INTO venta SET ?', newSaleWithShift)
+        if (existentShiftId == -1) {
+            const shiftInserted = await conn.query('INSERT INTO turno SET ?', shiftData)
+            return shiftInserted.insertId
+        }
 
-        return saleWithShiftInserted.insertId
+        const shiftAffected = await conn.query('UPDATE turno SET ? WHERE Turno_PK = ?', [shiftData, existentShiftId])
+        return shiftAffected.affectedRows
+        
     } catch (error) {
         return error
     }
 }
 
-async function setSaleDetail(saleDetail){
+async function saveSaleWithShift(saleData, isNewSale){
     const conn = await getConnection()
+    try {
+        if (isNewSale) {
+            const saleDataInserted = await conn.query('INSERT INTO venta SET ?', saleData)
+            return saleDataInserted.insertId    
+        }
+
+        const saleDataAffected = await conn.query('UPDATE venta SET ? WHERE Venta_PK = ?', [saleData, saleData.Venta_PK])
+        return saleDataAffected.affectedRows
+    } catch (error) {
+        return error
+    }
+}
+
+async function saveSaleDetail(saleDetail, isNewSaleDetail){
+    const conn = await getConnection()
+
     try {
         //const saleWithShiftInserted = await conn.query('INSERT INTO venta SET ?', newSaleWithShift)
         for (let index = 1; index <= Object.keys(saleDetail).length; index++) {
+
+            const originalId = saleDetail[index].oldId
             
             delete saleDetail[index].description
             delete saleDetail[index].quantityBoxes
             delete saleDetail[index].code
+            delete saleDetail[index].oldId
 
-            await conn.query('INSERT INTO detalleventa SET ?', saleDetail[index])
-            
+            if (isNewSaleDetail || typeof originalId != "number")
+                await conn.query('INSERT INTO detalleventa SET ?', saleDetail[index])
+
+            else{ 
+                await conn.query('UPDATE detalleventa SET ? WHERE Venta_FK__detalleventa = ? AND Producto_FK__detalleventa = ?', [saleDetail[index], saleDetail[index].Venta_FK__detalleventa, originalId])
+                
+                // if(response.affectedRows == 0)
+                //     await conn.query('INSERT INTO detalleventa SET ?', saleDetail[index])
+            }
         }
 
         return 1;
@@ -134,15 +167,14 @@ async function setSaleDetail(saleDetail){
     }
 }
 
-
-
 module.exports = {
     getEmployees,
     getRoutes,
     getLastSaleID,
-    setNewShift,
-    setNewSaleWithShift,
-    setSaleDetail,
+    saveShift,
+    saveSaleWithShift,
+    saveSaleDetail,
     getInitiatedSaleById,
-    getInitiatedSaleDetailById
+    getInitiatedSaleDetailById,
+    deleteProductFromSaleDetail
 }

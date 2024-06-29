@@ -44,36 +44,34 @@ contextBridge.exposeInMainWorld('electronAPI', {
         location.href = url
     },
 
-    getFromSessionStorage: (paramID) => {
-        let params = sessionStorage.getItem(paramID)
-        params = JSON.parse(params)
-        return params
+    getFromSessionStorage: (identifier) => {
+        let params = sessionStorage.getItem(identifier)
+        return params != null ? JSON.parse(params) : params
     },
 
-    deleteParams: (paramID) => {
-        sessionStorage.removeItem(paramID)
+    deleteParams: (identifier) => {
+        sessionStorage.removeItem(identifier)
     },
 
-    prepareSaleDetailOnSessionStorage: () => {
-        const sessionStorageSales = sessionStorage.getItem("addedSales")
+    prepareSessionStorage: (keyIndex, sessionStorageSales) => {
 
         if (sessionStorageSales) {
             // Recupera las ventas del session storage
-            const auxAddedSales = JSON.parse(sessionStorageSales) // Prepara objeto
+            //const auxAddedSales = JSON.parse(sessionStorageSales) // Prepara objeto
             
             // Prepara index
-            let index = parseInt(sessionStorage.getItem("index"))
+            let index = parseInt(sessionStorage.getItem(keyIndex))
             index++
-            sessionStorage.setItem("index", `${index}`)
+            sessionStorage.setItem(keyIndex, `${index}`)
 
             // Retorna los datos listos para insercion
             return {
-                objectSales: auxAddedSales, 
+                objectSales: sessionStorageSales, 
                 i: index
             }
         } else {
             const transientSale = new Object() // Prepara objeto
-            sessionStorage.setItem("index", "1") // Prepara index
+            sessionStorage.setItem(keyIndex, "1") // Prepara index
 
             // Retorna los datos listos para insercion
             return{
@@ -83,10 +81,9 @@ contextBridge.exposeInMainWorld('electronAPI', {
         }
     },
 
-    setSaleDetailOnSessionStorage: (sales, addedSale, index) => {
-        sales[index] = addedSale
+    setItemsOnSessionStorage: (key, sales) => {
         const salesString = JSON.stringify(sales)
-        sessionStorage.setItem("addedSales", salesString) 
+        sessionStorage.setItem(key, salesString) 
     },
 
     testByRegexp: (value, valueType) => {
@@ -94,7 +91,8 @@ contextBridge.exposeInMainWorld('electronAPI', {
             codeProduct: /^[A-ZÁ-Úa-zá-ú0-9_ ]{1,10}$/,
             nameProduct: /^([A-ZÁ-Úa-zá-ú0-9]+[\.\, ]*)+$/,
             numbers: /^[0-9]+(\.[0-9]+)?$/,
-            intNumbers: /^[0-9]+$/
+            intNumbers: /^[0-9]+$/,
+            prices: /^\$? ?[0-9]+(\.[0-9]+)?$/
         }
         
         return expressions[valueType].test(value)
@@ -140,18 +138,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('select:initiatedSaleDetailByID', id) 
     },
 
-    insertNewShift: (newShift) => {
-        return ipcRenderer.invoke('insert:newShift', newShift) 
-    },
-
-    insertNewSaleWithShift: (newSaleWithShift) => {
-        return ipcRenderer.invoke('insert:newSaleWithShift', newSaleWithShift) 
-    },
-
-    insertSaleDetail: (saleDetail) => {
-        return ipcRenderer.invoke('insert:saleDetail', saleDetail) 
-    },
-
     insertNewProduct: (productData) => {
         return ipcRenderer.invoke('insert:product', productData) 
     },
@@ -162,6 +148,22 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     updateSaleDetail: (saleUpdated, saleId, productId) => {
         return ipcRenderer.invoke('update:saleDetail', saleUpdated, saleId, productId) 
+    },
+
+    deleteProductFromSaleDetail: (saleId, productId) => {
+        return ipcRenderer.invoke('delete:productFromSaleDetail', saleId, productId) 
+    },
+
+    saveShift: (shiftData, existentShiftId = -1) => {
+        return ipcRenderer.invoke('save:shift', shiftData, existentShiftId) 
+    },
+
+    saveSaleWithShift: (saleData, isNewSale = true) => {
+        return ipcRenderer.invoke('save:saleWithShift', saleData, isNewSale) 
+    },
+
+    saveSaleDetail: (saleDetail, isNewSaleDetail = true) => {
+        return ipcRenderer.invoke('save:saleDetail', saleDetail, isNewSaleDetail) 
     },
 
     existsProductWithCode: (productCode) => {

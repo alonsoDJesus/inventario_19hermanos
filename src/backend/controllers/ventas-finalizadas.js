@@ -10,7 +10,7 @@ async function getCompletedSales(criteria = ''){
                 Nombre__ruta as ruta,
                 Fecha_inicio__venta as fecha, 
                 Hora_inicio__venta as salida,
-                Hora_fin__venta as llegada,
+                Hora_registro__venta as llegada,
                 Venta_total_global__venta as venta,
                 Costo_total_global__venta as costo,
                 Utilidad_total_global__venta as utilidad
@@ -18,7 +18,7 @@ async function getCompletedSales(criteria = ''){
         INNER JOIN turno ON Turno_FK__venta = Turno_PK
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
-        WHERE Hora_fin__venta IS NOT NULL ${searchCriteriaString}
+        WHERE Hora_registro__venta IS NOT NULL ${searchCriteriaString}
         ORDER BY Venta_PK DESC;
     `)
 

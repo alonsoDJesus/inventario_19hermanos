@@ -1,6 +1,6 @@
 const { app, screen, ipcMain } = require('electron')
 const { createWindow } = require('./main')
-const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById, getInitiatedSaleDetailById } = require('./controllers/nueva-venta')
+const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById, getInitiatedSaleDetailById, saveShift, saveSaleWithShift, saveSaleDetail, deleteProductFromSaleDetail } = require('./controllers/nueva-venta')
 const { getInitialSales } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
@@ -51,18 +51,6 @@ app.whenReady().then( () => {
         return await getInitiatedSaleDetailById(id)
     }),
 
-    ipcMain.handle('insert:newShift', async (event, newShift) => {
-        return await setNewShift(newShift)
-    }),
-
-    ipcMain.handle('insert:newSaleWithShift', async (event, newSaleWithShift) => {
-        return await setNewSaleWithShift(newSaleWithShift)
-    }),
-
-    ipcMain.handle('insert:saleDetail', async (event, saleDetail) => {
-        return await setSaleDetail(saleDetail)
-    }),
-
     ipcMain.handle('insert:product', async (event, productData) => {
         return await setNewProduct(productData)
     })
@@ -73,6 +61,22 @@ app.whenReady().then( () => {
 
     ipcMain.handle('update:saleDetail', async (event, saleUpdated, saleId, productId) => {
         return await updateSaleDetailById(saleUpdated, saleId, productId)
+    }),
+
+    ipcMain.handle('delete:productFromSaleDetail', async (event, saleId, productId) => {
+        return await deleteProductFromSaleDetail(saleId, productId)
+    }),
+
+    ipcMain.handle('save:shift', async (event, shiftData, existentShiftId) => {
+        return await saveShift(shiftData, existentShiftId)
+    }),
+
+    ipcMain.handle('save:saleWithShift', async (event, newSaleWithShift, isNewSale) => {
+        return await saveSaleWithShift(newSaleWithShift, isNewSale)
+    }),
+
+    ipcMain.handle('save:saleDetail', async (event, saleDetail, isNewSaleDetail) => {
+        return await saveSaleDetail(saleDetail, isNewSaleDetail)
     }),
 
     ipcMain.handle('exists:productWithCode', async (event, productCode) => {

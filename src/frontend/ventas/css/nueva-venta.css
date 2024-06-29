@@ -161,7 +161,7 @@ label{
 }
 
 .header_descripcion{
-    margin-right: 18rem;
+    margin-right: 30rem;
 }
 
 .header_piezas{
@@ -213,17 +213,11 @@ label{
 }
 
 .data_description{
-    margin-right: 25%;
+    margin-right: 50%;
     inline-size: 30%;
 }
 
 .data_pieces{
-    inline-size: 10%;
-    text-align: center;
-    margin-right: 21%;
-}
-
-.data_boxes{
     inline-size: 10%;
     text-align: center;
 }
@@ -350,7 +344,7 @@ label{
 .modal__fields{
     margin-top: 1rem;
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
     gap: 1rem;
 }
 
@@ -359,7 +353,7 @@ label{
 }
 
 .grid-col-4{
-    grid-column: 3 / 6;
+    grid-column: 3 / 5;
 }
 
 #selectGroupRoute{
@@ -437,7 +431,7 @@ label{
 .cancel{
     background-color: var(--forth);
     color: var(--primary);
-    grid-column: 4 / 5;
+    grid-column: 3 / 4;
 }
 
 .cancel:hover{
@@ -447,7 +441,7 @@ label{
 .accept{
     background-color: var(--secondary);
     color: var(--white);
-    grid-column: 5 / 6;
+    grid-column: 4 / 5;
 }
 
 .accept:hover{
@@ -462,6 +456,14 @@ label{
     position: absolute;
     top: 1.2rem;
     right: 0.6rem;
+    cursor: pointer;
+}
+
+#sale__caution{
+    position: static;
+    width: 100%;
+    margin-top: 0.5rem;
+    gap: 6%;
 }
 
 .m-right{
@@ -478,6 +480,11 @@ label{
 
 #code__val{
     right: 3rem;
+}
+
+#sale__val{
+    right: 1.7rem;
+    top: 1.2rem;
 }
 
 #codeRoute__val{

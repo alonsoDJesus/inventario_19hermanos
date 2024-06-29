@@ -28,25 +28,25 @@ body.innerHTML = `
         </li>
         <li class="nav__item">
             <img src="${icons.truck}" alt="" class="nav__icon" id="truckSolid">
-            <p>Ventas</p>
+            <p>Rutas</p>
             <ul class="nav__subitems">
                 <li id="navNewSale">
                     <div class = "container-icon">
                         <img src="${icons.truckPrimary}" alt="" class="nav__icon" id="boxSolid">
                     </div>
-                    <p>Nueva venta</p>
+                    <p>Iniciar Ruta</p>
                 </li>
                 <li id="navInitiatedSales">
                     <div class = "container-icon">
                         <img src="${icons.hourglassStartPrimary}" alt="" class="nav__icon" id="boxSolid">
                     </div>
-                    <p>Ver salidas de producto</p>
+                    <p>Ver Rutas en Proceso</p>
                 </li>
                 <li id="navCompletedSales">
                     <div class = "container-icon">
                         <img src="${icons.hourglassEndPrimary}" alt="" class="nav__icon" id="boxSolid">
                     </div>
-                    <p>Ver ventas finalizadas</p>
+                    <p>Ver Liquidaciones</p>
                 </li>
             </ul>
         </li>

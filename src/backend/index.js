@@ -1,7 +1,7 @@
 const { app, screen, ipcMain } = require('electron')
 const { createWindow } = require('./main')
-const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById, getInitiatedSaleDetailById, saveShift, saveSaleWithShift, saveSaleDetail, deleteProductFromSaleDetail } = require('./controllers/nueva-venta')
-const { getInitialSales } = require('./controllers/inicio')
+const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift, setSaleDetail, getInitiatedSaleById, getInitiatedSaleDetailById, saveShift, saveSaleWithShift, saveSaleDetail, deleteProductFromSaleDetail, getAvailableStocks } = require('./controllers/nueva-venta')
+const { getInitialSales, deleteSaleById } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
 const { getProducts } = require('./controllers/inventario')
@@ -51,6 +51,10 @@ app.whenReady().then( () => {
         return await getInitiatedSaleDetailById(id)
     }),
 
+    ipcMain.handle('select:availableStocks', async (event, saleId) => {
+        return await getAvailableStocks(saleId)
+    }),
+
     ipcMain.handle('insert:product', async (event, productData) => {
         return await setNewProduct(productData)
     })
@@ -65,6 +69,10 @@ app.whenReady().then( () => {
 
     ipcMain.handle('delete:productFromSaleDetail', async (event, saleId, productId) => {
         return await deleteProductFromSaleDetail(saleId, productId)
+    }),
+
+    ipcMain.handle('delete:sale', async (event, saleId) => {
+        return await deleteSaleById(saleId)
     }),
 
     ipcMain.handle('save:shift', async (event, shiftData, existentShiftId) => {

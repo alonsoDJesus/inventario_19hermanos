@@ -229,7 +229,6 @@ function setDataOnFields() {
     cost.value = `$ ${product.cost}`
     sale.value = `$ ${product.sale}`
     stock.value = parseInt(product.stock)
-
     fieldsCheck.sale = true
 }
 
@@ -247,6 +246,8 @@ async function prepareModalForm(productData = undefined) {
     productsData = allProductsData
 
     if (productData != undefined) {
+        editingStatusModalForm = true
+
         title.innerText = "Edita este producto"
         setProductsField(allProductsData, productData.Producto_FK__detalleventa)
 
@@ -255,18 +256,15 @@ async function prepareModalForm(productData = undefined) {
         establecerCorrecto('description', productsDescription) // Señalalo como correcto
         clearDataFromFields()
         setDataOnFields()
-
         quantity.value = productData.Cantidad_piezas_inicio__detalleventa
         regulateQuantity()
 
         sale.value = `$ ${productData.Precio_venta_al_momento__detalleventa}`
-
-        editingStatusModalForm = true
     } else{
+        editingStatusModalForm = false
+
         title.innerText = "Agrega un producto"
         setProductsField(allProductsData)
-
-        editingStatusModalForm = false
     }
     code.focus() // Cambia el enfoque al select de los productos
 }
@@ -382,9 +380,10 @@ function regulateQuantity() {
         quantity.value = quantity.value.replace('-', '') // Evita numeros negativos
         if (fieldsCheck.description) {
             let product = searchProductByIdAttribute()
-
-            if (parseInt(quantity.value) <= parseInt(product.stock) && quantity.value != '' && parseInt(quantity.value) != 0) { // Si no excede al stock
+            
+            if (parseInt(quantity.value) <= parseInt(stock.value) && quantity.value != '' && parseInt(quantity.value) != 0) { // Si no excede al stock
                 // Afecta las cantidades de stock disponible y de cajas a enviar
+                
                 stock.value = parseInt(product.stock) - parseInt(quantity.value)
 
                 // Señalizalo como correcto
@@ -703,7 +702,7 @@ async function fetchLastSaleID(){
 }
 
 async function fetchProductsData(){
-    const allProductsData = await window.electronAPI.selectProducts('code')
+    const allProductsData = await window.electronAPI.selectAvailableStocks(saleID)
     return allProductsData
 }
 
@@ -783,7 +782,7 @@ async function saveSaleDetail(){
                     const statusSaleDetailInsertion = await window.electronAPI.saveSaleDetail(saleDetail, !editingStatusForm)
                     
                     if (statusSaleDetailInsertion == 1) {
-
+                        
                         let currentDeletedSales = window.electronAPI.getFromSessionStorage("deletedSales")
 
                         if (currentDeletedSales && editingStatusForm) {

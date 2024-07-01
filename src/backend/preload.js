@@ -138,6 +138,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('select:initiatedSaleDetailByID', id) 
     },
 
+    selectAvailableStocks: (saleId) => {
+        return ipcRenderer.invoke('select:availableStocks', saleId) 
+    },
+
     insertNewProduct: (productData) => {
         return ipcRenderer.invoke('insert:product', productData) 
     },
@@ -152,6 +156,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     deleteProductFromSaleDetail: (saleId, productId) => {
         return ipcRenderer.invoke('delete:productFromSaleDetail', saleId, productId) 
+    },
+
+    deleteSale: (saleId) => {
+        return ipcRenderer.invoke('delete:sale', saleId) 
     },
 
     saveShift: (shiftData, existentShiftId = -1) => {

@@ -1,6 +1,6 @@
 const { getConnection } = require('../database')
 
-async function getProducts(searchCriteriaDeterminator){
+async function getProducts(searchCriteriaDeterminator, limitedResults = false){
     let searchCriteriaString = ''
     switch (searchCriteriaDeterminator) {
         case 'code':
@@ -17,7 +17,8 @@ async function getProducts(searchCriteriaDeterminator){
     }
     try {
         const conn = await getConnection()
-        const products = await conn.query(`
+
+        let query = `
             SELECT 
                 Producto_PK as id,
                 Codigo__producto as codigo,
@@ -30,8 +31,13 @@ async function getProducts(searchCriteriaDeterminator){
                 Cantidad_existencias_minimas_inventario__producto as minStock
             FROM producto
             ${searchCriteriaString}
-            LIMIT 20
-        `)
+        `
+
+        if (limitedResults) {
+            query += '\nLIMIT 20'
+        }
+        
+        const products = await conn.query(query)
 
         products.forEach(product => {
             product.cost = Intl.NumberFormat().format(product.cost)

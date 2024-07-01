@@ -52,6 +52,17 @@ async function getInitialSales(criteria = ''){
     return initialSales;
 }
 
+async function deleteSaleById(saleId) {
+    try {
+        const conn = await getConnection()
+        const saleDeletedInfo = await conn.query(`DELETE FROM venta WHERE Venta_PK = ?`, saleId)
+        return saleDeletedInfo;
+    } catch (error) {
+        return error;
+    }
+}
+
 module.exports = {
-    getInitialSales
+    getInitialSales,
+    deleteSaleById
 }

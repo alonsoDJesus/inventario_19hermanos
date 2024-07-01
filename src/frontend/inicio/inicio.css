@@ -258,6 +258,10 @@ input[type="date"]{
     cursor: pointer;
 }
 
+.button_add:hover{
+    background-color: var(--forth_o);
+}
+
 .button_icon{
     height: 2rem;
 }

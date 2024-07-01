@@ -8,6 +8,7 @@ const containerCards = document.getElementById('containerCards')
 let cards
 
 let initialSales = undefined
+let criteria = 'all'
 let fieldsCheck = {
     date: false
 }
@@ -16,7 +17,36 @@ async function goToCompletingSale(event, id) {
     await window.electronAPI.navigateTo(links.completingSale, id)
 }
 
-function renderInitialSales(searchType = 'all') {
+async function deleteSale(saleId) {
+    await swal({
+        icon: 'warning',
+        title: '¿Estás seguro de eliminar el producto?',
+        padding: '1.4rem',
+        buttons: {
+            cancel: {
+                text: 'Cancelar',
+                value: null,
+                visible: true,
+                closeModal: true
+            },
+
+            confirm: {
+                text: "Aceptar",
+                value: true,
+                visible: true,
+                closeModal: true
+            }
+        }
+    }).then(async (value) => {
+        if (value) {
+            await window.electronAPI.deleteSale(saleId)
+        }
+    })
+
+    criteria == 'all' ? getInitialSales() : getInitialSalesWithCriteria(dateField.value)
+}
+
+function renderInitialSales() {
 
     containerCards.innerHTML = ''
     if (initialSales && initialSales.length != 0) {
@@ -35,9 +65,9 @@ function renderInitialSales(searchType = 'all') {
                         </div>
 
                         <div class="card_buttons">
-                            <div class="card_button" id = "editNewSaleButton" onclick="goToCompletingSale(event, ${sale.id})"><div></div></div>
+                            <div class="card_button" id = "completeSaleButton" onclick="goToCompletingSale(event, ${sale.id})"><div></div></div>
                             <div class="card_button"><div></div></div>
-                            <div class="card_button"><div></div></div>
+                            <div class="card_button" id = "deleteNewSaleButton" onclick="deleteSale(${sale.id})"><div></div></div>
                         </div>
                     </div>
                 
@@ -45,7 +75,7 @@ function renderInitialSales(searchType = 'all') {
             `;
         });
     }else{
-        const notFoundMessage = searchType == 'all' ?  
+        const notFoundMessage = criteria == 'all' ?  
         `Aún no tienes ninguna venta. <br>Registra una dando clic en el botón de agregar.` : 
         `No se encontró alguna venta en esta fecha.`
         containerCards.innerHTML += `
@@ -82,6 +112,7 @@ radioShowDate.addEventListener('click', () => {
 
 radioShowAll.addEventListener('click', () => {
     document.querySelector('.input-group').classList.toggle('display-none')
+    criteria = 'all'
     getInitialSales()
 })
 
@@ -95,6 +126,7 @@ dateField.addEventListener('change', () => {
 
 buttonSearch.addEventListener('click', async () => {
     if (fieldsCheck.date) {
+        criteria = 'byDate'
         getInitialSalesWithCriteria(dateField.value)
     }else{
         await swal({
@@ -115,7 +147,7 @@ buttonAddSale.addEventListener('click', async () => {
 containerCards.addEventListener('click', async (event) => {
     let card
     
-    if(event.target.closest('#editNewSaleButton') == null){
+    if(event.target.closest('#completeSaleButton') == null && event.target.closest('#deleteNewSaleButton') == null){
         card = event.target.closest('.card')
         
         await window.electronAPI.navigateTo(links.newSale, card.id, 'edit')

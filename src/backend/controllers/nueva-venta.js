@@ -1,5 +1,5 @@
 const { getConnection } = require('../database')
-
+const { getProducts } = require('./inventario') 
 async function getEmployees(){
     const conn = await getConnection()
     const employees = await conn.query(`
@@ -95,6 +95,36 @@ async function getInitiatedSaleDetailById(id){
     }
 }
 
+async function getAvailableStocks(saleId){
+    try {
+        const conn = await getConnection()
+        const products = await getProducts('code')
+        const routesStocks = await conn.query(`
+            SELECT  Codigo__producto as code, 
+                    SUM(Cantidad_piezas_inicio__detalleventa) as stock
+	            FROM detalleventa
+                INNER JOIN producto ON Producto_FK__detalleventa = Producto_PK
+                WHERE Venta_total__detalleventa IS NULL && Venta_FK__detalleventa != ?
+                GROUP BY (Producto_FK__detalleventa) 
+                ORDER BY Codigo__producto
+        `, saleId)
+
+        
+        products.forEach( product => {
+            for (let index = 0; index < routesStocks.length; index++) {
+                const routeStock = routesStocks[index];
+                if (product.codigo == routeStock.code) {
+                    product.stock -= routeStock.stock
+                }
+            }
+        });
+
+        return products
+    } catch (error) {
+        return error
+    }
+}
+
 
 async function deleteProductFromSaleDetail(saleId, productId){
     const conn = await getConnection()
@@ -171,6 +201,7 @@ module.exports = {
     getEmployees,
     getRoutes,
     getLastSaleID,
+    getAvailableStocks,
     saveShift,
     saveSaleWithShift,
     saveSaleDetail,

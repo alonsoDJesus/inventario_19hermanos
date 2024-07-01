@@ -3,10 +3,12 @@ const buttonOption2 = document.getElementById('buttonOption2')
 const buttonOptions = document.getElementById('buttonShowOptions')
 const timeFinishField = document.getElementById('timeFinish')
 const dateFinishField = document.getElementById('dateFinish')
+const finalBoxes = document.getElementById('finalBoxes')
 
 const fieldsCheck = {
     timeFinish: false,
-    dateFinish: false
+    dateFinish: false,
+    finalBoxes: false
 }
 const optionsFormat = {
     style: 'currency',
@@ -124,12 +126,23 @@ function setFieldDateFinish(date){
     establecerCorrecto('dateFinish', dateFinishField)
 }
 
+function setFieldInitialBoxes(initialBoxesQuantity){
+    const initialBoxes = document.getElementById('initialBoxes')
+    initialBoxes.value = initialBoxesQuantity
+
+    establecerCorrecto('initialBoxes', initialBoxes)
+}
+
 function getFieldTimeFinish(){
     return timeFinishField.value
 }
 
 function getFieldDateFinish(){
     return dateFinishField.value
+}
+
+function getFieldFinalBoxes(){
+    return finalBoxes.value
 }
 
 function getInitialPieces(index){
@@ -580,8 +593,9 @@ async function saveSaleDetail() {
     if (statusValidation) {
         const saveSaleDetailTask = async function () {
             const saleDataToUpdate = {
-                Fecha_fin__venta: getFieldDateFinish(),
-                Hora_fin__venta: getFieldTimeFinish(),
+                Fecha_registro__venta: getFieldDateFinish(),
+                Hora_registro__venta: getFieldTimeFinish(),
+                Cajas_fin__venta: getFieldFinalBoxes(),
                 Venta_total_global__venta: getFinalSaleData(),
                 Costo_total_global__venta: getFinalCostData(),
                 Utilidad_total_global__venta: getFinalUtilityData()
@@ -608,7 +622,7 @@ async function saveSaleDetail() {
                 })
 
                 await swal({
-                    title: "Venta iniciada exitosamente",
+                    title: "Liquidación realizada exitosamente",
                     button: {
                         text: 'Aceptar'
                     }
@@ -632,6 +646,27 @@ async function saveSaleDetail() {
 
 }
 
+async function validateNumbers(typeNumbers = 'intNumbers', field) { 
+
+    if (field.value == "") {
+        establecerIncorrecto(field.name, field, 'Campo Vacío')
+        return
+    }
+
+    if (field.value == 0){
+        establecerIncorrecto(field.name, field, 'Valor no válido')
+        return
+    }
+
+    const testByRegExp = await window.electronAPI.testByRegexp(field.value, typeNumbers)
+    if(!testByRegExp){
+        establecerIncorrecto(field.name, field, 'Símbolos o números raros')
+        return
+    }
+
+    establecerCorrecto(field.name, field)
+}
+
 async function init(){
     const checkTime = document.getElementById('checkTime')
     const checkDate = document.getElementById('checkDate')
@@ -640,11 +675,11 @@ async function init(){
     const saleDataFetched = await getSaleDataById(params.index)
 
     intervalID = 0
-
     setFieldName(saleDataFetched.nombre)
     setFieldRoute(saleDataFetched.ruta)
     setFieldStartDate(saleDataFetched.fecha)
     setFieldTimeStart(saleDataFetched.salida)
+    setFieldInitialBoxes(saleDataFetched.cajasSalida)
     await setsaleDetailToUpdate(params.index)
 
     switch (params.editingStatusOfCompletingSale) {
@@ -676,6 +711,8 @@ async function init(){
                     year >= 2024 && year < 2500 ? establecerCorrecto(dateFinishField.name, dateFinishField) : establecerIncorrecto(dateFinishField.name, dateFinishField, 'Fecha Incorrecta')
                 }
             })
+
+            finalBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', finalBoxes))
             break;
     
         default:

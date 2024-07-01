@@ -9,7 +9,8 @@ async function getSaleById(id){
                 CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre,
                 Nombre__ruta as ruta,
                 Fecha_inicio__venta as fecha,
-                Hora_inicio__venta as salida
+                Hora_inicio__venta as salida,
+                Cajas_inicio__venta as cajasSalida
             FROM venta 
             INNER JOIN turno ON Turno_FK__venta = Turno_PK
             INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
@@ -60,9 +61,10 @@ async function updateSaleById(saleUpdated, id){
     try {
         const conn = await getConnection()
         const saleUpdate = await conn.query(`UPDATE venta SET ? WHERE Venta_PK = ?`, [saleUpdated, id])
-
+        
         return saleUpdate.affectedRows
     } catch (error) {
+       
         return error
     }
 }

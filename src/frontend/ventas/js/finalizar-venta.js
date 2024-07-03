@@ -641,6 +641,18 @@ async function saveSaleDetail() {
 
         showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
 
+    } else{
+        const errorMessageForm = document.getElementById('errorMessageForm')
+        errorMessageForm.classList.add('formulario__data-error')
+        errorMessageForm.classList.remove('display-none')
+
+        buttonOption1.classList.toggle('button_save_active')
+        buttonOption2.classList.toggle('button_cancel_active')
+
+        setTimeout(() => {
+            errorMessageForm.classList.remove('formulario__data-error')
+            errorMessageForm.classList.add('display-none')
+        }, 5000);
     }
     //const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, )
 

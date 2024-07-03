@@ -377,6 +377,10 @@ hgroup{
     top: 3rem;
 }
 
+#errorMessageForm{
+    z-index: 50;
+}
+
 .val__replacer{
     top: 0.7rem;
     right: 2.3rem;

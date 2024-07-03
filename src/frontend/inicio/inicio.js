@@ -20,7 +20,8 @@ async function goToCompletingSale(event, id) {
 async function deleteSale(saleId) {
     await swal({
         icon: 'warning',
-        title: '¿Estás seguro de eliminar el producto?',
+        title: '¿Estás seguro de eliminar esta venta?',
+        text: 'Todos los datos se perderán :\'(',
         padding: '1.4rem',
         buttons: {
             cancel: {
@@ -86,6 +87,8 @@ function renderInitialSales() {
             </div>  
         `;
     }
+
+    containerCards.children.length > 3 ? document.getElementById('containerSales').classList.add('h-35rem') : document.getElementById('containerSales').classList.remove('h-35rem')
 }
 
 function checkDate(){
@@ -147,7 +150,7 @@ buttonAddSale.addEventListener('click', async () => {
 containerCards.addEventListener('click', async (event) => {
     let card
     
-    if(event.target.closest('#completeSaleButton') == null && event.target.closest('#deleteNewSaleButton') == null){
+    if(event.target.closest('#completeSaleButton') == null && event.target.closest('#deleteNewSaleButton') == null && event.target.closest('.card') != null){
         card = event.target.closest('.card')
         
         await window.electronAPI.navigateTo(links.newSale, card.id, 'edit')

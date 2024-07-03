@@ -381,7 +381,7 @@ function regulateQuantity() {
         if (fieldsCheck.description) {
             let product = searchProductByIdAttribute()
             
-            if (parseInt(quantity.value) <= parseInt(stock.value) && quantity.value != '' && parseInt(quantity.value) != 0) { // Si no excede al stock
+            if (parseInt(quantity.value) <= parseInt(product.stock) && quantity.value != '' && parseInt(quantity.value) != 0) { // Si no excede al stock
                 // Afecta las cantidades de stock disponible y de cajas a enviar
                 
                 stock.value = parseInt(product.stock) - parseInt(quantity.value)

@@ -4,7 +4,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
     navigateTo: (url, id = -1, visitMode = 'none') => {
         if (url.includes('finalizar-venta.html')) {
             const completingSaleParams = {
-                editingStatusOfCompletingSale: true,
+                firstEdition: visitMode == 'firstEdition',
                 index: id
             }
 

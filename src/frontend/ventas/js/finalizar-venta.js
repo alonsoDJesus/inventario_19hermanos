@@ -1,15 +1,17 @@
 const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonOptions = document.getElementById('buttonShowOptions')
-const timeFinishField = document.getElementById('timeFinish')
-const dateFinishField = document.getElementById('dateFinish')
+const initialBoxes = document.getElementById('initialBoxes')
 const finalBoxes = document.getElementById('finalBoxes')
 
 const fieldsCheck = {
-    timeFinish: false,
-    dateFinish: false,
+    employee: false,
+    route: false,
+    date: false,
+    initialBoxes: false,
     finalBoxes: false
 }
+
 const optionsFormat = {
     style: 'currency',
     currency: 'USD'
@@ -21,6 +23,7 @@ let saleAddends = [0.0]
 let costAddends = [0.0]
 let utilityAddends = [0.0]
 let saleID = -1
+let saleDataFetched
 
 function getStatusValidationFields(){
     const initialValue = true
@@ -108,6 +111,11 @@ function setFieldEmployees(employeesData, selectedIndex = 0){
     establecerCorrecto('employee', employee)
 }
 
+function getFieldEmployees(){
+    const employee = document.getElementById('employee')
+    return employee.selectedIndex
+}
+
 function setFieldRoutes(routesData, selectedIndex = 0){
     const route = document.getElementById('route')
     const emptyOption = document.createElement('option')
@@ -115,6 +123,11 @@ function setFieldRoutes(routesData, selectedIndex = 0){
     emptyOption.disabled = true
     setOptions(route, routesData, "ruta", emptyOption, selectedIndex)
     establecerCorrecto('route', route)
+}
+
+function getFieldRoutes(){
+    const route = document.getElementById('route')
+    return route.selectedIndex
 }
 
 function setFieldRoute(routeName){
@@ -131,31 +144,19 @@ function setFieldStartDate(dateValue){
     establecerCorrecto('date', date)
 }
 
-function setFieldTimeFinish(time){
-    timeFinishField.value = time
-
-    establecerCorrecto('timeFinish', timeFinishField)
-}
-
-function setFieldDateFinish(date){
-    dateFinishField.value = date
-
-    establecerCorrecto('dateFinish', dateFinishField)
+function getFieldStartDate(){
+    const date = document.getElementById('date')
+    return date.value
 }
 
 function setFieldInitialBoxes(initialBoxesQuantity){
-    const initialBoxes = document.getElementById('initialBoxes')
     initialBoxes.value = initialBoxesQuantity
 
     establecerCorrecto('initialBoxes', initialBoxes)
 }
 
-function getFieldTimeFinish(){
-    return timeFinishField.value
-}
-
-function getFieldDateFinish(){
-    return dateFinishField.value
+function getFieldInitialBoxes(){
+    return initialBoxes.value
 }
 
 function getFieldFinalBoxes(){
@@ -405,7 +406,7 @@ function renderSaleDetail(isReadOnly = false) {
         divField.classList.add('data')
 
         const inputFinalPieces = document.createElement('input')
-        inputFinalPieces.type = "number"
+        inputFinalPieces.type = "tel"
         inputFinalPieces.classList.add('card__field')
         inputFinalPieces.classList.add('bg-primary')
         inputFinalPieces.readOnly = isReadOnly
@@ -589,44 +590,55 @@ async function saveSaleDetail() {
 
     if (statusValidation) {
         const saveSaleDetailTask = async function () {
-            const saleDataToUpdate = {
-                Fecha_registro__venta: getFieldDateFinish(),
-                Hora_registro__venta: getFieldTimeFinish(),
-                Cajas_fin__venta: getFieldFinalBoxes(),
-                Venta_total_global__venta: getFinalSaleData(),
-                Costo_total_global__venta: getFinalCostData(),
-                Utilidad_total_global__venta: getFinalUtilityData()
+            const shiftData = {
+                Ruta_FK__turno: getFieldRoutes(),
+                Distribuidor_FK__turno: getFieldEmployees()
             }
 
-            const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, saleID)
+            const existentShiftId = saleDataFetched.turnoId
+            let shiftInsertID = await window.electronAPI.saveShift(shiftData, existentShiftId)
 
-            if (typeof saleUpdatedID == "number" && saleUpdatedID == 1) {
-                const cardFields = document.querySelectorAll('.card__field')
-                const productsIds = document.querySelectorAll('.description')
-                const confirmationsAffectedRows = []
-
-                cardFields.forEach(async (cardField, index) => {
-                    const saleDetailToUpdate = {
-                        Cantidad_piezas_fin__detalleventa: parseInt(cardField.value),
-                        Cantidad_piezas_vendidas__detalleventa: getSaledPieces(index + 1),
-                        Venta_total__detalleventa: getTotalSalePerProduct(index + 1),
-                        Costo_total__detalleventa: getTotalCostPerProduct(index + 1),
-                        Utilidad__detalleventa: getTotalUtilityPerProduct(index + 1)
-                    }
-
-                    const productId = parseInt(productsIds[index].id)
-                    await window.electronAPI.updateSaleDetail(saleDetailToUpdate, saleID, productId)
-                })
-
-                await swal({
-                    title: "Liquidación realizada exitosamente",
-                    button: {
-                        text: 'Aceptar'
-                    }
-                })
-
-                await window.electronAPI.deleteParams('completingSaleParams')
-                await window.electronAPI.navigateTo(links.home)
+            if (typeof shiftInsertID == "number"){
+                const saleDataToUpdate = {
+                    Fecha_inicio__venta: getFieldStartDate(),
+                    Cajas_inicio__venta: getFieldInitialBoxes(),
+                    Cajas_fin__venta: getFieldFinalBoxes(),
+                    Venta_total_global__venta: getFinalSaleData(),
+                    Costo_total_global__venta: getFinalCostData(),
+                    Utilidad_total_global__venta: getFinalUtilityData(),
+                    Turno_FK__venta: existentShiftId
+                }
+    
+                const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, saleID)
+    
+                if (typeof saleUpdatedID == "number" && saleUpdatedID == 1) {
+                    const cardFields = document.querySelectorAll('.card__field')
+                    const productsIds = document.querySelectorAll('.description')
+                    const confirmationsAffectedRows = []
+    
+                    cardFields.forEach(async (cardField, index) => {
+                        const saleDetailToUpdate = {
+                            Cantidad_piezas_fin__detalleventa: parseInt(cardField.value),
+                            Cantidad_piezas_vendidas__detalleventa: getSaledPieces(index + 1),
+                            Venta_total__detalleventa: getTotalSalePerProduct(index + 1),
+                            Costo_total__detalleventa: getTotalCostPerProduct(index + 1),
+                            Utilidad__detalleventa: getTotalUtilityPerProduct(index + 1)
+                        }
+    
+                        const productId = parseInt(productsIds[index].id)
+                        await window.electronAPI.updateSaleDetail(saleDetailToUpdate, saleID, productId)
+                    })
+    
+                    await swal({
+                        title: "Liquidación realizada exitosamente",
+                        button: {
+                            text: 'Aceptar'
+                        }
+                    })
+    
+                    await window.electronAPI.deleteParams('completingSaleParams')
+                    await window.electronAPI.navigateTo(links.home)
+                }
             }
         }
 
@@ -678,7 +690,7 @@ async function validateNumbers(typeNumbers = 'intNumbers', field) {
 
 async function init(){    
     const params = await getParams()
-    const saleDataFetched = await getSaleDataById(params.index)
+    saleDataFetched = await getSaleDataById(params.index)
     const employeesSet = await getEmployeesSet()
     const routesSet = await getRoutesSet()
 
@@ -688,31 +700,23 @@ async function init(){
     setFieldStartDate(saleDataFetched.fecha)
     setFieldInitialBoxes(saleDataFetched.cajasSalida)
     await setsaleDetailToUpdate(params.index)
+    setTagID(params.index)
+    setSaleID(params.index)
+    setButtonsOptions()
 
-    switch (params.editingStatusOfCompletingSale) {
+    finalBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', finalBoxes))
+    initialBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', initialBoxes))
+    
+    switch (params.firstEdition) {
         case true:
             setTitle("Finalizar Venta")
-            setTagID(params.index)
             renderSaleDetail()
-            setButtonsOptions()
-            setSaleID(params.index)
 
-            timeFinishField.addEventListener('keyup', () => {
-                establecerCorrecto(timeFinishField.name, timeFinishField)
-            })
-
-            dateFinishField.addEventListener('keyup', () => {
-                if(dateFinishField.value != ''){
-                    const dateRegistered = new Date(dateFinishField.value)
-                    year = dateRegistered.getFullYear()
-                    year >= 2024 && year < 2500 ? establecerCorrecto(dateFinishField.name, dateFinishField) : establecerIncorrecto(dateFinishField.name, dateFinishField, 'Fecha Incorrecta')
-                }
-            })
-
-            finalBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', finalBoxes))
             break;
     
         default:
+            setTitle("Editar venta finalizada")
+            renderSaleDetail()
             break;
     }
 }

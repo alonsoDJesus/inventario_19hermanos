@@ -23,6 +23,7 @@ const icons = {
 const links = {
     home: '../inicio/index.html',
     newSale: 'nueva-venta.html',
+    completingSale: 'finalizar-venta.html',
     completedSales: 'ventas-finalizadas.html',
     stock: '../inventario/html/inventario.html',
     newProduct: '../inventario/html/registrar-producto.html'

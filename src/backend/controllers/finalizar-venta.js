@@ -8,6 +8,7 @@ async function getSaleById(id){
             SELECT
                 Distribuidor_PK as id,
                 Ruta_PK as rutaId,
+                Turno_FK__venta as turnoId,
                 Fecha_inicio__venta as fecha,
                 Cajas_inicio__venta as cajasSalida
             FROM venta 

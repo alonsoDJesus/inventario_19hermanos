@@ -32,7 +32,7 @@ async function getInitialSales(criteria = ''){
         INNER JOIN turno ON Turno_FK__venta = Turno_PK
         INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
         INNER JOIN ruta ON Ruta_FK__turno = Ruta_PK
-        WHERE Hora_registro__venta IS NULL ${searchCriteriaString}
+        WHERE Venta_total_global__venta IS NULL ${searchCriteriaString}
         ORDER BY Venta_PK DESC;
         `)
     

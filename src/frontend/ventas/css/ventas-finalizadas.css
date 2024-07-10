@@ -88,7 +88,6 @@ input[type="date"]{
     background-color: var(--secondary);
     border-radius: 1.4rem;
     padding: 1.4rem;
-    height: 35rem;
 }
 
 .container__headers{
@@ -130,6 +129,20 @@ input[type="date"]{
     width: 98%;
     margin-bottom: 1rem;
     padding: 0 2.85%;
+    cursor: pointer;
+    transition: .3s;
+}
+
+.card:hover{
+    box-shadow: 0 0.3rem 0.5rem black;
+}
+
+.default{
+    cursor: auto;
+}
+
+.default:hover{
+    box-shadow: 0 0 0 black;
 }
 
 .text_example{
@@ -261,6 +274,10 @@ input[type="date"]{
 
 .h-1rem{
     height: 1rem;
+}
+
+.h-35rem{
+    height: 35rem;
 }
 
 .display-none{

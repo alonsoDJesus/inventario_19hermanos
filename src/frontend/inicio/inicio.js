@@ -14,7 +14,7 @@ let fieldsCheck = {
 }
 
 async function goToCompletingSale(event, id) {
-    await window.electronAPI.navigateTo(links.completingSale, id)
+    await window.electronAPI.navigateTo(links.completingSale, id, 'firstEdition')
 }
 
 async function deleteSale(saleId) {

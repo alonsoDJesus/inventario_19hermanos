@@ -16,7 +16,7 @@ function renderCompletedSales(searchType = 'all') {
 
        completedSales.forEach(sale => {
            containerCards.innerHTML += `
-           <div class = "card">
+           <div class = "card" id = "${sale.id}">
 
                <div class="card__body">
                    <div class="card__data">
@@ -35,7 +35,7 @@ function renderCompletedSales(searchType = 'all') {
                    </div>
                    <div class="card_buttons">
                         <div class="card_button"><div></div></div>
-                        <div class="card_button"><div></div></div>
+                        <div class="card_button" id = "deleteNewSaleButton"><div></div></div>
                     </div>
                </div>
                
@@ -47,13 +47,16 @@ function renderCompletedSales(searchType = 'all') {
         `Aún no tienes ninguna venta liquidada. <br>Las ventas finalizadas irán aparaciendo automáticamente.` 
 
         containerCards.innerHTML += `
-            <div class="card">
+            <div class="card default">
                 <p class="text_example">
                     ${notFoundMessage}
                 </p>
             </div>  
         `;
     }
+
+    console.log(document.getElementById('containerSales'))
+    containerCards.children.length > 3 ? document.getElementById('containerSales').classList.add('h-35rem') : document.getElementById('containerSales').classList.remove('h-35rem')
 }
 
 function checkDate(){
@@ -103,6 +106,16 @@ buttonSearch.addEventListener('click', async () => {
                 text: 'Aceptar'
             }
         })
+    }
+})
+
+containerCards.addEventListener('click', async (event) => {
+    let card
+    
+    if(event.target.closest('#deleteNewSaleButton') == null && event.target.closest('.default') == null && event.target.closest('.card') != null){
+        card = event.target.closest('.card')
+        
+        await window.electronAPI.navigateTo(links.completingSale, card.id, 'secondEdition')
     }
 })
 

@@ -38,6 +38,17 @@
                         <p class="formulario__input-error" id="employees__warning">Seleccione un producto válido</p>
                     </div>
 
+                    <div class="select__group position-relative">
+                        <div class="label__group">
+                            <img src="../../../icons/route-solid.svg" alt="" class="h-1rem">
+                            <label for="routes" class="fs-1">Ruta</label>
+                        </div>
+                        <select id="routes" name="routes" class="field field-bgcolor-primary"></select>
+                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="routes__val"></div>
+                        <p class="formulario__input-error" id="routes__warning">Seleccione un producto válido</p>
+                    
+                    </div>
+
                     <div class="input__group position-relative">
                         <div class="label__group">
                             <img src="../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
@@ -48,29 +59,6 @@
                         <p class="formulario__input-error" id="initialQuantityBoxes__warning"></p>
                     </div>
 
-                    <div class="select__group position-relative" id="selectGroupRoute">
-                        <div class="label__group">
-                            <img src="../../../icons/route-solid.svg" alt="" class="h-1rem">
-                            <label for="routes" class="fs-1">Ruta</label>
-                        </div>
-                        <div id="containerRouteFields">
-                            <div class="position-relative" id="containerCodeRoute">
-                                <input id="codeRoute" name="codeRoute" type="text" class="field field-bgcolor-primary" placeholder="000">
-                                <div class="button-search" id="buttonSearchRoute">
-                                    <img src="../../../icons/magnifying-glass-solid-white.svg" alt="" class="h-1rem">
-                                </div>
-                                <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal" id="codeRoute__val"></div>
-                                <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
-                                <p class="formulario__input-error" id="codeRoute__warning">Seleccione un producto válido</p>
-                            </div>
-                            <div id="containerSelectRoute">
-                                <select id="routes" name="routes" class="field field-bgcolor-primary"></select>
-                                <div class="formulario__validacion-estado icon-wrong opacity-0" id="routes__val"></div>
-                                <p class="formulario__input-error" id="routes__warning">Seleccione un producto válido</p>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="input__group" id="inputGroupDate">
 
                         <div class="label__group">
@@ -78,36 +66,10 @@
                             <label for="date" class="fs-1">Fecha</label>
                         </div>
 
-                        <div class="checkbox__group">
-                            <input type="checkbox" id="checkDate" name="checkDate"/>
-                            <label for="checkDate">Registrar fecha manualmente</label>
-                        </div>
-
                         <div class="position-relative">
                             <input type="date" id="date" name="date" class="field field-bgcolor-primary">
-                            <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon m-right">
                             <div class="formulario__validacion-estado icon-wrong opacity-0" id="date__val"></div>
                             <p class="formulario__input-error" id="date__warning">Seleccione un producto válido</p>
-                        </div>
-                    </div>
-
-                    <div class="input__group" id="inputGroupTime">
-
-                        <div class="label__group">
-                            <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
-                            <label for="time" class="fs-1">Hora de Salida</label>
-                        </div>
-
-                        <div class="checkbox__group">
-                            <input type="checkbox" id="checkTime" name="checkTime" />
-                            <label for="checkTime">Registrar hora manualmente</label>
-                        </div>
-
-                        <div class="position-relative">
-                            <input type="time" id="time" name="time" class="field field-bgcolor-primary">
-                            <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon m-right">
-                            <div class="formulario__validacion-estado icon-wrong opacity-0" id="time__val"></div>
-                            <p class="formulario__input-error" id="time__warning">Seleccione un producto válido</p>
                         </div>
                     </div>
                 </div>

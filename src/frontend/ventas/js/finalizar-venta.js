@@ -86,11 +86,35 @@ function setTagID(saleID){
     tagID.textContent = tagNumber
 }
 
-function setFieldName(employeeName){
-    const employee = document.getElementById('employee')
-    employee.value = employeeName
+function setOptions(selectField, dataset, keyName, optionDefault, selectedIndex){
+    selectField.innerHTML = ''
+    selectField.appendChild(optionDefault)
+    dataset.forEach(data => {
+        const option = document.createElement('option')
+        option.text = selectField.id == 'routes' ? data['codigo'] : data[keyName]
+        option.setAttribute('id', data.id)
+        selectField.appendChild(option)
+    });
 
+    selectField.selectedIndex = selectedIndex
+}
+
+function setFieldEmployees(employeesData, selectedIndex = 0){
+    const employee = document.getElementById('employee')
+    const emptyOption = document.createElement('option')
+    emptyOption.text = "Seleccione algún empleado"
+    emptyOption.disabled = true
+    setOptions(employee, employeesData, "nombre", emptyOption, selectedIndex)
     establecerCorrecto('employee', employee)
+}
+
+function setFieldRoutes(routesData, selectedIndex = 0){
+    const route = document.getElementById('route')
+    const emptyOption = document.createElement('option')
+    emptyOption.text = "Seleccione alguna ruta"
+    emptyOption.disabled = true
+    setOptions(route, routesData, "ruta", emptyOption, selectedIndex)
+    establecerCorrecto('route', route)
 }
 
 function setFieldRoute(routeName){
@@ -105,13 +129,6 @@ function setFieldStartDate(dateValue){
     date.value = dateValue
 
     establecerCorrecto('date', date)
-}
-
-function setFieldTimeStart(time){
-    const timeStart = document.getElementById('timeStart')
-    timeStart.value = time
-
-    establecerCorrecto('timeStart', timeStart)
 }
 
 function setFieldTimeFinish(time){
@@ -285,34 +302,6 @@ function getCurrentDate() {
     today = today >= 1 && today < 10 ? `0${today}` : `${today}`
     month = month >= 0 && month < 10 ? `0${month + 1}` : `${month + 1}`
     return `${year}-${month}-${today}`
-}
-
-function switchModeTime(checkField, checked){
-
-    if (checked) {
-        checkField.readOnly = false
-        clearValidations(checkField.name, checkField)
-        if (checkField.id == 'timeFinish') {
-            clearInterval(intervalID)
-            intervalID = 0
-            document.getElementById('timeFinishFieldLockedIcon').classList.toggle('display-none')
-        }else{
-            document.getElementById('dateFinishFieldLockedIcon').classList.toggle('display-none')
-        }
-    } else {
-        checkField.readOnly = true
-        establecerCorrecto(checkField.name, checkField)
-        if (checkField.id == 'timeFinish' && intervalID == 0) {
-            intervalID = setInterval(() => {
-                setFieldTimeFinish(getCurrentTime())
-            }, 1000);
-
-            document.getElementById('timeFinishFieldLockedIcon').classList.toggle('display-none')
-        } else{
-            setFieldDateFinish(getCurrentDate())
-            document.getElementById('dateFinishFieldLockedIcon').classList.toggle('display-none')
-        }
-    }
 }
 
 // Regulador de la cantidad ingresada por el usario
@@ -587,6 +576,14 @@ async function getSaleDataById(id){
     return await window.electronAPI.selectSaleById(id)
 }
 
+async function getEmployeesSet(){
+    return await window.electronAPI.selectEmployees()
+}
+
+async function getRoutesSet(){
+    return await window.electronAPI.selectRoutes()
+}
+
 async function saveSaleDetail() {
     const statusValidation = getStatusValidationFields()
 
@@ -679,18 +676,16 @@ async function validateNumbers(typeNumbers = 'intNumbers', field) {
     establecerCorrecto(field.name, field)
 }
 
-async function init(){
-    const checkTime = document.getElementById('checkTime')
-    const checkDate = document.getElementById('checkDate')
-    
+async function init(){    
     const params = await getParams()
     const saleDataFetched = await getSaleDataById(params.index)
+    const employeesSet = await getEmployeesSet()
+    const routesSet = await getRoutesSet()
 
     intervalID = 0
-    setFieldName(saleDataFetched.nombre)
-    setFieldRoute(saleDataFetched.ruta)
+    setFieldEmployees(employeesSet, saleDataFetched.id)
+    setFieldRoutes(routesSet, saleDataFetched.rutaId)
     setFieldStartDate(saleDataFetched.fecha)
-    setFieldTimeStart(saleDataFetched.salida)
     setFieldInitialBoxes(saleDataFetched.cajasSalida)
     await setsaleDetailToUpdate(params.index)
 
@@ -698,19 +693,9 @@ async function init(){
         case true:
             setTitle("Finalizar Venta")
             setTagID(params.index)
-            switchModeTime(timeFinishField, checkTime.checked)
-            switchModeTime(dateFinishField, checkDate.checked)
             renderSaleDetail()
             setButtonsOptions()
             setSaleID(params.index)
-
-            checkTime.addEventListener('click', () => {
-                switchModeTime(timeFinishField, checkTime.checked)
-            })
-
-            checkDate.addEventListener('click', () => {
-                switchModeTime(dateFinishField, checkDate.checked)
-            })
 
             timeFinishField.addEventListener('keyup', () => {
                 establecerCorrecto(timeFinishField.name, timeFinishField)

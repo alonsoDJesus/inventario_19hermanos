@@ -72,7 +72,7 @@ label{
     transition: .1s ease all;
 }
 
-input:focus, .completingsale__financialdata input:focus{
+input:focus, select:focus, .completingsale__financialdata input:focus{
     border: 3px solid var(--forth);
     outline: none;
     box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
@@ -364,18 +364,6 @@ hgroup{
 }
 
 /*Corrección provisional a los íconos de validacion*/
-#timeFinish__val, #dateFinish__val{
-    top: 4.1rem;
-    right: 2.4rem;
-}
-
-#employee__val, #route__val, #date__val, #timeStart__val, #initialBoxes__val{
-    right: 2.4rem;
-}
-
-#employeeFieldLockedIcon, #routeFieldLockedIcon, #dateFieldLockedIcon, #timeStartFieldLockedIcon, #initialBoxesFieldLockedIcon{
-    top: 3rem;
-}
 
 #errorMessageForm{
     z-index: 50;

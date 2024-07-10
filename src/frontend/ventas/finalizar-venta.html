@@ -34,10 +34,9 @@
                             <img src="../../../icons/user-solid.svg" alt="" class="h-1rem">
                             <label for="employee" class="fs-1">Vendedor</label>
                         </div>
-                        <input type="text" id="employee" class="completingsale__field bg-primary" autofocus readonly></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="employeeFieldLockedIcon">
+                        <select id="employee" class="completingsale__field bg-primary" autofocus></select>
                         <div class="formulario__validacion-estado icon-wrong opacity-0" id="employee__val"></div>
-                        <p class="formulario__input-error" id="employee__warning">Seleccione un producto válido</p>
+                        <p class="formulario__input-error" id="employee__warning"></p>
                     </div>
 
                     <div class="input__group position-relative">
@@ -45,64 +44,19 @@
                             <img src="../../../icons/route-solid.svg" alt="" class="h-1rem">
                             <label for="route" class="fs-1">Ruta</label>
                         </div>
-                        <input type="text" id="route" class="completingsale__field bg-primary" readonly></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="routeFieldLockedIcon">
+                        <select id="route" class="completingsale__field bg-primary"></select>
                         <div class="formulario__validacion-estado icon-wrong opacity-0" id="route__val"></div>
-                        <p class="formulario__input-error" id="route__warning">Seleccione un producto válido</p>
+                        <p class="formulario__input-error" id="route__warning"></p>
                     </div>
 
                     <div class="input__group position-relative">
                         <div class="label__group">
                             <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
-                            <label for="date" class="fs-1">Fecha de Salida</label>
+                            <label for="date" class="fs-1">Fecha</label>
                         </div>
                         <input type="date" id="date" class="completingsale__field bg-primary" readonly></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="dateFieldLockedIcon">
                         <div class="formulario__validacion-estado icon-wrong opacity-0" id="date__val"></div>
-                        <p class="formulario__input-error" id="date__warning">Seleccione un producto válido</p>
-                    </div>
-
-                    <div class="input__group position-relative">
-                        <div class="label__group">
-                            <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
-                            <label for="timeStart" class="fs-1">Hora de Salida</label>
-                        </div>
-                        <input type="time" id="timeStart" class="completingsale__field bg-primary" readonly></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="timeStartFieldLockedIcon">
-                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="timeStart__val"></div>
-                        <p class="formulario__input-error" id="timeStart__warning">Seleccione un producto válido</p>
-                    </div>
-
-                    <div class="input__group position-relative">
-                        <div class="label__group">
-                            <img src="../../../icons/calendar-solid.svg" alt="" class="h-1rem">
-                            <label for="dateFinish" class="fs-1">Fecha de Captura</label>
-                        </div>
-                        <div class="checkbox__group">
-                            <input type="checkbox" id="checkDate" name="checkDate" />
-                            <label for="checkDate">Registrar fecha manualmente</label>
-                        </div>
-                        <input type="date" id="dateFinish" name="dateFinish" class="completingsale__field bg-primary" title="Aqui se registra la hora de llegada"></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon display-none" id="dateFinishFieldLockedIcon">
-                        
-                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="dateFinish__val"></div>
-                        <p class="formulario__input-error" id="dateFinish__warning">Seleccione un producto válido</p>
-                    </div>
-
-                    <div class="input__group position-relative">
-                        <div class="label__group">
-                            <img src="../../../icons/clock-solid.svg" alt="" class="h-1rem">
-                            <label for="timeFinish" class="fs-1">Hora de Captura</label>
-                        </div>
-                        <div class="checkbox__group">
-                            <input type="checkbox" id="checkTime" name="checkTime" />
-                            <label for="checkTime">Registrar hora manualmente</label>
-                        </div>
-                        <input type="time" id="timeFinish" name="timeFinish" class="completingsale__field bg-primary"></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon display-none" id="timeFinishFieldLockedIcon">
-                        
-                        <div class="formulario__validacion-estado icon-wrong opacity-0" id="timeFinish__val"></div>
-                        <p class="formulario__input-error" id="timeFinish__warning">Seleccione un producto válido</p>
+                        <p class="formulario__input-error" id="date__warning"></p>
                     </div>
 
                     <div class="input__group position-relative">
@@ -111,7 +65,6 @@
                             <label for="initialBoxes" class="fs-1">Salida de Cajas</label>
                         </div>
                         <input type="tel" id="initialBoxes" class="completingsale__field bg-primary" readonly></input>
-                        <img src="../../../icons/lock-solid.svg" alt="" class="h-1rem lock-field-icon" id="initialBoxesFieldLockedIcon">
                         <div class="formulario__validacion-estado icon-wrong opacity-0" id="initialBoxes__val"></div>
                         <p class="formulario__input-error" id="initialBoxes__warning"></p>
                     </div>

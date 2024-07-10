@@ -20,16 +20,10 @@ function renderCompletedSales(searchType = 'all') {
 
                <div class="card__body">
                    <div class="card__data">
-                        <p class="data">${sale.id}</p>
                         <p class="data">${sale.nombre}</p>
                         <p class="data">${sale.ruta}</p>
                         <p class="data">${sale.fecha}</p>
-                        <div class="data__container itinerary">
-                           <p class= "data__containerheader">Inicio</p>
-                           <p class= "data__containerheader">Fin</p>
-                           <p class="data_salida">${sale.salida}</p>
-                           <p class="data_llegada">${sale.llegada}</p>
-                        </div>
+                        
                         <div class="data__container summary">
                            <p class= "data__containerheader">Venta</p>
                            <p class= "data__containerheader">Costo</p>

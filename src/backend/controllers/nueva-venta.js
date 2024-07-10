@@ -45,7 +45,6 @@ async function getInitiatedSaleById(id){
                 Codigo__ruta as codigoRuta,
                 Ruta_FK__turno as rutaId,
                 Fecha_inicio__venta as fechaInicio,
-                Hora_inicio__venta as horaInicio,
                 Cajas_inicio__venta as cantidadCajas,
                 Turno_FK__venta as turnoId
             FROM venta 
@@ -144,9 +143,12 @@ async function saveShift(shiftData, existentShiftId){
         }
 
         const shiftAffected = await conn.query('UPDATE turno SET ? WHERE Turno_PK = ?', [shiftData, existentShiftId])
+        
+        
         return shiftAffected.affectedRows
         
     } catch (error) {
+
         return error
     }
 }
@@ -160,8 +162,10 @@ async function saveSaleWithShift(saleData, isNewSale){
         }
 
         const saleDataAffected = await conn.query('UPDATE venta SET ? WHERE Venta_PK = ?', [saleData, saleData.Venta_PK])
+        
         return saleDataAffected.affectedRows
     } catch (error) {
+
         return error
     }
 }
@@ -193,6 +197,7 @@ async function saveSaleDetail(saleDetail, isNewSaleDetail){
 
         return 1;
     } catch (error) {
+
         return error
     }
 }

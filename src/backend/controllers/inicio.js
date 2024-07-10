@@ -25,9 +25,8 @@ async function getInitialSales(criteria = ''){
     const initialSales = await conn.query(`
         SELECT 	Venta_PK as id, 
             CONCAT(Nombre__distribuidor, ' ', Apellido_paterno__distribuidor, ' ', Apellido_materno__distribuidor) as nombre, 
-            Nombre__ruta as ruta, 
+            Codigo__ruta as ruta, 
             Fecha_inicio__venta as fecha,
-            Hora_inicio__venta as salida,
             Cajas_inicio__venta as cantidad_cajas
         FROM venta
         INNER JOIN turno ON Turno_FK__venta = Turno_PK

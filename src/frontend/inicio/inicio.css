@@ -89,7 +89,7 @@ input[type="date"]{
 
 .container__headers{
     width: 80%;
-    margin-left: 2.7rem;
+    margin-left: 2rem;
     display: flex;
 }
 
@@ -101,23 +101,15 @@ input[type="date"]{
 }
 
 .container__header:nth-child(1){
-    margin-right: 12%;
+    margin-right: 10.5%;
 }
 
 .container__header:nth-child(2){
-    margin-right: 13.5%;
+    margin-right: 11.5%;
 }
 
 .container__header:nth-child(3){
-    margin-right: 14%;
-}
-
-.container__header:nth-child(4){
-    margin-right: 8%;
-}
-
-.container__header:nth-child(5){
-    margin-right: 4%;
+    margin-right: 7.5%;
 }
 
 .container__cards{
@@ -141,6 +133,15 @@ input[type="date"]{
 .card:hover{
     box-shadow: 0 0.3rem 0.5rem black;
 }
+
+.default{
+    cursor: auto;
+}
+
+.default:hover{
+    box-shadow: 0 0 0 black;
+}
+
 
 .text_example{
     display: inline-block;
@@ -179,18 +180,18 @@ input[type="date"]{
 }
 
 .data:nth-child(1){
-    inline-size: 2.4rem;
+    inline-size: 6rem;
 }
 
 .data:nth-child(2){
-    inline-size: 7.0rem;
+    inline-size: 2rem;
 }
 
 .data:nth-child(3){
     inline-size: 5.0rem;
 }
 
-.data:nth-child(6){
+.data:nth-child(4){
    font-family: 'MPLUS1Code-Regular';
    font-size: 0.9rem;
    text-align: right;

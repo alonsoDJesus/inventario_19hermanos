@@ -104,23 +104,16 @@ input[type="date"]{
 }
 
 .container__header:nth-child(1){
-    margin-right: 10%;
+    margin-right: 12%;
+    margin-left: 1%;
 }
 
 .container__header:nth-child(2){
-    margin-right: 7%;
+    margin-right: 10%;
 }
 
 .container__header:nth-child(3){
-    margin-right: 10%;
-}
-
-.container__header:nth-child(4){
-    margin-right: 10%;
-}
-
-.container__header:nth-child(5){
-    margin-right: 19%;
+    margin-right: 21%;
 }
 
 .container__cards{
@@ -176,13 +169,13 @@ input[type="date"]{
 }
 
 .data:nth-child(1){
-    inline-size: 2.4rem;
-    margin-right: 6%;
+    inline-size: 7rem;
+    margin-right: 12%;
 }
 
 .data:nth-child(2){
-    inline-size: 7.0rem;
-    margin-right: 3.5%;
+    inline-size: 2rem;
+    margin-right: 8%;
 }
 
 .data:nth-child(3){
@@ -232,7 +225,7 @@ input[type="date"]{
 .card_buttons{
     width: 10%;
     display: flex;
-    justify-content: center;
+    justify-content: end;
 }
 
 .card_button{

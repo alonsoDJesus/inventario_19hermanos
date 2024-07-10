@@ -13,7 +13,6 @@ const code = document.getElementById('code')
 const buttonOption1 = document.getElementById('buttonOption1')
 const buttonOption2 = document.getElementById('buttonOption2')
 const buttonShowOptions = document.getElementById('buttonShowOptions')
-const codeRoute = document.getElementById('codeRoute')
 const initialQuantityBoxes = document.getElementById('initialQuantityBoxes')
 const buttonAceptModal = document.getElementById('buttonAceptModal')
 const saleIconLock = document.getElementById('saleIconLock')
@@ -46,7 +45,7 @@ let isProductRepeated = false
 let saleInitiatedData
 
 function getStatusValidationFields(){
-    return fieldsCheck.employees && fieldsCheck.routes && fieldsCheck.initialQuantityBoxes && fieldsCheck.date && fieldsCheck.time
+    return fieldsCheck.employees && fieldsCheck.routes && fieldsCheck.initialQuantityBoxes && fieldsCheck.date
 }
 
 function setSaleID(newSaleID){
@@ -88,7 +87,7 @@ function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault, s
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
         const option = document.createElement('option')
-        option.text = data['codigo'] ? `${data['codigo']} ${data[keyName]}`: data[keyName]
+        option.text = selectField.id == 'routes' ? data['codigo'] : data[keyName]
         option.setAttribute('id', data.id)
         selectField.appendChild(option)
     });
@@ -107,19 +106,6 @@ function setTagID(saleID){
     tagID.textContent = tagNumber
 }
 
-function getCurrentTime() {
-    let date = new Date()
-    let hour = date.getHours()
-    let minutes = date.getMinutes()
-    let seconds = date.getSeconds()
-
-    hour = hour >= 0 && hour < 10 ? `0${hour}` : `${hour}`
-    minutes = minutes >= 0 && minutes < 10 ? `0${minutes}` : `${minutes}`
-    seconds = seconds >= 0 && seconds < 10 ? `0${seconds}` : `${seconds}`
-
-    timeField.value = `${hour}:${minutes}:${seconds}`
-}
-
 function getCurrentDate() {
     let date = new Date()
     today = date.getDate()
@@ -129,42 +115,6 @@ function getCurrentDate() {
     today = today >= 1 && today < 10 ? `0${today}` : `${today}`
     month = month >= 0 && month < 10 ? `0${month + 1}` : `${month + 1}`
     dateField.value = `${year}-${month}-${today}`
-}
-
-
-function switchModeTime(checkField, checked, visitMode = 'create', dateFounded = '', timeFounded = ''){
-    if (checked) {
-        checkField.readOnly = false
-        clearValidations(checkField.name, checkField)
-        if (checkField.id == 'time') {
-            clearInterval(intervalID)
-            intervalID = 0
-            lockFieldIcons[1].classList.add('display-none')
-        } else{
-            lockFieldIcons[0].classList.add('display-none')
-        }
-    } else {
-        checkField.readOnly = true
-        establecerCorrecto(checkField.name, checkField)
-        if (checkField.id == 'time' && intervalID == 0) {
-            if( visitMode == "edit"){
-                timeField.value = timeFounded
-            } else{
-                intervalID = setInterval(() => {
-                    getCurrentTime()
-                }, 1000);
-            }
-
-            lockFieldIcons[1].classList.remove('display-none')
-        } else {
-            if( visitMode == "edit"){
-                dateField.value = dateFounded
-            } else{
-                getCurrentDate()
-            }
-            lockFieldIcons[0].classList.remove('display-none')
-        }
-    }
 }
 
 function searchProductByIdAttribute() {
@@ -491,10 +441,10 @@ function toggleModalForm(openModal = true) {
         saleIconLock.src = icons.lockIcon
 
         // En una lista se almacenan los campos que serán limpiados de sus validaciones
+        modalFormFields.push(fields[4])
+        modalFormFields.push(fields[5])
         modalFormFields.push(fields[6])
-        modalFormFields.push(fields[7])
-        modalFormFields.push(fields[8])
-        modalFormFields.push(fields[11])
+        modalFormFields.push(fields[9])
         modalFormFields.forEach(modalField => {
             // De cada campo se necesita su nombre y el propio campo para su limpieza
             clearValidations(modalField.name, modalField)
@@ -541,22 +491,6 @@ function selectProductByCode(){
         }else{
             productsDescription.selectedIndex = 0
             establecerIncorrecto(code.name, code, 'Producto no encontrado')
-        }
-    }
-}
-
-function selectRouteByCode(){
-    if(fieldsCheck.codeRoute){
-        clearValidations('routes', routes)
-        let routeSearched = searchRouteByCode(codeRoute.value)
-
-        if( routeSearched != undefined ){
-            routes.selectedIndex = routeSearched.id
-            establecerCorrecto(routes.name, routes)
-        } else{
-            routes.selectedIndex = 0
-            clearValidations(routes.name, routes)
-            establecerIncorrecto(codeRoute.name, codeRoute, 'Ruta no encontrada')
         }
     }
 }
@@ -771,7 +705,6 @@ async function saveSaleDetail(){
                 const saleData = {
                     Venta_PK: saleID,
                     Fecha_inicio__venta: dateField.value,
-                    Hora_inicio__venta: timeField.value,
                     Turno_FK__venta: editingStatusForm ? saleInitiatedData.turnoId : shiftInsertID,
                     Cajas_inicio__venta: parseInt(initialQuantityBoxes.value)
                 }
@@ -844,8 +777,6 @@ async function init() {
     const buttonSearchProduct = document.getElementById('buttonSearchProduct')
     const imgButton = document.querySelector('#buttonSearchProduct img')
     const date = document.getElementById('date')
-    const time = document.getElementById('time')
-    const checkTime = document.getElementById('checkTime')
     const checkDate = document.getElementById('checkDate')
     const employeesData = await fetchEmployeesData()
     const logCards = document.getElementById('logCards')
@@ -869,17 +800,11 @@ async function init() {
 
             employees.selectedIndex = saleInitiatedData.vendedorId
             initialQuantityBoxes.value = saleInitiatedData.cantidadCajas
-            codeRoute.value = saleInitiatedData.codigoRuta
             routes.selectedIndex = saleInitiatedData.rutaId
+            dateField.value = saleInitiatedData.fechaInicio
             establecerCorrecto(employees.name, employees)
             establecerCorrecto(initialQuantityBoxes.name, initialQuantityBoxes)
-            establecerCorrecto(codeRoute.name, codeRoute)
             establecerCorrecto(routes.name, routes)
-
-            checkDate.parentElement.children[1].innerText = 'Editar fecha'
-            checkTime.parentElement.children[1].innerText = 'Editar hora'
-            switchModeTime(date, checkDate.checked, 'edit', saleInitiatedData.fechaInicio)
-            switchModeTime(time, checkTime.checked, 'edit', '', saleInitiatedData.horaInicio)
 
             if(await window.electronAPI.getFromSessionStorage("addedSales") == null){
                 for (let index = 0; index < initiatedSaleDetailData.length; index++) {
@@ -899,37 +824,23 @@ async function init() {
 
             renderAllSales()
             setButtonsOptions('edit')
-
-            checkDate.addEventListener('click', () => {
-                switchModeTime(date, checkDate.checked, 'edit', saleInitiatedData.fechaInicio)
-            })
-
-            checkTime.addEventListener('click', () => {
-                switchModeTime(time, checkTime.checked, 'edit', '', saleInitiatedData.horaInicio)
-            })
             break;
 
         default:
             const lastSaleID = await fetchLastSaleID()
             editingStatusForm = false
 
+            getCurrentDate()
+
             setSaleID(lastSaleID + 1)
             setTagID(getSaleID())
-            switchModeTime(date, checkDate.checked)
-            switchModeTime(time, checkTime.checked)
             renderAllSales()
             setButtonsOptions()
-
-            checkDate.addEventListener('click', () => {
-                switchModeTime(date, checkDate.checked)
-            })
-
-            checkTime.addEventListener('click', () => {
-                switchModeTime(time, checkTime.checked)
-            })
             break;
 
     }
+
+    validateDate()
 
     buttonAceptModal.addEventListener('click', async () => {
         if (fieldsCheck.description && fieldsCheck.quantity) {
@@ -969,63 +880,16 @@ async function init() {
         }
     })
 
-    codeRoute.onkeydown = (e) => {
-        if(e.code == 'NumpadEnter' || e.code == 'Enter'){
-            e.preventDefault()
-        }
-    }
-
-    codeRoute.addEventListener('keyup', (e) => {
-        if(e.code == 'NumpadEnter' || e.code == 'Enter'){
-            selectRouteByCode()
-        }else{
-            const checkValue = window.electronAPI.testByRegexp(codeRoute.value, 'codeProduct')
-
-            if (checkValue) {
-                clearValidations(codeRoute.name, codeRoute)
-                fieldsCheck.codeRoute = true
-            } else {
-                fieldsCheck.codeRoute = false
-                routes.selectedIndex = 0
-
-                let errorMessage = ''
-                if (codeRoute.value.length == 0) {
-                    errorMessage = 'Campo Vacío'
-                }else if(codeRoute.value.length > 10){
-                    errorMessage = 'Código muy largo'
-                }else{
-                    errorMessage = 'Símbolos raros'
-                }
-
-                clearValidations(routes.name, routes)
-                establecerIncorrecto(codeRoute.name, codeRoute, errorMessage)
-            }
-        }
-    })
-
     routes.addEventListener('change', () => {
         if(routes.selectedIndex != 0){
-            let routeSearched = searchRouteByIdAttribute()
-
-            codeRoute.value = routeSearched.codigo
             establecerCorrecto('routes', routes)
         }else{
-            codeRoute.value = ''
-            clearValidations(codeRoute.name, codeRoute)
             establecerIncorrecto('routes', routes, 'Selecciona una ruta')
         }
     })
 
     dateField.addEventListener('keyup', validateDate)
     dateField.addEventListener('change', validateDate)
-
-    time.addEventListener('keyup', () => {
-        establecerCorrecto(time.name, time)
-    })
-
-    time.addEventListener('change', () => {
-        establecerCorrecto(time.name, time)
-    })
 
     // Clic para abrir el modal del registro para el nuevo producto
     buttonAddSale.addEventListener('click', async () => {
@@ -1100,9 +964,9 @@ async function init() {
 
     // Clic para seleccionar algun producto
     productsDescription.addEventListener('change', () => {
-        clearValidations(fields[7].name, fields[7])
-        clearValidations(fields[8].name, fields[8])
-        clearValidations(fields[11].name, fields[11])
+        clearValidations(fields[5].name, fields[5])
+        clearValidations(fields[6].name, fields[6])
+        clearValidations(fields[9].name, fields[9])
         ocultarMensajeCaution(sale.name, sale)
 
         sale.readOnly = true

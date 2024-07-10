@@ -57,11 +57,9 @@ function renderInitialSales() {
 
                     <div class="card_body">
                         <div class="card_data">
-                            <p class="data">${sale.id}</p>
                             <p class="data">${sale.nombre}</p>
                             <p class="data">${sale.ruta}</p>
                             <p class="data">${sale.fecha}</p>
-                            <p class="data">${sale.salida}</p>
                             <p class="data">${sale.cantidad_cajas}</p>
                         </div>
 
@@ -80,7 +78,7 @@ function renderInitialSales() {
         `Aún no tienes ninguna venta. <br>Registra una dando clic en el botón de agregar.` : 
         `No se encontró alguna venta en esta fecha.`
         containerCards.innerHTML += `
-            <div class="card">
+            <div class="card default">
                 <p class="text_example">
                     ${notFoundMessage}
                 </p>
@@ -150,7 +148,7 @@ buttonAddSale.addEventListener('click', async () => {
 containerCards.addEventListener('click', async (event) => {
     let card
     
-    if(event.target.closest('#completeSaleButton') == null && event.target.closest('#deleteNewSaleButton') == null && event.target.closest('.card') != null){
+    if(event.target.closest('#completeSaleButton') == null && event.target.closest('#deleteNewSaleButton') == null && event.target.closest('.default') == null && event.target.closest('.card') != null){
         card = event.target.closest('.card')
         
         await window.electronAPI.navigateTo(links.newSale, card.id, 'edit')

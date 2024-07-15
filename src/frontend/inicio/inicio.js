@@ -196,3 +196,9 @@ window.addEventListener('load', () => {
         await window.electronAPI.navigateTo(links.newProduct, -1,  'create')
     })
 })
+
+window.addEventListener('keyup', async (keyEvent) => {
+    if(keyEvent.code == 'NumpadAdd'){
+        await window.electronAPI.navigateTo(links.newSale)
+    }
+})

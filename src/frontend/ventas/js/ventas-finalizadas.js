@@ -4,8 +4,46 @@ const dateField = document.getElementById('date')
 const buttonSearch = document.getElementById('buttonSearch')
 
 let completedSales = undefined
+let criteria = 'all'
 let fieldsCheck = {
     date: false
+}
+
+async function deleteCompletedSale(saleId) {
+    await swal({
+        icon: 'warning',
+        title: '¿Estás seguro de eliminar esta liquidacion?',
+        text: 'Todos los datos se perderán y afectará en tu estado de resultados :\'(',
+        padding: '1.4rem',
+        buttons: {
+            cancel: {
+                text: 'Cancelar',
+                value: null,
+                visible: true,
+                closeModal: true
+            },
+
+            confirm: {
+                text: "Aceptar",
+                value: true,
+                visible: true,
+                closeModal: true
+            }
+        }
+    }).then(async (value) => {
+        if (value) {
+            await window.electronAPI.deleteSale(saleId)
+
+            await swal({
+                title: "Liquidación eliminada exitosamente",
+                button: {
+                    text: 'Aceptar'
+                }
+            })
+        }
+    })
+
+    criteria == 'all' ? getCompletedSales() : getCompletedSalesWithCriteria(dateField.value)
 }
 
 function renderCompletedSales(searchType = 'all') {
@@ -35,16 +73,16 @@ function renderCompletedSales(searchType = 'all') {
                    </div>
                    <div class="card_buttons">
                         <div class="card_button"><div></div></div>
-                        <div class="card_button" id = "deleteNewSaleButton"><div></div></div>
+                        <div class="card_button" id = "deleteNewSaleButton" onclick = "deleteCompletedSale(${sale.id})"><div></div></div>
                     </div>
                </div>
                
            </div>
       `;});
     }else{
-        const notFoundMessage = searchType != 'all' ?  
+        const notFoundMessage = criteria != 'all' ?  
         `No se encontró alguna venta en esta fecha.` :
-        `Aún no tienes ninguna venta liquidada. <br>Las ventas finalizadas irán aparaciendo automáticamente.` 
+        `Aún no tienes ninguna liquidacion. <br>Las liquidaciones irán aparaciendo automáticamente.` 
 
         containerCards.innerHTML += `
             <div class="card default">
@@ -82,6 +120,7 @@ radioShowDate.addEventListener('click', () => {
 
 radioShowAll.addEventListener('click', () => {
     document.querySelector('.input-group').classList.toggle('display-none')
+    criteria = 'all'
     getCompletedSales()
 })
 
@@ -95,6 +134,7 @@ dateField.addEventListener('change', () => {
 
 buttonSearch.addEventListener('click', async () => {
     if (fieldsCheck.date) {
+        criteria = 'byDate'
         getCompletedSalesWithCriteria(dateField.value)
     }else{
         await swal({

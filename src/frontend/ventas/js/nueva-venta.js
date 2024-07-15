@@ -1107,4 +1107,14 @@ window.addEventListener('load', () => {
     })
 })
 
+window.addEventListener('keyup', async (keyEvent) => {
+    if(keyEvent.code == 'NumpadAdd'){
+        productIdToEdit = undefined
+        productToEdit = undefined
+
+        toggleModalForm()
+        prepareModalForm()
+    }
+})
+
 init()

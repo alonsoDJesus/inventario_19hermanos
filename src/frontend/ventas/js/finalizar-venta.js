@@ -24,6 +24,9 @@ let costAddends = [0.0]
 let utilityAddends = [0.0]
 let saleID = -1
 let saleDataFetched
+let params
+let saleDetailToUpdate
+let playRegulateQuantity = false;
 
 function getStatusValidationFields(){
     const initialValue = true
@@ -94,7 +97,7 @@ function setOptions(selectField, dataset, keyName, optionDefault, selectedIndex)
     selectField.appendChild(optionDefault)
     dataset.forEach(data => {
         const option = document.createElement('option')
-        option.text = selectField.id == 'routes' ? data['codigo'] : data[keyName]
+        option.text = selectField.id == 'route' ? data['codigo'] : data[keyName]
         option.setAttribute('id', data.id)
         selectField.appendChild(option)
     });
@@ -157,6 +160,11 @@ function setFieldInitialBoxes(initialBoxesQuantity){
 
 function getFieldInitialBoxes(){
     return initialBoxes.value
+}
+
+function setFieldFinalBoxes(finalBoxesValue){
+    finalBoxes.value = finalBoxesValue
+    establecerCorrecto(finalBoxes.name, finalBoxes)
 }
 
 function getFieldFinalBoxes(){
@@ -305,54 +313,89 @@ function getCurrentDate() {
     return `${year}-${month}-${today}`
 }
 
+function correctEconomicQuantities(index) {
+    setSaleAddend(index, 0)
+    setCostAddend(index, 0)
+    setUtilityAddend(index, 0)
+    setFinalSaleData(getTotalAmountOf(getSaleAddends()))
+    setFinalCostData(getTotalAmountOf(getCostAddends()))
+    setFinalUtilityData(getTotalAmountOf(getUtilityAddends()))
+}
+
+function getAvailableStockAfterChange(index){
+    const modification = saleDetailToUpdate[index-1].piezasVendidas - getSaledPieces(index)
+    return saleDetailToUpdate[index-1].stock + modification 
+    
+}
+
 // Regulador de la cantidad ingresada por el usario
-function regulateQuantity(field, index){
+async function regulateQuantity(field, index) {
+    if (!playRegulateQuantity) {
+        return
+    }
     try {
-        field.value = field.value.replace('-', '') // Evita numeros negativos
-        if (parseInt(field.value) <= getInitialPieces(index) && field.value != '') { // Si no excede a cantidades iniciales
-            // Señalizalo como correcto
-            establecerCorrecto(field.id, field)
+        
 
-            // Actualiza el texto de las piezas vendidas
-            setSaledPieces(getInitialPieces(index), parseInt(field.value), index)
-            setTotalSalePerProduct(getSalePrice(index), getSaledPieces(index), index)
-            setTotalCostPerProduct(getCostPrice(index), getSaledPieces(index), index)
-            setTotalUtilityPerProduct(getTotalSalePerProduct(index), getTotalCostPerProduct(index), index)
-            setSaleAddend(index, getTotalSalePerProduct(index))
-            setCostAddend(index, getTotalCostPerProduct(index))
-            setUtilityAddend(index, getTotalUtilityPerProduct(index))
-            setFinalSaleData(getTotalAmountOf(getSaleAddends()))
-            setFinalCostData(getTotalAmountOf(getCostAddends()))
-            setFinalUtilityData(getTotalAmountOf(getUtilityAddends()))
-        }else{ // Pero si excede a cantidades iniciales o la cantidad es vacía...
-            let errorMessage
-            field.value == '' ? errorMessage = "Campo vacío" : errorMessage = "Cantidad Excedente"
-            establecerIncorrecto(field.id, field, errorMessage)
-
-            setSaleAddend(index, 0)
-            setCostAddend(index, 0)
-            setUtilityAddend(index, 0)
-            setFinalSaleData(getTotalAmountOf(getSaleAddends()))
-            setFinalCostData(getTotalAmountOf(getCostAddends()))
-            setFinalUtilityData(getTotalAmountOf(getUtilityAddends()))
+        if (field.value == "") {
+            correctEconomicQuantities(index)
+            establecerIncorrecto(field.id, field, "Campo Vacío")
+            return
         }
+        
+        const testByRegExp = await window.electronAPI.testByRegexp(field.value, 'intNumbers')
+
+        if (!testByRegExp) {
+            correctEconomicQuantities(index)
+            establecerIncorrecto(field.id, field, "Símbolos o números raros")
+            return
+        }
+        
+        if (parseInt(field.value) > getInitialPieces(index)) {
+            correctEconomicQuantities(index)
+            establecerIncorrecto(field.id, field, "Cantidad Excedente")
+            return
+        }
+
+        // Actualiza el texto de las piezas vendidas
+        setSaledPieces(getInitialPieces(index), parseInt(field.value), index)
+
+        const availableStockAfterChange = getAvailableStockAfterChange(index)
+        if (!params.firstEdition && availableStockAfterChange < 0){
+            console.log(params)
+            correctEconomicQuantities(index)
+            establecerIncorrecto(field.id, field, "Stock da negativos")
+            return
+        }
+
+        // Señalizalo como correcto
+        establecerCorrecto(field.id, field)
+        setTotalSalePerProduct(getSalePrice(index), getSaledPieces(index), index)
+        setTotalCostPerProduct(getCostPrice(index), getSaledPieces(index), index)
+        setTotalUtilityPerProduct(getTotalSalePerProduct(index), getTotalCostPerProduct(index), index)
+        setSaleAddend(index, getTotalSalePerProduct(index))
+        setCostAddend(index, getTotalCostPerProduct(index))
+        setUtilityAddend(index, getTotalUtilityPerProduct(index))
+        setFinalSaleData(getTotalAmountOf(getSaleAddends()))
+        setFinalCostData(getTotalAmountOf(getCostAddends()))
+        setFinalUtilityData(getTotalAmountOf(getUtilityAddends()))
     } catch (error) { // Si ocurre algun error, entonces
         if (error instanceof TypeError) {
             // sentencias para manejar excepciones TypeError
-        } 
+        }
     }
 }
 
 function setValidations(fields) {
-    fields.forEach((field, index) => {
-        field.addEventListener('keyup', () => {
-            regulateQuantity(field, index+1)
+    for (let index = 0; index < fields.length; index++) {
+        fields[index].addEventListener('keyup', () => {
+            regulateQuantity(fields[index], index+1)
         })
 
-        field.addEventListener('change', () => {
-            regulateQuantity(field, index+1)
-        })
-    })
+        if (fields[index] != "") {
+            regulateQuantity(fields[index], index+1)
+        }
+        
+    }
 }
 
 function renderSaleDetail(isReadOnly = false) {
@@ -411,6 +454,7 @@ function renderSaleDetail(isReadOnly = false) {
         inputFinalPieces.classList.add('bg-primary')
         inputFinalPieces.readOnly = isReadOnly
         inputFinalPieces.id = `finalPieces${index+1}`
+        inputFinalPieces.value = saleDetailElement.piezasFinales != null ? parseInt(saleDetailElement.piezasFinales) : ''
 
         fieldsCheck[inputFinalPieces.id] = false // Inicialización de claves en el objeto de las validaciones
 
@@ -556,6 +600,8 @@ function renderSaleDetail(isReadOnly = false) {
         setValidations(document.querySelectorAll('.card__field'))
     }
 
+    playRegulateQuantity = true
+
     // for (let index = 0; index < saleDetailToUpdate.length; index++) {
 
     // }
@@ -637,7 +683,7 @@ async function saveSaleDetail() {
                     })
     
                     await window.electronAPI.deleteParams('completingSaleParams')
-                    await window.electronAPI.navigateTo(links.home)
+                    await window.electronAPI.navigateTo(links.completedSales)
                 }
             }
         }
@@ -671,25 +717,26 @@ async function validateNumbers(typeNumbers = 'intNumbers', field) {
 
     if (field.value == "") {
         establecerIncorrecto(field.name, field, 'Campo Vacío')
-        return
+        return false
     }
 
     if (field.value == 0){
         establecerIncorrecto(field.name, field, 'Valor no válido')
-        return
+        return false
     }
 
     const testByRegExp = await window.electronAPI.testByRegexp(field.value, typeNumbers)
     if(!testByRegExp){
         establecerIncorrecto(field.name, field, 'Símbolos o números raros')
-        return
+        return false
     }
 
     establecerCorrecto(field.name, field)
+    return true
 }
 
 async function init(){    
-    const params = await getParams()
+    params = await getParams()
     saleDataFetched = await getSaleDataById(params.index)
     const employeesSet = await getEmployeesSet()
     const routesSet = await getRoutesSet()
@@ -700,8 +747,8 @@ async function init(){
     setFieldStartDate(saleDataFetched.fecha)
     setFieldInitialBoxes(saleDataFetched.cajasSalida)
     await setsaleDetailToUpdate(params.index)
-    setTagID(params.index)
     setSaleID(params.index)
+    setTagID(saleID)
     setButtonsOptions()
 
     finalBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', finalBoxes))
@@ -716,6 +763,8 @@ async function init(){
     
         default:
             setTitle("Editar venta finalizada")
+            setFieldFinalBoxes(saleDataFetched.cajasEntrada)
+            playRegulateQuantity = true
             renderSaleDetail()
             break;
     }

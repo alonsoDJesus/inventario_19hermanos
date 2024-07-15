@@ -55,7 +55,6 @@ function renderCompletedSales(searchType = 'all') {
         `;
     }
 
-    console.log(document.getElementById('containerSales'))
     containerCards.children.length > 3 ? document.getElementById('containerSales').classList.add('h-35rem') : document.getElementById('containerSales').classList.remove('h-35rem')
 }
 

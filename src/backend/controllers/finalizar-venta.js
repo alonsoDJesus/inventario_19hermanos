@@ -10,7 +10,8 @@ async function getSaleById(id){
                 Ruta_PK as rutaId,
                 Turno_FK__venta as turnoId,
                 Fecha_inicio__venta as fecha,
-                Cajas_inicio__venta as cajasSalida
+                Cajas_inicio__venta as cajasSalida,
+                Cajas_fin__venta as cajasEntrada
             FROM venta 
             INNER JOIN turno ON Turno_FK__venta = Turno_PK
             INNER JOIN distribuidor ON Distribuidor_FK__turno = Distribuidor_PK
@@ -42,8 +43,11 @@ async function getSaleDetailById(id){
                 Producto_PK as idProducto,
                 Descripcion__producto as descripcion,
                 Cantidad_piezas_inicio__detalleventa as piezasEntregadas,
+                Cantidad_piezas_fin__detalleventa as piezasFinales,
+                Cantidad_piezas_vendidas__detalleventa as piezasVendidas,
                 Precio_venta_al_momento__detalleventa as precioVenta,
-                Precio_costo_al_momento__detalleventa as precioCosto
+                Precio_costo_al_momento__detalleventa as precioCosto,
+                Cantidad_existencias_actual_inventario__producto as stock
             FROM detalleventa
             INNER JOIN producto ON Producto_FK__detalleventa = Producto_PK
             INNER JOIN venta ON Venta_FK__detalleventa = Venta_PK

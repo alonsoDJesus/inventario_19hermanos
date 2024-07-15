@@ -470,3 +470,11 @@ label{
     top: 1.3rem;
     right: 2.6rem;
 }
+
+.formulario__data-error{
+    background-color: var(--forth);
+    position: relative;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}

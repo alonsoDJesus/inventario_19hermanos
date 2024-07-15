@@ -45,6 +45,22 @@ let isProductRepeated = false
 let saleInitiatedData
 
 function getStatusValidationFields(){
+    if (!fieldsCheck.employees){
+        establecerIncorrecto(employees.name, employees, "Selecciona un empleado")
+    }
+
+    if (!fieldsCheck.routes){
+        establecerIncorrecto(routes.name, routes, "Selecciona una ruta")
+    }
+
+    if(!fieldsCheck.initialQuantityBoxes){
+        validateNumbers('intNumbers', initialQuantityBoxes)
+    }
+
+    if(!fieldsCheck.date){
+        validateDate()
+    }
+
     return fieldsCheck.employees && fieldsCheck.routes && fieldsCheck.initialQuantityBoxes && fieldsCheck.date
 }
 
@@ -343,7 +359,7 @@ function regulateQuantity() {
                 setDataOnFields() // Se restablecen los datos de los campos
 
                 let errorMessage
-                quantity.value == '' ? errorMessage = "Campo vacío" : (parseInt(quantity.value) == 0 ? errorMessage = "No se acepta 0" : errorMessage = "Stock superado")
+                quantity.value == '' ? errorMessage = "Campo Vacío" : (parseInt(quantity.value) == 0 ? errorMessage = "No se acepta 0" : errorMessage = "Stock superado")
                 establecerIncorrecto('quantity', quantity, errorMessage)
             }
         }
@@ -754,18 +770,15 @@ async function saveSaleDetail(){
         }
 
         showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
-    }else{
-        const errorMessageForm = document.getElementById('errorMessageForm')
-        errorMessageForm.classList.add('formulario__data-error')
-        errorMessageForm.classList.remove('display-none')
+    } else {
+        if (!saleDetail) {
+            const errorMessageForm = document.getElementById('errorMessageForm')
+            errorMessageForm.classList.add('formulario__data-error')
+            errorMessageForm.classList.remove('display-none')
 
-        buttonOption1.classList.toggle('button_save_active')
-        buttonOption2.classList.toggle('button_cancel_active')
-
-        setTimeout(() => {
-            errorMessageForm.classList.remove('formulario__data-error')
-            errorMessageForm.classList.add('display-none')
-        }, 5000);
+            buttonOption1.classList.toggle('button_save_active')
+            buttonOption2.classList.toggle('button_cancel_active')
+        }
     }
 }
 
@@ -877,6 +890,15 @@ async function init() {
 
             toggleModalForm(false)
             renderAllSales()
+        }else{
+            if(productsDescription.selectedIndex == 0){
+                establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido')
+            }
+            
+            if(quantity.value == ""){
+                establecerIncorrecto('quantity', quantity, "Campo Vacío")
+            }
+            
         }
     })
 

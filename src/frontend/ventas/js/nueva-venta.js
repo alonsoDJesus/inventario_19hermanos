@@ -453,9 +453,6 @@ function toggleModalForm(openModal = true) {
         modalForm.reset() // Limpieza del formulario
         // Limpieza de validaciones
 
-        sale.readOnly = true
-        saleIconLock.src = icons.lockIcon
-
         // En una lista se almacenan los campos que serán limpiados de sus validaciones
         modalFormFields.push(fields[4])
         modalFormFields.push(fields[5])
@@ -538,7 +535,7 @@ async function validateNumbers(typeNumbers = 'intNumbers', field) {
 
     if(field.name == 'sale'){
         if(parseFloat(sale.value.replace('$', '').trim()) <=  parseFloat(cost.value.replace('$', '').trim())){
-            establecerIncorrecto(field.name, field, 'Precio Incorrecto')
+            establecerIncorrecto(field.name, field, 'No hay margen de utilidad')
             return
         }
     }
@@ -856,7 +853,7 @@ async function init() {
     validateDate()
 
     buttonAceptModal.addEventListener('click', async () => {
-        if (fieldsCheck.description && fieldsCheck.quantity) {
+        if (fieldsCheck.description && fieldsCheck.quantity && fieldsCheck.sale) {
             switch (editingStatusModalForm) {
                 case true:
                     productToEdit.Producto_FK__detalleventa = productsDescription.selectedIndex
@@ -894,9 +891,13 @@ async function init() {
             if(productsDescription.selectedIndex == 0){
                 establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido')
             }
-            
+
             if(quantity.value == ""){
-                establecerIncorrecto('quantity', quantity, "Campo Vacío")
+                establecerIncorrecto(quantity.name, quantity, "Campo Vacío")
+            }
+
+            if(sale.value == ""){
+                establecerIncorrecto(sale.name, sale, "Campo Vacío")
             }
             
         }
@@ -991,8 +992,6 @@ async function init() {
         clearValidations(fields[9].name, fields[9])
         ocultarMensajeCaution(sale.name, sale)
 
-        sale.readOnly = true
-        saleIconLock.src = icons.lockIcon
         // Si no está seleccionado ningun producto
         if (productsDescription.selectedIndex == 0) {
             setSelectionFieldAsWrong('Seleccione un producto válido') // Señalalo como incorrecto
@@ -1017,22 +1016,6 @@ async function init() {
 
     initialQuantityBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', initialQuantityBoxes))
     initialQuantityBoxes.addEventListener('change', () => validateNumbers('intNumbers', initialQuantityBoxes))
-
-    saleIconLock.addEventListener('click', () => {
-        if (productsDescription.selectedIndex == 0) {
-            mostrarMensajeCaution(sale.name, sale, 'Elige un producto')
-            return
-        }
-
-        if (isProductRepeated) {
-            mostrarMensajeCaution(sale.name, sale, 'Producto repetido')
-            return
-        }
-
-        sale.readOnly = !sale.readOnly
-        saleIconLock.src = sale.readOnly ? icons.lockIcon : icons.lockOpen
-        validateNumbers('prices', sale)
-    })
 
     sale.addEventListener('keyup', () => validateNumbers('prices', sale))
 

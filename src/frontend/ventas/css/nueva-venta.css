@@ -478,3 +478,9 @@ label{
     left: 0;
     width: 100%;
 }
+
+#stock, #cost{
+    border-bottom: solid .2rem var(--forth);
+    background-color: var(--third);
+    border-radius: 0;
+}

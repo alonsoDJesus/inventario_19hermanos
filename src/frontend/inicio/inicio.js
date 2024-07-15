@@ -41,6 +41,13 @@ async function deleteSale(saleId) {
     }).then(async (value) => {
         if (value) {
             await window.electronAPI.deleteSale(saleId)
+
+            await swal({
+                title: "Venta exitosamente",
+                button: {
+                    text: 'Aceptar'
+                }
+            })
         }
     })
 

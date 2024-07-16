@@ -53,3 +53,20 @@ function clearValidations(nameField, field){
 
     fieldsCheck[nameField] = false; // En el objeto de los campos se señala una entrada incorrecta
 }
+
+async function showSwalToFillemptyFields(){
+    await swal({
+        icon: 'warning',
+        title: '¡Te hacen falta datos!',
+        text: 'Revisa los campos que están señalados en rojo y llenalos',
+        padding: '1.4rem',
+        buttons: {    
+            confirm: {
+                text: "Aceptar",
+                value: true,
+                visible: true,
+                closeModal: true
+            }
+        }
+    })
+}

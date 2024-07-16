@@ -45,22 +45,6 @@ let isProductRepeated = false
 let saleInitiatedData
 
 function getStatusValidationFields(){
-    if (!fieldsCheck.employees){
-        establecerIncorrecto(employees.name, employees, "Selecciona un empleado")
-    }
-
-    if (!fieldsCheck.routes){
-        establecerIncorrecto(routes.name, routes, "Selecciona una ruta")
-    }
-
-    if(!fieldsCheck.initialQuantityBoxes){
-        validateNumbers('intNumbers', initialQuantityBoxes)
-    }
-
-    if(!fieldsCheck.date){
-        validateDate()
-    }
-
     return fieldsCheck.employees && fieldsCheck.routes && fieldsCheck.initialQuantityBoxes && fieldsCheck.date
 }
 
@@ -785,12 +769,41 @@ async function saveSaleDetail(){
         showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
     } else {
         if (!saleDetail) {
-            const errorMessageForm = document.getElementById('errorMessageForm')
-            errorMessageForm.classList.add('formulario__data-error')
-            errorMessageForm.classList.remove('display-none')
 
-            buttonOption1.classList.toggle('button_save_active')
-            buttonOption2.classList.toggle('button_cancel_active')
+            if (document.getElementById('errorMessageForm') == null) {
+                const logCards = document.getElementById('logCards')
+
+                const errorMessageForm = document.createElement('div')
+                errorMessageForm.classList.add('formulario__data-error')
+                errorMessageForm.id = "errorMessageForm"
+
+                const messageParagraph = document.createElement('p')
+                messageParagraph.innerText = "No has añadido productos a tu venta."
+
+                errorMessageForm.appendChild(messageParagraph)
+                logCards.appendChild(errorMessageForm)
+            }
+
+            if (!fieldsCheck.employees){
+                establecerIncorrecto(employees.name, employees, "Selecciona un empleado")
+            }
+        
+            if (!fieldsCheck.routes){
+                establecerIncorrecto(routes.name, routes, "Selecciona una ruta")
+            }
+        
+            if(!fieldsCheck.initialQuantityBoxes){
+                validateNumbers('intNumbers', initialQuantityBoxes)
+            }
+        
+            if(!fieldsCheck.date){
+                validateDate()
+            }
+
+            buttonOption1.classList.remove('button_option1_active')
+            buttonOption2.classList.remove('button_option2_active')
+
+            await showSwalToFillemptyFields()
         }
     }
 }

@@ -724,20 +724,7 @@ async function saveSaleDetail() {
             }
         } )
 
-        await swal({
-            icon: 'warning',
-            title: '¡Te hacen falta datos!',
-            text: 'Revisa los campos que están señalados en rojo y llenalos',
-            padding: '1.4rem',
-            buttons: {    
-                confirm: {
-                    text: "Aceptar",
-                    value: true,
-                    visible: true,
-                    closeModal: true
-                }
-            }
-        })
+        await showSwalToFillemptyFields()
     }
     //const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, )
 

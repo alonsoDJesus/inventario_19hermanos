@@ -223,7 +223,7 @@ async function prepareModalForm(productData = undefined) {
         clearDataFromFields()
         setDataOnFields()
         quantity.value = productData.Cantidad_piezas_inicio__detalleventa
-        regulateQuantity()
+        await regulateQuantity()
 
         sale.value = `$ ${productData.Precio_venta_al_momento__detalleventa}`
     } else{
@@ -296,7 +296,7 @@ function renderAllSales() {
             const paragraphDescription = document.createElement('p')
             paragraphDescription.classList.add('data')
             paragraphDescription.classList.add('data_description')
-            paragraphDescription.innerText = `${auxAddedSales[index].description}`
+            paragraphDescription.innerText = `${auxAddedSales[index].code} ${auxAddedSales[index].description}`
             cardData.appendChild(paragraphDescription)
 
             const paragraphPieces = document.createElement('p')
@@ -341,27 +341,42 @@ function renderAllSales() {
 }
 
 // Regulador de la cantidad ingresada por el usario
-function regulateQuantity() {
+async function regulateQuantity() {
     try {
-        quantity.value = quantity.value.replace('-', '') // Evita numeros negativos
         if (fieldsCheck.description) {
-            let product = searchProductByIdAttribute()
             
-            if (parseInt(quantity.value) <= parseInt(product.stock) && quantity.value != '' && parseInt(quantity.value) != 0) { // Si no excede al stock
-                // Afecta las cantidades de stock disponible y de cajas a enviar
-                
-                stock.value = parseInt(product.stock) - parseInt(quantity.value)
-
-                // Señalizalo como correcto
-                establecerCorrecto('quantity', quantity)
-            } else { // Pero si excede al stock...
+            if (quantity.value == "") {
                 clearDataFromFields(false)
                 setDataOnFields() // Se restablecen los datos de los campos
-
-                let errorMessage
-                quantity.value == '' ? errorMessage = "Campo Vacío" : (parseInt(quantity.value) == 0 ? errorMessage = "No se acepta 0" : errorMessage = "Stock superado")
-                establecerIncorrecto('quantity', quantity, errorMessage)
+                establecerIncorrecto('quantity', quantity, "Campo Vacío")
+                return
             }
+            
+            if (!(await window.electronAPI.testByRegexp(quantity.value, "intNumbers"))){
+                clearDataFromFields(false)
+                setDataOnFields() // Se restablecen los datos de los campos
+                establecerIncorrecto('quantity', quantity, "Símbolos raros")
+                return
+            }
+
+            if(parseInt(quantity.value) == 0){
+                clearDataFromFields(false)
+                setDataOnFields() // Se restablecen los datos de los campos
+                establecerIncorrecto('quantity', quantity, "No se acepta 0")
+                return
+            }
+
+            let product = searchProductByIdAttribute()
+
+            if (parseInt(quantity.value) > parseInt(product.stock)) {
+                clearDataFromFields(false)
+                setDataOnFields() // Se restablecen los datos de los campos
+                establecerIncorrecto('quantity', quantity, "Stock superado")
+                return
+            }
+
+            stock.value = parseInt(product.stock) - parseInt(quantity.value)// Afecta las cantidades de stock disponible y de cajas a enviar
+            establecerCorrecto('quantity', quantity) // Señalizalo como correcto
         }
     } catch (error) { // Si ocurre algun error, entonces
         if (error instanceof TypeError) {
@@ -943,7 +958,7 @@ async function init() {
         if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {
             await addProductToSale()
         }
-        regulateQuantity() // Regulala en funcion del stock
+        await regulateQuantity() // Regulala en funcion del stock
     })
 
     // Cada vez que cambia la cantidad por medio de los botones del campo
@@ -951,7 +966,7 @@ async function init() {
         if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {
             await addProductToSale()
         }
-        regulateQuantity()
+        await regulateQuantity()
     })
 
     buttonSearchProduct.addEventListener('click', () => {
@@ -1026,7 +1041,13 @@ async function init() {
     initialQuantityBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', initialQuantityBoxes))
     initialQuantityBoxes.addEventListener('change', () => validateNumbers('intNumbers', initialQuantityBoxes))
 
-    sale.addEventListener('keyup', () => validateNumbers('prices', sale))
+    sale.addEventListener('keyup', async(keyEvent) => {
+        if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {
+            await addProductToSale()
+        }
+        
+        validateNumbers('prices', sale)
+    })
 
 }
 

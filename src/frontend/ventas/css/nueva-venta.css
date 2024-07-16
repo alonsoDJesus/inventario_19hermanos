@@ -448,6 +448,10 @@ label{
     font-family: 'MPLUS1Code-Regular';
 }
 
+#quantity__val, #sale__val{
+    right: 0.2rem;
+}
+
 #code::placeholder{
     color: rgba(255, 255, 255, 0.648);
 }

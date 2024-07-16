@@ -78,7 +78,7 @@ async function getInitiatedSaleDetailById(id){
             SELECT
                 Producto_PK as idProducto,
                 Codigo__producto as codigo, 
-                CONCAT( Codigo__producto, ' ', Descripcion__producto ) as descripcion,
+                Descripcion__producto as descripcion,
                 Cantidad_piezas_inicio__detalleventa as piezasEntregadas,
                 Precio_venta_al_momento__detalleventa as precioVenta,
                 Precio_costo_al_momento__detalleventa as precioCosto,
@@ -197,7 +197,6 @@ async function saveSaleDetail(saleDetail, isNewSaleDetail){
 
         return 1;
     } catch (error) {
-
         return error
     }
 }

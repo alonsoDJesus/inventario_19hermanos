@@ -483,6 +483,7 @@ function checkProductRepetition(){
         establecerCorrecto('description', productsDescription) // Señalalo como correcto
         clearDataFromFields()
         setDataOnFields()
+        quantity.focus()
     } else { // Caso 2: no hay intento de duplicación de registro
         isProductRepeated = true
         setSelectionFieldAsWrong('Este producto ya está en tu lista de la venta')  // Señalalo como incorrecto
@@ -779,6 +780,57 @@ async function saveSaleDetail(){
     }
 }
 
+async function addProductToSale(){
+    if (fieldsCheck.description && fieldsCheck.quantity && fieldsCheck.sale) {
+        switch (editingStatusModalForm) {
+            case true:
+                productToEdit.Producto_FK__detalleventa = productsDescription.selectedIndex
+                productToEdit.code = code.value
+                productToEdit.Cantidad_piezas_inicio__detalleventa = parseInt(quantity.value)
+                productToEdit.Precio_venta_al_momento__detalleventa = parseFloat(sale.value.replace('$', '').trim())
+                productToEdit.Precio_costo_al_momento__detalleventa = parseFloat(cost.value.replace('$', '').trim())
+                productToEdit.description = productsDescription.value
+
+                const addedSales = await window.electronAPI.getFromSessionStorage("addedSales")
+                addedSales[productIdToEdit] = productToEdit
+                await window.electronAPI.setItemsOnSessionStorage("addedSales", addedSales)
+                break;
+
+            default:
+
+                await setInitiatedSaleDetailOnSessionStorage({
+                    saleId: saleID,
+                    productId: productsDescription.selectedIndex,
+                    productCode: code.value,
+                    quantityOfPieces: parseInt(quantity.value),
+                    salePrice: parseFloat(sale.value.replace('$', '').trim()),
+                    costPrice: parseFloat(cost.value.replace('$', '').trim()),
+                    description: productsDescription.value,
+                })
+
+                
+
+                break;
+        }
+
+        toggleModalForm(false)
+        renderAllSales()
+    }else{
+        if(productsDescription.selectedIndex == 0){
+            establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido')
+        }
+
+        if(quantity.value == ""){
+            establecerIncorrecto(quantity.name, quantity, "Campo Vacío")
+        }
+
+        if(sale.value == ""){
+            establecerIncorrecto(sale.name, sale, "Campo Vacío")
+        }
+        
+    }
+}
+
 async function init() {
     const params = await getParams()
     const buttonAddSale = document.getElementById('buttonAddSale')
@@ -852,56 +904,7 @@ async function init() {
 
     validateDate()
 
-    buttonAceptModal.addEventListener('click', async () => {
-        if (fieldsCheck.description && fieldsCheck.quantity && fieldsCheck.sale) {
-            switch (editingStatusModalForm) {
-                case true:
-                    productToEdit.Producto_FK__detalleventa = productsDescription.selectedIndex
-                    productToEdit.code = code.value
-                    productToEdit.Cantidad_piezas_inicio__detalleventa = quantity.value
-                    productToEdit.Precio_venta_al_momento__detalleventa = parseFloat(sale.value.replace('$', '').trim())
-                    productToEdit.Precio_costo_al_momento__detalleventa = parseFloat(cost.value.replace('$', '').trim())
-                    productToEdit.description = productsDescription.value
-
-                    const addedSales = await window.electronAPI.getFromSessionStorage("addedSales")
-                    addedSales[productIdToEdit] = productToEdit
-                    await window.electronAPI.setItemsOnSessionStorage("addedSales", addedSales)
-                    break;
-
-                default:
-
-                    await setInitiatedSaleDetailOnSessionStorage({
-                        saleId: saleID,
-                        productId: productsDescription.selectedIndex,
-                        productCode: code.value,
-                        quantityOfPieces: quantity.value,
-                        salePrice: parseFloat(sale.value.replace('$', '').trim()),
-                        costPrice: parseFloat(cost.value.replace('$', '').trim()),
-                        description: productsDescription.value,
-                    })
-
-                    
-
-                    break;
-            }
-
-            toggleModalForm(false)
-            renderAllSales()
-        }else{
-            if(productsDescription.selectedIndex == 0){
-                establecerIncorrecto('description', productsDescription, 'Seleccione un producto válido')
-            }
-
-            if(quantity.value == ""){
-                establecerIncorrecto(quantity.name, quantity, "Campo Vacío")
-            }
-
-            if(sale.value == ""){
-                establecerIncorrecto(sale.name, sale, "Campo Vacío")
-            }
-            
-        }
-    })
+    buttonAceptModal.addEventListener('click', async() => await addProductToSale())
 
     routes.addEventListener('change', () => {
         if(routes.selectedIndex != 0){
@@ -936,12 +939,18 @@ async function init() {
     })
 
     // Cada vez que el usuario escriba una cantidad
-    quantity.addEventListener('keyup', () => {
+    quantity.addEventListener('keyup', async (keyEvent) => {
+        if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {
+            await addProductToSale()
+        }
         regulateQuantity() // Regulala en funcion del stock
     })
 
     // Cada vez que cambia la cantidad por medio de los botones del campo
-    quantity.addEventListener('change', () => {
+    quantity.addEventListener('change', async (keyEvent) => {
+        if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {
+            await addProductToSale()
+        }
         regulateQuantity()
     })
 

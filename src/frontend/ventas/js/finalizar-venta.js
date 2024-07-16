@@ -697,17 +697,47 @@ async function saveSaleDetail() {
         showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
 
     } else{
-        const errorMessageForm = document.getElementById('errorMessageForm')
-        errorMessageForm.classList.add('formulario__data-error')
-        errorMessageForm.classList.remove('display-none')
+        // const errorMessageForm = document.getElementById('errorMessageForm')
+        // errorMessageForm.classList.add('formulario__data-error')
+        // errorMessageForm.classList.remove('display-none')
 
-        buttonOption1.classList.toggle('button_save_active')
-        buttonOption2.classList.toggle('button_cancel_active')
+        // buttonOption1.classList.toggle('button_save_active')
+        // buttonOption2.classList.toggle('button_cancel_active')
 
-        setTimeout(() => {
-            errorMessageForm.classList.remove('formulario__data-error')
-            errorMessageForm.classList.add('display-none')
-        }, 5000);
+        // setTimeout(() => {
+        //     errorMessageForm.classList.remove('formulario__data-error')
+        //     errorMessageForm.classList.add('display-none')
+        // }, 5000);
+
+        if (initialBoxes.value == "") {
+            establecerIncorrecto(initialBoxes.name, initialBoxes, "Campo Vacío")
+        }
+
+        if (finalBoxes.value == ""){
+            establecerIncorrecto(finalBoxes.name, finalBoxes, "Campo Vacío")
+        }
+
+        document.querySelectorAll('.card__field').forEach( (cardField) => {
+            console.log(cardField.id)
+            if (cardField.value == ""){
+                establecerIncorrecto(cardField.id, cardField, "Campo Vacío")
+            }
+        } )
+
+        await swal({
+            icon: 'warning',
+            title: '¡Te hacen falta datos!',
+            text: 'Revisa los campos que están señalados en rojo y llenalos',
+            padding: '1.4rem',
+            buttons: {    
+                confirm: {
+                    text: "Aceptar",
+                    value: true,
+                    visible: true,
+                    closeModal: true
+                }
+            }
+        })
     }
     //const saleUpdatedID = await window.electronAPI.updateSale(saleDataToUpdate, )
 

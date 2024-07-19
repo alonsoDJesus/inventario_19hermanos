@@ -113,11 +113,11 @@ async function getAvailableStocks(saleId){
             for (let index = 0; index < routesStocks.length; index++) {
                 const routeStock = routesStocks[index];
                 if (product.codigo == routeStock.code) {
-                    product.stock -= routeStock.stock
+                    product.stock = parseInt(product.stock) - parseInt(routeStock.stock)
                 }
             }
         });
-
+        
         return products
     } catch (error) {
         return error
@@ -128,8 +128,11 @@ async function getAvailableStocks(saleId){
 async function deleteProductFromSaleDetail(saleId, productId){
     const conn = await getConnection()
     try {
-        const deletedProduct = await conn.query('DELETE FROM detalleventa WHERE Venta_FK__detalleventa = ? AND Producto_FK__detalleventa = ?', [saleId, productId])
+        const responseDeletedProduct = await conn.query('DELETE FROM detalleventa WHERE Venta_FK__detalleventa = ? AND Producto_FK__detalleventa = ?', [saleId, productId])
+        console.log(responseDeletedProduct)
+        return responseDeletedProduct.affectedRows
     } catch (error) {
+        console.log(error)
         return error
     }
 }

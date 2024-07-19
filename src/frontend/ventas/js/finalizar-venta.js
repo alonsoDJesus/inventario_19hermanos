@@ -408,6 +408,7 @@ function renderSaleDetail(isReadOnly = false) {
     // }
 
     saleDetailToUpdate.forEach( (saleDetailElement, index) => {
+        const isUnavailableElement = saleDetailElement.codigoProducto.includes('*')
         // Group Card
         const groupCard = document.createElement('div')
         groupCard.classList.add('saledetail__groupcard')
@@ -429,8 +430,19 @@ function renderSaleDetail(isReadOnly = false) {
 
         const paragraphDescription = document.createElement('p')
         paragraphDescription.innerText = saleDetailElement.descripcion
+        paragraphDescription.classList.add('description__text')
+        //saleDetailElement.codigoProducto.includes('*') ? paragraphDescription.innerHTML += "<br><span>Descontinuado</span>" : ''
         
-        divDescription.appendChild(paragraphDescription)
+        const auxDivDescription = document.createElement('div')
+
+        auxDivDescription.appendChild(paragraphDescription)
+
+        if (isUnavailableElement) {
+            paragraphDescription.classList.add('mb-p')
+            auxDivDescription.innerHTML += "<p class='description__tagUnavailable'>Descontinuado</p>" 
+        }
+
+        divDescription.appendChild(auxDivDescription)
         cardData.appendChild(divDescription)
         //------------------------------------------------------------------------
         const divInitialPieces = document.createElement('div')
@@ -452,7 +464,7 @@ function renderSaleDetail(isReadOnly = false) {
         inputFinalPieces.type = "tel"
         inputFinalPieces.classList.add('card__field')
         inputFinalPieces.classList.add('bg-primary')
-        inputFinalPieces.readOnly = isReadOnly
+        inputFinalPieces.readOnly = isReadOnly || isUnavailableElement
         inputFinalPieces.id = `finalPieces${index+1}`
         inputFinalPieces.value = saleDetailElement.piezasFinales != null ? parseInt(saleDetailElement.piezasFinales) : ''
 

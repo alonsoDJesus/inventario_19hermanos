@@ -1,3 +1,5 @@
+const searchField = document.getElementById('searchField')
+
 const fieldsCheck = {
     searchField: false
 }
@@ -9,6 +11,7 @@ const format = new Intl.NumberFormat('en-US', optionsFormat);
 
 let allProducts = []
 let lowLevelProducts = [], midLevelProducts = [], highLevelProducts =[]
+let searchCriteriaDeterminator = '', searchType = ''
 let quantityProductsToSupply = {
     lowLevelQuantity: 0,
     midLevelQuantity: 0
@@ -66,7 +69,9 @@ function levelClassifier(){
 
 function searchProduct(){
     if (fieldsCheck.searchField) {
-        fetchProductsWithCriteria(searchField.value, 'specific')
+        searchCriteriaDeterminator = searchField.value
+        searchType = 'specific'
+        fetchProductsWithCriteria()
     }
 }
 
@@ -152,6 +157,14 @@ function renderProducts(searchType) {
                         const footerIcon = document.createElement('img')
                         footerIcon.src = singleFooterIcon
                         footerIcon.classList.add('h-1rem')
+
+                        if (footerIcon.src == icons.edit) {
+                            console.log('funcion de editar')    
+                        }else{
+                            footerContainerIcon.id = "deleteProductButton"
+                            footerContainerIcon.onclick = () => deleteProduct(product.id)
+                        }
+
                         footerContainerIcon.appendChild(footerIcon)
                     
                     cardFooter.appendChild(footerContainerIcon)
@@ -189,7 +202,6 @@ function renderProducts(searchType) {
 
 async function init() {
     const sortSelector = document.getElementById('sortSelector')
-    const searchField = document.getElementById('searchField')
     const buttonSearch = document.getElementById('buttonSearch')
     const buttonAddProduct = document.getElementById('buttonAddProduct')
 
@@ -222,13 +234,110 @@ async function init() {
         await window.electronAPI.navigateTo(links.newProduct, -1, 'create')
     })
    
-
-    await fetchProductsWithCriteria('code')
+    searchCriteriaDeterminator = 'code'
+    searchType = 'all'
+    await fetchProductsWithCriteria()
 
     showWarningStockMessage()
 }
 
-async function fetchProductsWithCriteria(searchCriteriaDeterminator, searchType = 'all'){
+async function deleteProduct(productId){
+    await swal({
+        icon: "warning",
+        title: "¿Estás seguro de eliminar este producto?",
+        text: "Esta acción es de gran delicadeza, por lo que debes estar 100% seguro.",
+        padding: '1.4rem',
+        buttons: {
+            cancel: {
+                text: 'Cancelar',
+                value: null,
+                visible: true,
+                closeModal: true
+            },
+
+            confirm: {
+                text: "Aceptar",
+                value: true,
+                visible: true,
+                closeModal: true
+            }
+        }
+    }).then(async (value) => {
+        switch (value) {
+            case true:
+                await swal({
+                    icon: "warning",
+                    title: "Elije la forma en que eliminarás este producto",
+                    text: `a) Descontinuar producto: El producto ya no estará 
+                    disponible para venderse pero si aparecerá en registros de 
+                    ventas pasadas como "producto descontinuado". De esta manera
+                    no perderás datos importantes para tus estados financieros.
+
+                    b) Borrado total: Se borrará por completo este producto y todos
+                    los registros que tengan que ver con él. Si tienes algún estado
+                    financiero pendiente por obtener, entonces no se recomienda este
+                    método.`,
+                    padding: '1.4rem',
+                    className: "swal-modal--w50",
+                    buttons: {
+                        cancel: {
+                            text: 'Cancelar',
+                            value: null,
+                            visible: true,
+                            closeModal: true
+                        },
+            
+                        method1: {
+                            text: "Descontinuar producto",
+                            value: 1,
+                            visible: true,
+                            closeModal: true,
+                            className: '.swal-button--confirm'
+                        },
+
+                        method2: {
+                            text: "Eliminación total",
+                            value: 2,
+                            visible: true,
+                            closeModal: true,
+                            className: '.swal-button--confirm'
+                        }
+                    }
+                }).then(async (value) => {
+                    switch (value) {
+                        case 1:
+                            affectedRows = await window.electronAPI.updateProductAsUnavailable(productId)
+                            if (affectedRows == 1) {
+                                await swal({
+                                    title: "Producto descontinuado exitosamente",
+                                    button: {
+                                        text: 'Aceptar'
+                                    }
+                                })
+                            }
+
+                            fetchProductsWithCriteria()
+                            
+                            break;
+
+                        case 2:
+
+                            break;
+
+                        default:
+                            break;
+                    }
+                })
+                    
+                break;
+         
+            default:
+                break;
+          }
+    })
+}
+
+async function fetchProductsWithCriteria(){
     lowLevelProducts = []
     midLevelProducts = []
     highLevelProducts = []
@@ -254,19 +363,9 @@ async function fetchProductsWithCriteria(searchCriteriaDeterminator, searchType 
 }
 
 function determinateSearchCriteriaBySelector(){
-    switch (sortSelector.selectedIndex) {
-        case 1:
-            fetchProductsWithCriteria('code', 'all')
-            break;
-    
-        case 2:
-            fetchProductsWithCriteria('stock', 'all')
-            break;
-        
-        default:
-            fetchProductsWithCriteria('code')
-            break;
-    }
+    searchType = 'all'
+    sortSelector.selectedIndex == 2 ? searchCriteriaDeterminator = 'stock' : searchCriteriaDeterminator = 'code'
+    fetchProductsWithCriteria()
 }
 
 init()

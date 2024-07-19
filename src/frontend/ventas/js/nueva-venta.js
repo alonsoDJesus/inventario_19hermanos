@@ -34,6 +34,11 @@ const fieldsCheck = {
     sale: false
 }
 
+const numericMXFormat = {
+    style: "currency",
+    currency: "MXN"
+}
+
 let saleID = 0
 let intervalID = 0
 let productsData
@@ -43,6 +48,7 @@ let productIdToEdit
 let productToEdit
 let isProductRepeated = false
 let saleInitiatedData
+
 
 function getStatusValidationFields(){
     return fieldsCheck.employees && fieldsCheck.routes && fieldsCheck.initialQuantityBoxes && fieldsCheck.date
@@ -81,6 +87,74 @@ function getSaleID(){
 //     }
 // }
 //----------------------------------------------------------------------------
+function setFieldSalePrice(saleValue){
+    switch (saleValue) {
+        case '':
+            sale.value = saleValue
+            break;
+    
+        default:
+            let saleFormatted = new Number(saleValue).toLocaleString("es-MX", numericMXFormat)
+            saleFormatted = saleFormatted.replace('$', '')
+            saleFormatted = `$ ${saleFormatted}`
+            sale.value = saleFormatted
+            break;
+    }
+}
+
+function getFieldSalePrice(){
+    switch (sale.value) {
+        case "":
+            return ""
+    
+        default:
+            return parseFloat(sale.value.replace('$', '').replace(',', '').trim()).toFixed(2)
+    }
+}
+
+function setFieldCostPrice(costValue){
+    switch (costValue) {
+        case '':
+            cost.value = costValue
+            break;
+    
+        default:
+            cost.value = `$ ${Intl.NumberFormat().format(costValue)}` 
+            break;
+    }
+}
+
+function getFieldCostPrice(){
+    switch (cost.value) {
+        case "":
+            return ""
+    
+        default:
+            return parseFloat(cost.value.replace('$', '').replace(',', '').trim())
+    }
+}
+
+function setFieldStock(stockValue){
+    switch (stockValue) {
+        case '':
+            stock.value = stockValue
+            break;
+    
+        default:
+            stock.value = `${Intl.NumberFormat().format(stockValue)}` 
+            break;
+    }
+}
+
+function getFieldStock(){
+    switch (stock.value) {
+        case "":
+            return ""
+    
+        default:
+            return parseInt(stock.value.replace(',', '').trim())
+    }
+}
 
 function setOptionsOnSelectField(selectField, dataset, keyName, optionDefault, selectedIndex){
     selectField.innerHTML = ''
@@ -121,7 +195,7 @@ function searchProductByIdAttribute() {
     let productFounded
 
     productsData.forEach(product => {
-        if (product.id == productsDescription.selectedIndex) {
+        if (product.id == getProductIdFromSelectedIndex()) {
             productFounded = product
         }
     })
@@ -166,27 +240,27 @@ function searchRouteByCode(code){
 }
 
 function verifyStock(){
-    if (stock.value < 0) {
+    if (getFieldStock() < 0) {
         quantity.value = ''
 
         product = searchProductByIdAttribute()
-        stock.value = product.stock
+        setFieldStock(parseInt(product.stock))
     }
 }
 
 function setDataOnFields() {
-    product = searchProductByIdAttribute()
-    cost.value = `$ ${product.cost}`
-    sale.value = `$ ${product.sale}`
-    stock.value = parseInt(product.stock)
+    const product = searchProductByIdAttribute()
+    setFieldCostPrice(parseFloat(product.cost))
+    setFieldSalePrice(parseFloat(product.sale))
+    setFieldStock(parseInt(product.stock))
     fieldsCheck.sale = true
 }
 
 // Limppieza de datos de los campos
 function clearDataFromFields(wantToCleanQuantity = true){
-    cost.value = ''
-    sale.value = ''
-    stock.value = ''
+    setFieldCostPrice("")
+    setFieldSalePrice("")
+    setFieldStock("")
     quantity.value = wantToCleanQuantity ? '' : quantity.value
 }
 
@@ -194,27 +268,24 @@ async function prepareModalForm(productData = undefined) {
     const allProductsData = await fetchProductsData() // Colocación de productos en el select
     const title = document.querySelector('.form__addsale h2')
     productsData = allProductsData
-
+    setProductsField(allProductsData)
     if (productData != undefined) {
         editingStatusModalForm = true
-
         title.innerText = "Edita este producto"
-        setProductsField(allProductsData, productData.Producto_FK__detalleventa)
-
+        productsDescription.selectedIndex = getIndexOfProductFounded(productData.Producto_FK__detalleventa)
         code.value = productData.code
 
         establecerCorrecto('description', productsDescription) // Señalalo como correcto
         clearDataFromFields()
         setDataOnFields()
+        
         quantity.value = productData.Cantidad_piezas_inicio__detalleventa
         await regulateQuantity()
 
-        sale.value = `$ ${productData.Precio_venta_al_momento__detalleventa}`
+        setFieldSalePrice(parseFloat(productData.Precio_venta_al_momento__detalleventa))
     } else{
         editingStatusModalForm = false
-
         title.innerText = "Agrega un producto"
-        setProductsField(allProductsData)
     }
     code.focus() // Cambia el enfoque al select de los productos
 }
@@ -359,7 +430,7 @@ async function regulateQuantity() {
                 return
             }
 
-            stock.value = parseInt(product.stock) - parseInt(quantity.value)// Afecta las cantidades de stock disponible y de cajas a enviar
+            setFieldStock(parseInt(product.stock) - parseInt(quantity.value))// Afecta las cantidades de stock disponible y de cajas a enviar
             establecerCorrecto('quantity', quantity) // Señalizalo como correcto
         }
     } catch (error) { // Si ocurre algun error, entonces
@@ -369,11 +440,11 @@ async function regulateQuantity() {
     }
 }
 
-function searchRepeatedSale(addedSales){
+function searchRepeatedSale(addedSales, productId){
     let mySale = undefined, index = 1
-
     while (addedSales[index] != undefined) {
-        if (productsDescription.selectedIndex == addedSales[index].Producto_FK__detalleventa) {
+        console.log(productId)
+        if (productId == addedSales[index].Producto_FK__detalleventa) {
             mySale = addedSales[index]
         }
 
@@ -468,6 +539,21 @@ function toggleModalForm(openModal = true) {
     }
 }
 
+function getProductIdFromSelectedIndex(){
+    return productsDescription.options[productsDescription.selectedIndex].id
+}
+
+function getIndexOfProductFounded(productId) {
+
+    const options = productsDescription.options
+
+    for (let iterator = 1; iterator < options.length; iterator++) {
+        if (options[iterator].id == productId) {
+            return options[iterator].index
+        }
+    }
+}
+
 function setSelectionFieldAsWrong(errorMessage){
     establecerIncorrecto('description', productsDescription, errorMessage) // Señalalo como incorrecto
     clearDataFromFields() // Limpia los datos de los campos
@@ -475,7 +561,7 @@ function setSelectionFieldAsWrong(errorMessage){
 
 function checkProductRepetition(){
     const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales")) // Obtengo esos elementos
-    const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales) : -1
+    const productRepeated = auxAddedSales != null ? searchRepeatedSale(auxAddedSales, getProductIdFromSelectedIndex()) : -1
 
     if ((productRepeated == undefined && auxAddedSales != null) || !auxAddedSales || (editingStatusModalForm && productRepeated.Producto_FK__detalleventa == productToEdit.Producto_FK__detalleventa)) { // Caso 1: Si hay intento de reptición de registro
         isProductRepeated = false
@@ -493,13 +579,13 @@ function selectProductByCode(){
     if (fieldsCheck.code) {
         clearValidations('description', productsDescription)
         clearValidations('quantity', quantity)
-        ocultarMensajeCaution(sale.name, sale)
+        //clearValidations('sale', sale)
         clearDataFromFields()
 
-        productSearched = searchProductByCode(code.value)
+        const productSearched = searchProductByCode(code.value)
 
         if(productSearched != undefined){
-            productsDescription.selectedIndex = productSearched.id
+            productsDescription.selectedIndex = getIndexOfProductFounded(productSearched.id)
             checkProductRepetition()
         }else{
             productsDescription.selectedIndex = 0
@@ -534,7 +620,7 @@ async function validateNumbers(typeNumbers = 'intNumbers', field) {
     }
 
     if(field.name == 'sale'){
-        if(parseFloat(sale.value.replace('$', '').trim()) <=  parseFloat(cost.value.replace('$', '').trim())){
+        if(getFieldSalePrice() <= getFieldCostPrice()){
             establecerIncorrecto(field.name, field, 'No hay margen de utilidad')
             return
         }
@@ -577,10 +663,11 @@ async function deleteProductSale(event) {
             productIdToEdit = event.target.closest('.card__button').id
             const addedSales = await window.electronAPI.getFromSessionStorage("addedSales")
             productToEdit = addedSales[productIdToEdit]
-
-            if (editingStatusForm) {
+            
+            if (productToEdit.oldId) {
                 const currentDeletedProducts = await window.electronAPI.getFromSessionStorage("deletedSales")
                 const deleteDetail = await window.electronAPI.prepareSessionStorage("deletedSalesIndex", currentDeletedProducts)
+                //console.log(isRepeatedDeletedProduct)
                 deleteDetail.objectSales[deleteDetail.i] = productToEdit
                 await window.electronAPI.setItemsOnSessionStorage("deletedSales", deleteDetail.objectSales)
             }
@@ -594,6 +681,7 @@ async function deleteProductSale(event) {
             })
 
             await window.electronAPI.setItemsOnSessionStorage("addedSales", updatedAddedSales)
+            await window.electronAPI.repareIndex(auxAddedSales.length)
             renderAllSales()
 
             if (auxAddedSales.length == 0) {
@@ -700,7 +788,7 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
     })
 }
 
-async function saveSaleDetail(){
+async function saveSaleDetail() {
     const saleDetail = await window.electronAPI.getFromSessionStorage("addedSales")
     const statusValidation = getStatusValidationFields()
 
@@ -721,34 +809,41 @@ async function saveSaleDetail(){
                     Turno_FK__venta: editingStatusForm ? saleInitiatedData.turnoId : shiftInsertID,
                     Cajas_inicio__venta: parseInt(initialQuantityBoxes.value)
                 }
-                
+
                 const saleDataInsertedID = await window.electronAPI.saveSaleWithShift(saleData, !editingStatusForm)
 
                 if (typeof saleDataInsertedID == "number") {
-                    const statusSaleDetailInsertion = await window.electronAPI.saveSaleDetail(saleDetail, !editingStatusForm)
-                    
-                    if (statusSaleDetailInsertion == 1) {
-                        
-                        let currentDeletedSales = window.electronAPI.getFromSessionStorage("deletedSales")
+                    //const statusSaleDetailInsertion = await window.electronAPI.saveSaleDetail(saleDetail, !editingStatusForm)
 
-                        if (currentDeletedSales && editingStatusForm) {
-                            currentDeletedSales = Object.values(currentDeletedSales)
-                            
-                            
-                            for (let index = 0; index < currentDeletedSales.length; index++) {
-                                if (currentDeletedSales[index].oldId) {
-                                    await window.electronAPI.deleteProductFromSaleDetail(currentDeletedSales[index].Venta_FK__detalleventa, currentDeletedSales[index].Producto_FK__detalleventa)
-                                }                                    
+                    //if (statusSaleDetailInsertion == 1) {
+
+                    let currentDeletedSales = window.electronAPI.getFromSessionStorage("deletedSales")
+
+                    if (currentDeletedSales && editingStatusForm) {
+                        currentDeletedSales = Object.values(currentDeletedSales)
+
+                        let responseDeletedProducts
+                        for (let index = 0; index < currentDeletedSales.length; index++) {
+                            if (currentDeletedSales[index].oldId) {
+                                responseDeletedProducts = await window.electronAPI.deleteProductFromSaleDetail(currentDeletedSales[index].Venta_FK__detalleventa, currentDeletedSales[index].Producto_FK__detalleventa)
                             }
                         }
 
+                        if (typeof responseDeletedProducts == "number") {
+
+                        }
+                    }
+
+                    const statusSaleDetailInsertion = await window.electronAPI.saveSaleDetail(saleDetail, !editingStatusForm)
+                    
+                    if (statusSaleDetailInsertion == 1) {
                         await swal({
                             title: editingStatusForm ? "Venta editada exitosamente" : "Venta iniciada exitosamente",
                             button: {
                                 text: 'Aceptar'
                             }
                         })
-    
+
                         sessionStorage.removeItem("addedSalesIndex")
                         sessionStorage.removeItem("addedSales")
                         sessionStorage.removeItem("deletedSales")
@@ -756,6 +851,9 @@ async function saveSaleDetail(){
                         await window.electronAPI.deleteParams("newSaleParams")
                         await window.electronAPI.navigateTo(links.home)
                     }
+
+
+                    //}
                 }
             }
         }
@@ -768,6 +866,23 @@ async function saveSaleDetail(){
 
         showSwalConfirm(undefined, confirmContent, saveSaleDetailTask)
     } else {
+
+        if (!fieldsCheck.employees) {
+            establecerIncorrecto(employees.name, employees, "Selecciona un empleado")
+        }
+
+        if (!fieldsCheck.routes) {
+            establecerIncorrecto(routes.name, routes, "Selecciona una ruta")
+        }
+
+        if (!fieldsCheck.initialQuantityBoxes) {
+            validateNumbers('intNumbers', initialQuantityBoxes)
+        }
+
+        if (!fieldsCheck.date) {
+            validateDate()
+        }
+
         if (!saleDetail) {
 
             if (document.getElementById('errorMessageForm') == null) {
@@ -783,28 +898,12 @@ async function saveSaleDetail(){
                 errorMessageForm.appendChild(messageParagraph)
                 logCards.appendChild(errorMessageForm)
             }
-
-            if (!fieldsCheck.employees){
-                establecerIncorrecto(employees.name, employees, "Selecciona un empleado")
-            }
-        
-            if (!fieldsCheck.routes){
-                establecerIncorrecto(routes.name, routes, "Selecciona una ruta")
-            }
-        
-            if(!fieldsCheck.initialQuantityBoxes){
-                validateNumbers('intNumbers', initialQuantityBoxes)
-            }
-        
-            if(!fieldsCheck.date){
-                validateDate()
-            }
-
-            buttonOption1.classList.remove('button_option1_active')
-            buttonOption2.classList.remove('button_option2_active')
-
-            await showSwalToFillemptyFields()
         }
+
+        await showSwalToFillemptyFields()
+
+        buttonOption1.classList.remove('button_option1_active')
+        buttonOption2.classList.remove('button_option2_active')
     }
 }
 
@@ -812,11 +911,12 @@ async function addProductToSale(){
     if (fieldsCheck.description && fieldsCheck.quantity && fieldsCheck.sale) {
         switch (editingStatusModalForm) {
             case true:
-                productToEdit.Producto_FK__detalleventa = productsDescription.selectedIndex
+                productToEdit.Producto_FK__detalleventa = getProductIdFromSelectedIndex()
                 productToEdit.code = code.value
                 productToEdit.Cantidad_piezas_inicio__detalleventa = parseInt(quantity.value)
-                productToEdit.Precio_venta_al_momento__detalleventa = parseFloat(sale.value.replace('$', '').trim())
-                productToEdit.Precio_costo_al_momento__detalleventa = parseFloat(cost.value.replace('$', '').trim())
+                productToEdit.Precio_venta_al_momento__detalleventa = getFieldSalePrice()
+                console.log(getFieldSalePrice())
+                productToEdit.Precio_costo_al_momento__detalleventa = getFieldCostPrice()
                 productToEdit.description = productsDescription.value
 
                 const addedSales = await window.electronAPI.getFromSessionStorage("addedSales")
@@ -828,11 +928,11 @@ async function addProductToSale(){
 
                 await setInitiatedSaleDetailOnSessionStorage({
                     saleId: saleID,
-                    productId: productsDescription.selectedIndex,
+                    productId: getProductIdFromSelectedIndex(),
                     productCode: code.value,
                     quantityOfPieces: parseInt(quantity.value),
-                    salePrice: parseFloat(sale.value.replace('$', '').trim()),
-                    costPrice: parseFloat(cost.value.replace('$', '').trim()),
+                    salePrice: getFieldSalePrice(),
+                    costPrice: getFieldCostPrice(),
                     description: productsDescription.value,
                 })
 
@@ -852,7 +952,7 @@ async function addProductToSale(){
             establecerIncorrecto(quantity.name, quantity, "Campo Vacío")
         }
 
-        if(sale.value == ""){
+        if(getFieldSalePrice() == ""){
             establecerIncorrecto(sale.name, sale, "Campo Vacío")
         }
         
@@ -1052,7 +1152,11 @@ async function init() {
     })
 
     initialQuantityBoxes.addEventListener('keyup', () => validateNumbers('intNumbers', initialQuantityBoxes))
-    initialQuantityBoxes.addEventListener('change', () => validateNumbers('intNumbers', initialQuantityBoxes))
+    initialQuantityBoxes.addEventListener('keydown', (keyEvent) => {
+        if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {
+            keyEvent.preventDefault()
+        }
+    })
 
     sale.addEventListener('keyup', async(keyEvent) => {
         if (keyEvent.code == 'NumpadEnter' || keyEvent.code == 'Enter') {

@@ -201,9 +201,18 @@ hgroup{
     align-items: center;
 }
 
-.data:nth-child(1) p{
+.description__text{
     inline-size: 100%;
     overflow-wrap: break-word;
+}
+
+.description__tagUnavailable{
+    background-color: var(--warning);
+    color: var(--secondary);
+    font-family: 'OpenSans-Bold';
+    padding: 0 .2rem;
+    border-radius: .2rem;
+    display: inline;
 }
 
 .data:nth-child(2), .data:nth-child(4){
@@ -355,6 +364,10 @@ hgroup{
 
 .h-2rem{
     height: 2rem;
+}
+
+.mb-p{
+    margin-bottom: .2rem;
 }
 
 .bg-primary{

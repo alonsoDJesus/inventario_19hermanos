@@ -10,6 +10,10 @@
     border-radius: 1.4rem;
 }
 
+.swal-modal--w50{
+    width: 50rem;
+}
+
 .confirm__header {
     display: flex;
     align-items: center;
@@ -51,7 +55,7 @@
     gap: .3rem;
 }
 
-.swal-button--confirm{
+.swal-button--confirm, .swal-button--method1, .swal-button--method2{
     appearance: none;
     background-color: var(--primary);
     border-radius: .3rem;
@@ -64,6 +68,10 @@
     height: 2.5rem;
     width: 7rem;
     color: var(--white);
+}
+
+.swal-button--method1, .swal-button--method2{
+    width: 15rem;
 }
 
 .swal-button--cancel{

@@ -41,6 +41,7 @@ async function getSaleDetailById(id){
         const saleDetail = await conn.query(`
             SELECT
                 Producto_PK as idProducto,
+                Codigo__producto as codigoProducto,
                 Descripcion__producto as descripcion,
                 Cantidad_piezas_inicio__detalleventa as piezasEntregadas,
                 Cantidad_piezas_fin__detalleventa as piezasFinales,

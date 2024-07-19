@@ -86,6 +86,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         sessionStorage.setItem(key, salesString) 
     },
 
+    repareIndex: (index) => {
+        sessionStorage.setItem("addedSalesIndex", `${index}`)
+    },
+
     testByRegexp: (value, valueType) => {
         const expressions = {
             codeProduct: /^[A-ZÁ-Úa-zá-ú0-9_ ]{1,10}$/,
@@ -152,6 +156,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     updateSaleDetail: (saleUpdated, saleId, productId) => {
         return ipcRenderer.invoke('update:saleDetail', saleUpdated, saleId, productId) 
+    },
+
+    updateProductAsUnavailable: (productId) => {
+        return ipcRenderer.invoke('update:productAsUnavailable', productId)
     },
 
     deleteProductFromSaleDetail: (saleId, productId) => {

@@ -1,18 +1,18 @@
 const { getConnection } = require('../database')
 
 async function getProducts(searchCriteriaDeterminator, limitedResults = false){
-    let searchCriteriaString = ''
+    let searchCriteriaString = 'WHERE Status_eliminacion__producto = 0'
     switch (searchCriteriaDeterminator) {
         case 'code':
-            searchCriteriaString = 'ORDER BY Codigo__producto'
+            searchCriteriaString += '\nORDER BY Codigo__producto'
             break;
         
         case 'stock':
-            searchCriteriaString = 'ORDER BY Cantidad_existencias_actual_inventario__producto'
+            searchCriteriaString += '\nORDER BY Cantidad_existencias_actual_inventario__producto'
             break;
         
         default:
-            searchCriteriaString = `WHERE Codigo__producto = '${searchCriteriaDeterminator}'`
+            searchCriteriaString += ` AND Codigo__producto = '${searchCriteriaDeterminator}'`
             break;
     }
     try {
@@ -39,18 +39,30 @@ async function getProducts(searchCriteriaDeterminator, limitedResults = false){
         
         const products = await conn.query(query)
 
-        products.forEach(product => {
-            product.cost = Intl.NumberFormat().format(product.cost)
-            product.sale = Intl.NumberFormat().format(product.sale)
-            product.stock = Intl.NumberFormat().format(product.stock)
-        });
-
+        
         return products
     } catch (error) {
-        console.log(error)
+        return error
+    }
+}
+
+async function updateProductToSetAsUnavailable(productId){
+    try {
+        const conn = await getConnection() 
+        const response = await conn.query(
+            `UPDATE producto SET 
+                Status_eliminacion__producto = 1, 
+                Codigo__producto = CONCAT('*', Codigo__producto),
+                Cantidad_existencias_actual_inventario__producto = 0 
+            WHERE Producto_PK = ?;`
+            , productId)
+        return response.affectedRows
+    } catch (error) {
+        return error
     }
 }
 
 module.exports = {
-    getProducts
+    getProducts,
+    updateProductToSetAsUnavailable
 }

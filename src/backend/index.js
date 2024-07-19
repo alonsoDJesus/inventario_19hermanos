@@ -4,7 +4,7 @@ const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift
 const { getInitialSales, deleteSaleById } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
-const { getProducts } = require('./controllers/inventario')
+const { getProducts, updateProductToSetAsUnavailable } = require('./controllers/inventario')
 const { existsProductWithCode, setNewProduct } = require('./controllers/registrar-producto')
 const { getDirName } = require('../../ruta')
 
@@ -65,6 +65,10 @@ app.whenReady().then( () => {
 
     ipcMain.handle('update:saleDetail', async (event, saleUpdated, saleId, productId) => {
         return await updateSaleDetailById(saleUpdated, saleId, productId)
+    }),
+
+    ipcMain.handle('update:productAsUnavailable', async (event, productId) => {
+        return await updateProductToSetAsUnavailable(productId)
     }),
 
     ipcMain.handle('delete:productFromSaleDetail', async (event, saleId, productId) => {

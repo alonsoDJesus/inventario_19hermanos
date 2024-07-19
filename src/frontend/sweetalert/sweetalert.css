@@ -55,7 +55,7 @@
     gap: .3rem;
 }
 
-.swal-button--confirm, .swal-button--method1, .swal-button--method2{
+.swal-button--confirm, .swal-button--method1{
     appearance: none;
     background-color: var(--primary);
     border-radius: .3rem;

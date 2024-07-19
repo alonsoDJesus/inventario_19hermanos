@@ -183,7 +183,7 @@ function renderProducts(searchType) {
         productsContainer.classList.remove('view-grid-4')
 
         const notFoundMessage = searchType == 'all' ?  
-        `Aún no tienes ningún producto. <br>Registra uno dando clic en el botón de agregar.` : 
+        `Aún no tienes ningún producto. Registra uno dando clic en el botón de agregar.` : 
         `No se encontró ningún producto.`
         
         // Tarjeta 
@@ -238,7 +238,7 @@ async function init() {
     searchType = 'all'
     await fetchProductsWithCriteria()
 
-    showWarningStockMessage()
+    //showWarningStockMessage()
 }
 
 async function deleteProduct(productId){
@@ -267,18 +267,9 @@ async function deleteProduct(productId){
             case true:
                 await swal({
                     icon: "warning",
-                    title: "Elije la forma en que eliminarás este producto",
-                    text: `a) Descontinuar producto: El producto ya no estará 
-                    disponible para venderse pero si aparecerá en registros de 
-                    ventas pasadas como "producto descontinuado". De esta manera
-                    no perderás datos importantes para tus estados financieros.
-
-                    b) Borrado total: Se borrará por completo este producto y todos
-                    los registros que tengan que ver con él. Si tienes algún estado
-                    financiero pendiente por obtener, entonces no se recomienda este
-                    método.`,
+                    title: "¡Confirma para eliminar!",
+                    text: 'El producto ya no estará disponible para venderse pero si aparecerá en registros de ventas pasadas como "descontinuado". De esta manera no perderás datos importantes para tus estados financieros.',
                     padding: '1.4rem',
-                    className: "swal-modal--w50",
                     buttons: {
                         cancel: {
                             text: 'Cancelar',
@@ -288,20 +279,12 @@ async function deleteProduct(productId){
                         },
             
                         method1: {
-                            text: "Descontinuar producto",
+                            text: "Eliminar",
                             value: 1,
                             visible: true,
                             closeModal: true,
                             className: '.swal-button--confirm'
                         },
-
-                        method2: {
-                            text: "Eliminación total",
-                            value: 2,
-                            visible: true,
-                            closeModal: true,
-                            className: '.swal-button--confirm'
-                        }
                     }
                 }).then(async (value) => {
                     switch (value) {
@@ -309,7 +292,7 @@ async function deleteProduct(productId){
                             affectedRows = await window.electronAPI.updateProductAsUnavailable(productId)
                             if (affectedRows == 1) {
                                 await swal({
-                                    title: "Producto descontinuado exitosamente",
+                                    title: "Producto eliminado exitosamente",
                                     button: {
                                         text: 'Aceptar'
                                     }
@@ -318,10 +301,6 @@ async function deleteProduct(productId){
 
                             fetchProductsWithCriteria()
                             
-                            break;
-
-                        case 2:
-
                             break;
 
                         default:

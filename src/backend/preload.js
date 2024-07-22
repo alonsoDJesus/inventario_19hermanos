@@ -31,9 +31,11 @@ contextBridge.exposeInMainWorld('electronAPI', {
                 sessionStorage.setItem("newSaleParams", newSaleParamsString)
             } else{
                 if (url.includes('registrar-producto.html')){
-                    const newProductParams = {
+                    let newProductParams = {
                         visualizationStatus: visitMode
                     }
+
+                    id != -1 ? newProductParams.productCode = id : ''
 
                     const newProductParamsString = JSON.stringify(newProductParams)
                     sessionStorage.setItem("newProductParams", newProductParamsString)

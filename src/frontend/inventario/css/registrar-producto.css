@@ -108,6 +108,10 @@ label{
     height: 2rem;
 }
 
+.display-none{
+    display: none;
+}
+
 .position-relative{
     position: relative;
 }
@@ -141,4 +145,11 @@ input::placeholder {
     margin-top: 0.5rem;
     justify-content: left;
     gap: 0.3rem;
+}
+
+#boxesQuantity{
+    border-bottom: solid .2rem var(--forth);
+    background-color: var(--secondary);
+    border-radius: 0;
+    cursor: context-menu;
 }

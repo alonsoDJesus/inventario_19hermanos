@@ -157,9 +157,10 @@ function renderProducts(searchType) {
                         const footerIcon = document.createElement('img')
                         footerIcon.src = singleFooterIcon
                         footerIcon.classList.add('h-1rem')
-
-                        if (footerIcon.src == icons.edit) {
-                            console.log('funcion de editar')    
+                        if (singleFooterIcon == icons.edit) {
+                            footerContainerIcon.id = "editProductButton"
+                            
+                            footerContainerIcon.onclick = async () => await editProduct(product.codigo)
                         }else{
                             footerContainerIcon.id = "deleteProductButton"
                             footerContainerIcon.onclick = () => deleteProduct(product.id)
@@ -230,7 +231,7 @@ async function init() {
         searchProduct()
     })
 
-    buttonAddProduct.addEventListener('click', async () => {
+    buttonAddProduct.addEventListener('click', async () => { 
         await window.electronAPI.navigateTo(links.newProduct, -1, 'create')
     })
    
@@ -239,6 +240,10 @@ async function init() {
     await fetchProductsWithCriteria()
 
     //showWarningStockMessage()
+}
+
+async function editProduct(productCode) {
+    await window.electronAPI.navigateTo(links.newProduct, productCode, 'edit')
 }
 
 async function deleteProduct(productId){

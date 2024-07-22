@@ -5,6 +5,18 @@ const percentIconLock = document.getElementById('percent__icon-lock')
 const saleIconLock = document.getElementById('sale__icon-lock')
 const piecesInBoxIconLock = document.getElementById('piecesInBox__icon-lock')
 const boxesQuantityIconLock = document.getElementById('boxesQuantity__icon-lock')
+const fields = document.querySelectorAll('.form__field')
+
+const code = document.getElementById('code')
+const description = document.getElementById('description')
+const cost = document.getElementById('cost')
+const percent = document.getElementById('percent')
+const sale = document.getElementById('sale')
+const initialStock = document.getElementById('initialStock')
+const minStock = document.getElementById('minStock')
+const maxStock = document.getElementById('maxStock')
+const piecesInBox = document.getElementById('piecesInBox')
+const boxesQuantity = document.getElementById('boxesQuantity')
 
 const fieldsCheck = {
     description: false,
@@ -19,13 +31,22 @@ const fieldsCheck = {
     boxesQuantity: false
 }
 
+
+let params
+let productToEdit = {}
+let editingStatus = false
+
+async function fetchProductdata(){
+    return await window.electronAPI.selectProducts(params.productCode)   
+}
+
 async function checkForm(event){
     switch(event.target.name){
         case 'code':
             if(event.target.value == ""){
                 clearValidations(event.target.name, event.target)
             }else{
-                checkCodeField('codeProduct', event.target, event.target.name);
+                checkCodeField(event.target);
             }
         break;
 
@@ -61,7 +82,7 @@ async function checkForm(event){
             if(event.target.value == ""){
                 clearValidations(event.target.name, event.target)
                 clearValidations(sale.name, sale)
-                sale.value = ""
+                setFieldSale("")
             }else{
                 const testByRegExp = await window.electronAPI.testByRegexp(event.target.value, 'numbers')
                 checkSaleFields(testByRegExp && parseFloat(event.target.value) > 0, event.target, sale, testByRegExp);
@@ -75,20 +96,15 @@ async function checkForm(event){
                 const testByRegExp = await window.electronAPI.testByRegexp(event.target.value, 'numbers')
                 const percent = document.getElementById('percent')
                 const cost = document.getElementById('cost')
-                checkSaleFields(testByRegExp && parseFloat(event.target.value) > parseFloat(cost.value), event.target, percent, testByRegExp);
+                checkSaleFields(testByRegExp && parseFloat(event.target.value) > getFieldCost(), event.target, percent, testByRegExp);
             }
         break;
 
         case 'initialStock':
-            ocultarMensajeCaution(event.target.name, event.target)
-            if(event.target.value == ""){
-                const piecesInBox = document.getElementById('piecesInBox')
-                const boxesQuantity = document.getElementById('boxesQuantity')
+            if (event.target.value == ""){
+                setFieldBoxesQuantity("")
                 clearValidations(event.target.name, event.target)
-                disableField(piecesInBox)
-                disableField(boxesQuantity)
-                piecesInBoxIconLock.classList.remove('display-none')
-            }else{
+            } else {
                 checkInitialStockField()
             }
         break;
@@ -100,7 +116,7 @@ async function checkForm(event){
                 const maxStock = document.getElementById('maxStock')
                 checkStockLimitsField(event.target)
 
-                if(maxStock.value != "")
+                if(getFieldMaxStock() != "")
                     checkStockLimitsField(maxStock)
             }
         break;
@@ -112,16 +128,15 @@ async function checkForm(event){
                 const minStock = document.getElementById('minStock')
                 checkStockLimitsField(event.target)
 
-                if(minStock.value != "")
+                if(getFieldMinStock() != "")
                     checkStockLimitsField(minStock)
             }
         break;
 
         case 'piecesInBox':
             if(event.target.value == ""){
-                const boxesQuantity = document.getElementById('boxesQuantity')
+                setFieldBoxesQuantity("")
                 clearValidations(event.target.name, event.target)
-                disableField(boxesQuantity)
             }else{
                 checkPiecesInBoxField()
             }
@@ -133,17 +148,21 @@ async function checkForm(event){
 }
 
 async function checkCodeField(){
-    const code = document.getElementById('code')
 
-    if ( await window.electronAPI.testByRegexp(code.value, 'codeProduct')){
-        const isRepeatedCode = await window.electronAPI.existsProductWithCode(code.value)
-        if (!isRepeatedCode) 
-            establecerCorrecto(code.name, code)
-        else
-            establecerIncorrecto(code.name, code, "Código repetido")
-    }else {
-        establecerIncorrecto(code.name, code, "No puedes escribir símbolos o números raros.")
+    if (!await window.electronAPI.testByRegexp(getFieldCode(), 'codeProduct')) {
+        establecerIncorrecto(code.name, code, "Símbolos o números raros")
+        return
     }
+
+    let isRepeatedCode = await window.electronAPI.existsProductWithCode(getFieldCode())
+    isRepeatedCode = editingStatus ? isRepeatedCode && getFieldCode() != productToEdit.codigo : isRepeatedCode
+    
+    if (isRepeatedCode) {
+        establecerIncorrecto(code.name, code, "Código repetido")
+        return
+    }
+
+    establecerCorrecto(code.name, code)
 }
 
 async function checkDescriptionField (nameRegExp, field, fieldName){
@@ -158,8 +177,6 @@ async function checkDescriptionField (nameRegExp, field, fieldName){
 
 async function checkCostField(nameRegExp, field, fieldName){
     const testByRegExp = await window.electronAPI.testByRegexp(field.value, nameRegExp)
-    const sale = document.getElementById('sale')
-    const percent = document.getElementById('percent')
 
     if( testByRegExp && parseFloat(field.value) > 0){
         sale.readOnly = false
@@ -177,7 +194,7 @@ async function checkCostField(nameRegExp, field, fieldName){
         saleIconLock.classList.remove('display-none')
         disableField(percent)
         percentIconLock.classList.remove('display-none')
-
+        console.log(field)
         determinateErrorMessageInNumberFields({testByRegExp: testByRegExp, fieldName: fieldName, field: field})
     }
 }
@@ -189,18 +206,19 @@ async function checkSaleFields(statusQuantity, fieldModified, fieldToModify, tes
 
             switch (fieldToModify.id) {
                 case 'sale':
-                    let salePrice = roundToTwo(parseFloat(cost.value) + parseFloat(cost.value) * (parseFloat(fieldModified.value) / 100.0))
-                    fieldToModify.value = salePrice 
+                    let salePrice = roundToTwo(getFieldCost() + getFieldCost() * (getFieldPercent() / 100.0))
+                    console.log(salePrice)
+                    setFieldSale(salePrice) 
                     break;
             
                 default:
-                    let gainPercent = roundToTwo((( parseFloat(fieldModified.value) - parseFloat(cost.value) ) / cost.value) * 100)
-                    fieldToModify.value = gainPercent
+                    let gainPercent = roundToTwo((( getFieldSale() - getFieldCost() ) / getFieldCost()) * 100)
+                    setFieldPercent(gainPercent)
                     break;
             }
 
-            establecerCorrecto(fieldModified.name, fieldModified)
-            establecerCorrecto(fieldToModify.name, fieldToModify)
+            establecerCorrecto(sale.name, sale)
+            establecerCorrecto(percent.name, percent)
             break;
     
         default:
@@ -262,50 +280,68 @@ async function getParams() {
 }
 
 async function init(){
-    const params = await getParams()
+    params = await getParams()
+    enableFieldListeners()
+    setButtonsOptions()
 
     switch(params.visualizationStatus){
         case 'create':
-            enableFieldListeners()
-            setButtonsOptions()
-
-            saleIconLock.addEventListener('click', () => {
-                const cost = document.getElementById('cost')
-                
-                cost.focus()
-                mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
-            })
-
-            percentIconLock.addEventListener('click', () => {
-                const cost = document.getElementById('cost')
-                
-                cost.focus()
-                mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
-            })
-
-            piecesInBoxIconLock.addEventListener('click', () => {
-                const initialStock = document.getElementById('initialStock')
-                
-                initialStock.focus()
-                mostrarMensajeCaution(initialStock.name, initialStock, 'Primero debes ingresar el stock inicial')
-            })
-
-            boxesQuantityIconLock.addEventListener('click', () => {
-                const boxesQuantity = document.getElementById('boxesQuantity')
-                mostrarMensajeCaution(boxesQuantity.name, boxesQuantity, 'Este dato no puede editarse, es automático')
-
-                setTimeout(() => {
-                    ocultarMensajeCaution(boxesQuantity.name, boxesQuantity)
-                }, 5000);
-            })
+            setTitle("Registrar Nuevo Producto")
+            document.querySelectorAll('.input__group')[5].classList.remove('display-none')
+            document.querySelectorAll('.input__group')[9].classList.remove('display-none')
             break;
         
-        case 'edit':
+        case 'edit':          
+            editingStatus = true
+            productToEdit = (await fetchProductdata())[0]
+            
+            setTitle('Modificar datos')
+
+            setFieldCode(productToEdit.codigo)
+            setFieldDescription(productToEdit.descrip)
+            setFieldCost(productToEdit.cost)
+            checkCostField('numbers', cost, cost.name)
+            setFieldSale(productToEdit.sale)
+            setFieldCurrentStock(productToEdit.stock)
+            checkInitialStockField()
+            setFieldMinStock(productToEdit.minStock)
+            setFieldMaxStock(productToEdit.maxStock)
+            setFieldPiecesInBox(productToEdit.piecesInBox)
+            checkSaleFields(true, sale, percent, true);
+            checkPiecesInBoxField()
+
+            establecerCorrecto(code.name, code)
+            establecerCorrecto(description.name, description)
+            establecerCorrecto(initialStock.name, initialStock)
+            establecerCorrecto(minStock.name, minStock)
+            establecerCorrecto(maxStock.name, maxStock)
             break;
         
         default:
             break 
     }
+
+    document.querySelector('form').classList.remove('display-none')
+
+    sale.addEventListener('click', () => {
+        cost.focus()
+        mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+    })
+
+    saleIconLock.addEventListener('click', () => {
+        cost.focus()
+        mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+    })
+
+    percent.addEventListener('click', () => {
+        cost.focus()
+        mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+    })
+
+    percentIconLock.addEventListener('click', () => {
+        cost.focus()
+        mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+    })
 }
 
 async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = undefined){
@@ -354,46 +390,135 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
 }
 
 async function checkInitialStockField(){
-    const initialStock = document.getElementById('initialStock')
-    const testByRegExp = await window.electronAPI.testByRegexp(initialStock.value, 'intNumbers')
-    const piecesInBox = document.getElementById('piecesInBox')
-    if( testByRegExp && parseInt(initialStock.value) > 0 ){
-        establecerCorrecto(initialStock.name, initialStock)
-        piecesInBox.readOnly = false
-        piecesInBoxIconLock.classList.add('display-none')
+    const testByRegExp = await window.electronAPI.testByRegexp(getFieldCurrentStock(), 'intNumbers')
 
-        if(piecesInBox.value != "")
-            checkPiecesInBoxField()
-    }else{
-        const boxesQuantity = document.getElementById('boxesQuantity')
-        let errorMessage = testByRegExp ?  "No puedes poner una cantidad de 0." : "No puedes escribir símbolos o números raros." 
-        establecerIncorrecto(initialStock.name, initialStock, errorMessage)
-        disableField(boxesQuantity)
+    if (!testByRegExp) {
+        establecerIncorrecto(initialStock.name, initialStock, "Símbolos o números raros")
+        return
     }
+
+    if(parseInt(getFieldCurrentStock()) == 0){
+        establecerIncorrecto(initialStock.name, initialStock, "No puedes poner una cantidad de 0.")
+        return
+    }
+
+    establecerCorrecto(initialStock.name, initialStock)
+    
+    if(getFieldPiecesInBox() != "")
+        setFieldBoxesQuantity(computeQuantityOfBoxes())
 }
 
 async function checkPiecesInBoxField(){
-    const initialStock = document.getElementById('initialStock')
-    const piecesInBox = document.getElementById('piecesInBox')
-    const boxesQuantity = document.getElementById('boxesQuantity')
-    const testByRegExp = await window.electronAPI.testByRegexp(piecesInBox.value, 'intNumbers')
+    const testByRegExp = await window.electronAPI.testByRegexp(getFieldPiecesInBox(), 'intNumbers')
 
-    if( testByRegExp && piecesInBox != 0 ){
-        boxesQuantity.value = Math.ceil( parseInt(initialStock.value) / parseInt(piecesInBox.value) ) 
-        establecerCorrecto(piecesInBox.name, piecesInBox)
-        establecerCorrecto(boxesQuantity.name, boxesQuantity)
-    }else{
-        boxesQuantity.value = ''
-        clearValidations(boxesQuantity.name, boxesQuantity)
-
-        const errorMessage = testByRegExp ?  "No puedes poner una cantidad de 0." : "No puedes escribir símbolos o números raros."
-        establecerIncorrecto(piecesInBox.name, piecesInBox, errorMessage) 
+    if (!testByRegExp) {
+        establecerIncorrecto(piecesInBox.name, piecesInBox, "Símbolos o números raros")
+        return
     }
+
+    if(parseInt(getFieldPiecesInBox()) == 0){
+        establecerIncorrecto(piecesInBox.name, piecesInBox, "No puedes poner una cantidad de 0.")
+        return
+    }
+
+    establecerCorrecto(piecesInBox.name, piecesInBox)
+    
+    if(getFieldCurrentStock() != "")
+        setFieldBoxesQuantity(computeQuantityOfBoxes())
+}
+
+function setTitle(newTitle){
+    const title = document.getElementById('title')
+    title.innerText = newTitle
+}
+
+function setFieldCode(codeValue){
+    code.value = codeValue
+}
+
+function getFieldCode(){
+    return code.value
+}
+
+function setFieldDescription(descriptionValue){
+    description.value = descriptionValue
+}
+
+function getFieldDescription(){
+    return description.value
+}
+
+function setFieldCost(costValue){
+    cost.value = costValue != "" ? parseFloat(costValue) : costValue
+}
+
+function getFieldCost(){
+    return cost.value == "" ? "" : parseFloat(cost.value) 
+}
+
+function setFieldSale(saleValue){
+    sale.value = saleValue != "" ? parseFloat(saleValue) : saleValue
+}
+
+function getFieldSale(){
+    return sale.value == "" ? "" : parseFloat(sale.value) 
+}
+
+function setFieldPercent(percentValue){
+    percent.value = percentValue != "" ? parseFloat(percentValue) : perentValue
+}
+
+function getFieldPercent(){
+    return percent.value == "" ? "" : parseFloat(percent.value) 
+}
+
+function setFieldCurrentStock(currentStockValue){
+    initialStock.value = currentStockValue != "" ? parseInt(currentStockValue) : currentStockValue
+}
+
+function getFieldCurrentStock(){
+    return initialStock.value == "" ? "" : parseInt(initialStock.value)
+}
+
+function setFieldMaxStock(maxStockValue){
+    maxStock.value = maxStockValue != "" ? parseInt(maxStockValue) : maxStockValue
+}
+
+function getFieldMaxStock(){
+    return maxStock.value == "" ? "" : parseInt(maxStock.value)
+}
+
+function setFieldMinStock(minStockValue){
+    minStock.value = minStockValue != "" ? parseInt(minStockValue) : minStockValue
+}
+
+function getFieldMinStock(){
+    return minStock.value == "" ? "" : parseInt(minStock.value)   
+}
+
+function setFieldPiecesInBox(piecesInBoxValue){
+    piecesInBox.value = piecesInBoxValue != "" ? parseInt(piecesInBoxValue) : piecesInBoxValue
+}
+
+function getFieldPiecesInBox(){
+    return piecesInBox.value == "" ? "" : parseInt(piecesInBox.value)
+}
+
+function setFieldBoxesQuantity(boxesQuantityValue){
+    boxesQuantity.value = boxesQuantityValue != "" ? parseInt(boxesQuantityValue) : boxesQuantityValue
+}
+
+function getFieldBoxesQuantity(){
+    return boxesQuantity.value == "" ? "" : parseInt(boxesQuantity.value)
 }
 
 function roundToTwo(num) {
     return +(Math.round(num + 'e+2') + 'e-2');
-  }
+}
+
+function computeQuantityOfBoxes(){
+    return Math.ceil( getFieldCurrentStock() / getFieldPiecesInBox() )
+}
 
 function getStatusValidationFields(){
     const initialValue = true
@@ -414,31 +539,28 @@ function disableField(field){
 }
 
 function determinateErrorMessageInNumberFields({testByRegExp, fieldName, field}){
-    let errorMessage = testByRegExp ? (field.value == 0 ? "No puedes poner una cantidad de 0." : "El precio de venta debe superar al precio de costo    ") : "No puedes escribir símbolos o números raros."
+    let errorMessage = testByRegExp ? (field.value == 0 ? "No puedes poner una cantidad de 0." : "El precio de venta debe superar al precio de costo    ") : "Símbolos o números raros."
     establecerIncorrecto(fieldName, field, errorMessage) 
 }
 
 function enableFieldListeners(){
-    const fields = document.querySelectorAll('.form__field')
     fields.forEach( field  =>  {
         field.addEventListener('keyup', (event) => checkForm(event))
         field.addEventListener('change', (event) => checkForm(event))
     } )
 }
 
-function setButtonsOptions(isReadOnly = false){
-    
-    if (!isReadOnly) {
-        buttonOption1.children[0].src = icons.checkWhite
-        buttonOption1.addEventListener('click', () => {
-            saveSaleDetail()
-        })
+function setButtonsOptions() {
 
-        buttonOption2.children[0].src = icons.xmarkWhite
-        buttonOption2.addEventListener('click', () => {
-            cancelSaleDetail()
-        })
-    }
+    buttonOption1.children[0].src = icons.checkWhite
+    buttonOption1.addEventListener('click', () => {
+        saveProductData()
+    })
+
+    buttonOption2.children[0].src = icons.xmarkWhite
+    buttonOption2.addEventListener('click', () => {
+        cancelSaleDetail()
+    })
 
     buttonOptions.onclick = function () {
         buttonOption1.classList.toggle('floatbutton__option1-active')
@@ -459,22 +581,21 @@ function cancelSaleDetail() {
     showSwalConfirm(goToSomeWhere, confirmContent)
 }
 
-function saveSaleDetail() {
+function saveProductData() {
     const statusValidation = getStatusValidationFields()
 
     if (statusValidation) {
         const saveProductTask = async () => {
-            const fields = document.querySelectorAll('.form__field')
 
             const productData = {
-                Codigo__producto: fields[0].value,
-                Descripcion__producto: fields[1].value,
-                Precio_costo__producto: parseFloat(fields[2].value),
-                Precio_venta__producto: parseFloat(fields[4].value),
-                Cantidad_piezas_por_caja__producto: parseInt(fields[8].value),
-                Cantidad_existencias_actual_inventario__producto: parseInt(fields[5].value),
-                Cantidad_existencias_minimas_inventario__producto: parseInt(fields[6].value),
-                Cantidad_existencias_maximas_inventario__producto: parseInt(fields[7].value),
+                Codigo__producto: getFieldCode(),
+                Descripcion__producto: getFieldDescription(),
+                Precio_costo__producto: getFieldCost(),
+                Precio_venta__producto: getFieldSale(),
+                Cantidad_piezas_por_caja__producto: getFieldQuantityInBox(),
+                Cantidad_existencias_actual_inventario__producto: getFieldCurrentStock(),
+                Cantidad_existencias_minimas_inventario__producto: getFieldMinStock(),
+                Cantidad_existencias_maximas_inventario__producto: getFieldMaxStock(),
             }
             
             const productInsertedId = await window.electronAPI.insertNewProduct(productData)
@@ -488,7 +609,7 @@ function saveSaleDetail() {
                 })
                 
                 await window.electronAPI.deleteParams('newProductParams')
-                await window.electronAPI.navigateTo(links.home)
+                await window.electronAPI.navigateTo(links.stock)
             }
         }
 

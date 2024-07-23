@@ -153,7 +153,7 @@ async function saveProductData() {
             establecerIncorrecto(modification.name, modification, 'Campo Vacío')
         }
 
-        if (getFieldModification('string') != "") {
+        if (getFieldModification('string') != "" && !fieldsCheck.modification) {
             establecerIncorrecto(modification.name, modification, 'Símbolos o números raros')
         }
 

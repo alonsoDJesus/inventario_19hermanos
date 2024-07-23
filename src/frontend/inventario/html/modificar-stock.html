@@ -65,7 +65,15 @@
                         <img src="../../../../icons/list-ul-solid.svg" alt="" class="h-1rem">
                         <label for="reason" class="fs-2">Motivo</label>
                     </div>
-                    <select id="reason" name="reason" type="text" class="form__field field-bgcolor-secondary" title="Aquí aparecen los motivos del cambio que estás realizando"></select>
+                    <select id="reason" name="reason" type="text" class="form__field field-bgcolor-secondary" title="Aquí aparecen los motivos del cambio que estás realizando">
+                        <option selected disabled>Seleccione un motivo</option>
+                        <option>Compra de producto a proveedor</option>
+                        <option>Devolución de producto caducado o perforado</option>
+                        <option>Salida de producto para tienda "El Mexicano"</option>
+                        <option>Salida de producto para entrega a clientes específicos</option>
+                        <option>Ajuste de conteo de Stock</option>
+                        <option>No especificado</option>
+                    </select>
                     <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="reason__val"></div>
                     <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
                     <p class="formulario__input-error" id="reason__warning">Código inválido</p>
@@ -91,6 +99,18 @@
                 <input id="boxesQuantity" name="boxesQuantity" type="text" class="form__field" title="Aquí aparece automáticamente cuantas cajas tienes de un determinado producto." disabled>
             </div>
         </form>
+
+        <div class="modifystock__floatbutton" id="buttonOption2">
+            <img src="" alt="" class="h-2rem">
+        </div>
+    
+        <div class="modifystock__floatbutton" id="buttonOption1">
+            <img src="" alt="" class="h-2rem">
+        </div>
+    
+        <div class="modifystock__floatbutton"  id="buttonShowOptions">
+            <img src="../../../../icons/ellipsis-solid.svg" alt="" class="h-2rem">
+        </div>
     </main>
 
     <script src="../../sweetalert/sweetalert.min.js"></script>

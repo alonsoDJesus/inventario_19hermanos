@@ -39,6 +39,15 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
                     const newProductParamsString = JSON.stringify(newProductParams)
                     sessionStorage.setItem("newProductParams", newProductParamsString)
+                } else {
+                    if (url.includes('modificar-stock.html')) {
+                        const productParams = {
+                            productCode: id
+                        }
+
+                        const productParamsString = JSON.stringify(productParams)
+                        sessionStorage.setItem("productParams", productParamsString)
+                    }
                 }
             } 
         }   
@@ -98,6 +107,7 @@ contextBridge.exposeInMainWorld('electronAPI', {
             nameProduct: /^([A-ZÁ-Úa-zá-ú0-9]+[\.\, ]*)+$/,
             numbers: /^[0-9]+(\.[0-9]+)?$/,
             intNumbers: /^[0-9]+$/,
+            positiveNegativeIntNumbers: /^\-?[0-9]+$/,
             prices: /^\$? ?[0-9]+(\.[0-9]+)?$/
         }
         

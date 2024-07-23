@@ -327,8 +327,10 @@ async function init(){
     document.querySelector('form').classList.remove('display-none')
 
     sale.addEventListener('click', () => {
-        cost.focus()
-        mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+        if(sale.readOnly){
+            cost.focus()
+            mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+        } 
     })
 
     saleIconLock.addEventListener('click', () => {
@@ -337,8 +339,10 @@ async function init(){
     })
 
     percent.addEventListener('click', () => {
-        cost.focus()
-        mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+        if(percent.readOnly){
+            cost.focus()
+            mostrarMensajeCaution(cost.name, cost, 'Primero debes ingresar el precio de costo.')
+        }   
     })
 
     percentIconLock.addEventListener('click', () => {
@@ -393,26 +397,26 @@ async function showSwalConfirm(goToSomewhere, confirmContent, specialTask = unde
 }
 
 async function checkInitialStockField(){
-    const testByRegExp = await window.electronAPI.testByRegexp(getFieldCurrentStock(), 'intNumbers')
+    const testByRegExp = await window.electronAPI.testByRegexp(getFieldCurrentStock(true), 'intNumbers')
 
     if (!testByRegExp) {
         establecerIncorrecto(initialStock.name, initialStock, "Símbolos o números raros")
         return
     }
 
-    if(parseInt(getFieldCurrentStock()) == 0){
+    if(getFieldCurrentStock() == 0){
         establecerIncorrecto(initialStock.name, initialStock, "No puedes poner una cantidad de 0.")
         return
     }
 
     establecerCorrecto(initialStock.name, initialStock)
     
-    if(getFieldPiecesInBox() != "")
+    if(getFieldPiecesInBox('string') != "")
         setFieldBoxesQuantity(computeQuantityOfBoxes())
 }
 
 async function checkPiecesInBoxField(){
-    const testByRegExp = await window.electronAPI.testByRegexp(getFieldPiecesInBox(), 'intNumbers')
+    const testByRegExp = await window.electronAPI.testByRegexp(getFieldPiecesInBox('string'), 'intNumbers')
 
     if (!testByRegExp) {
         establecerIncorrecto(piecesInBox.name, piecesInBox, "Símbolos o números raros")
@@ -426,7 +430,7 @@ async function checkPiecesInBoxField(){
 
     establecerCorrecto(piecesInBox.name, piecesInBox)
     
-    if(getFieldCurrentStock() != "")
+    if(getFieldCurrentStock(true) != "")
         setFieldBoxesQuantity(computeQuantityOfBoxes())
 }
 
@@ -479,8 +483,8 @@ function setFieldCurrentStock(currentStockValue){
     initialStock.value = currentStockValue != "" ? parseInt(currentStockValue) : currentStockValue
 }
 
-function getFieldCurrentStock(){
-    return initialStock.value == "" ? "" : parseInt(initialStock.value)
+function getFieldCurrentStock(returnAsString = false){
+    return returnAsString ? initialStock.value : parseInt(initialStock.value)
 }
 
 function setFieldMaxStock(maxStockValue){
@@ -503,8 +507,8 @@ function setFieldPiecesInBox(piecesInBoxValue){
     piecesInBox.value = piecesInBoxValue != "" ? parseInt(piecesInBoxValue) : piecesInBoxValue
 }
 
-function getFieldPiecesInBox(){
-    return piecesInBox.value == "" ? "" : parseInt(piecesInBox.value)
+function getFieldPiecesInBox(returnMode = 'number'){
+    return returnMode == "string" ? piecesInBox.value : parseInt(piecesInBox.value)
 }
 
 function setFieldBoxesQuantity(boxesQuantityValue){

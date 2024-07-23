@@ -1,4 +1,7 @@
 const searchField = document.getElementById('searchField')
+const cardMenu = document.querySelector('.card__menu')
+const optionModifyProductData = document.getElementById('optionModifyProductData')
+const optionModifyProductStock = document.getElementById('optionModifyProductStock')
 
 const fieldsCheck = {
     searchField: false
@@ -12,10 +15,12 @@ const format = new Intl.NumberFormat('en-US', optionsFormat);
 let allProducts = []
 let lowLevelProducts = [], midLevelProducts = [], highLevelProducts =[]
 let searchCriteriaDeterminator = '', searchType = ''
+let previousCardId = -1
 let quantityProductsToSupply = {
     lowLevelQuantity: 0,
     midLevelQuantity: 0
 }
+let productCodeToEdit = ''
 
 function setQuantityProductsToSupply(){
     quantityProductsToSupply.lowLevelQuantity = lowLevelProducts.length
@@ -81,10 +86,11 @@ function renderProducts(searchType) {
     !productsContainer.classList.contains('view-grid-4') ?  productsContainer.classList.add('view-grid-4') : '' // Añade la vista de grid en caso de que se necesite
 
     if (allProducts.length !== 0) {
-        allProducts.forEach( (product) => {
+        allProducts.forEach( (product, index) => {
             // Tarjeta 
             const card = document.createElement('article')
             card.classList.add('card')
+            card.id = index
 
                 // Etiqueta de la tarjeta
                 const cardTag = document.createElement('div')
@@ -160,7 +166,7 @@ function renderProducts(searchType) {
                         if (singleFooterIcon == icons.edit) {
                             footerContainerIcon.id = "editProductButton"
                             
-                            footerContainerIcon.onclick = async () => await editProduct(product.codigo)
+                            footerContainerIcon.onclick = async (clickEvent) => await toggleMenuEditProduct(clickEvent, product.codigo)
                         }else{
                             footerContainerIcon.id = "deleteProductButton"
                             footerContainerIcon.onclick = () => deleteProduct(product.id)
@@ -234,6 +240,14 @@ async function init() {
     buttonAddProduct.addEventListener('click', async () => { 
         await window.electronAPI.navigateTo(links.newProduct, -1, 'create')
     })
+
+    optionModifyProductData.addEventListener('click', async () => { 
+        await window.electronAPI.navigateTo(links.newProduct, productCodeToEdit, 'edit')
+    })
+
+    optionModifyProductStock.addEventListener('click', async () => { 
+        await window.electronAPI.navigateTo(links.newProduct, productCodeToEdit, 'edit')
+    })
    
     searchCriteriaDeterminator = 'code'
     searchType = 'all'
@@ -242,8 +256,22 @@ async function init() {
     //showWarningStockMessage()
 }
 
-async function editProduct(productCode) {
-    await window.electronAPI.navigateTo(links.newProduct, productCode, 'edit')
+async function toggleMenuEditProduct(clickEvent, productCode) {
+    const card = clickEvent.target.closest('.card')
+    const boundingInfoButtonEdit = clickEvent.target.closest('#editProductButton').getBoundingClientRect()
+    productCodeToEdit = productCode
+
+    cardMenu.style.top = `${boundingInfoButtonEdit.top}px`
+    cardMenu.style.left = `${boundingInfoButtonEdit.left - 150}px`
+    cardMenu.classList.toggle('display-none')
+    
+    if (previousCardId != -1 && card.id != previousCardId) {
+        cardMenu.classList.remove('display-none')    
+    }
+
+    previousCardId = card.id
+    //await window.electronAPI.navigateTo(links.newProduct, productCode, 'edit')
+    
 }
 
 async function deleteProduct(productId){

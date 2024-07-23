@@ -148,10 +148,6 @@ contextBridge.exposeInMainWorld('electronAPI', {
         return ipcRenderer.invoke('select:availableStocks', saleId) 
     },
 
-    insertNewProduct: (productData) => {
-        return ipcRenderer.invoke('insert:product', productData) 
-    },
-
     updateSale: (saleUpdated, id) => {
         return ipcRenderer.invoke('update:sale', saleUpdated, id) 
     },
@@ -182,6 +178,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
 
     saveSaleDetail: (saleDetail, isNewSaleDetail = true) => {
         return ipcRenderer.invoke('save:saleDetail', saleDetail, isNewSaleDetail) 
+    },
+
+    saveProduct: (productData, isUpdate) => {
+        return ipcRenderer.invoke('save:product', productData, isUpdate) 
     },
 
     existsProductWithCode: (productCode) => {

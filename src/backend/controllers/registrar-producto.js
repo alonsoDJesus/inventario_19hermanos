@@ -12,13 +12,15 @@ async function existsProductWithCode(productCode){
     }
 }
 
-async function setNewProduct(productData){
+async function saveProduct(productData, isUpdate){
+    const query = isUpdate ? 'UPDATE producto SET ? WHERE Producto_PK = ?' : 'INSERT INTO producto SET ?'
+    const queryParams = isUpdate ? [productData, productData.Producto_PK] : productData
 
     try {
         const conn = await getConnection()
-        const productInserted = await conn.query(`INSERT INTO producto SET ?`, productData)
+        const response = await conn.query(query, queryParams)
 
-        return productInserted.insertId
+        return isUpdate ? response.affectedRows : response.insertId
     } catch (error) {
         return error
     }
@@ -26,5 +28,5 @@ async function setNewProduct(productData){
 
 module.exports = {
     existsProductWithCode,
-    setNewProduct
+    saveProduct
 }

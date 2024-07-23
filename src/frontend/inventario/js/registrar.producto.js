@@ -28,7 +28,6 @@ const fieldsCheck = {
     maxStock: false,
     minStock: false,
     piecesInBox: false,
-    boxesQuantity: false
 }
 
 
@@ -166,12 +165,17 @@ async function checkCodeField(){
 }
 
 async function checkDescriptionField (nameRegExp, field, fieldName){
-    if(await window.electronAPI.testByRegexp(field.value, nameRegExp)){
-        establecerCorrecto(fieldName, field);
-        
-    }else{     
-        establecerIncorrecto(fieldName, field);
+    if (!await window.electronAPI.testByRegexp(field.value, nameRegExp)) {
+        establecerIncorrecto(fieldName, field, 'Símbolos o números raros');
+        return
     }
+
+    if (getFieldDescription().length > 80) {
+        establecerIncorrecto(fieldName, field, 'Nombre muy largo');
+        return
+    }
+
+    establecerCorrecto(description.name, description)
 
 }
 
@@ -207,7 +211,6 @@ async function checkSaleFields(statusQuantity, fieldModified, fieldToModify, tes
             switch (fieldToModify.id) {
                 case 'sale':
                     let salePrice = roundToTwo(getFieldCost() + getFieldCost() * (getFieldPercent() / 100.0))
-                    console.log(salePrice)
                     setFieldSale(salePrice) 
                     break;
             
@@ -267,7 +270,7 @@ async function checkStockLimitsField(field){
             errorMessage = "No puedes poner una cantidad de 0."
         }
     }else{
-        errorMessage = `No puedes escribir símbolos o números raros.`
+        errorMessage = `Símbolos o números raros.`
     }
 
     if(errorMessage != "")
@@ -576,12 +579,12 @@ function cancelSaleDetail() {
     }
 
     goToSomeWhere = async function(){
-        await window.electronAPI.navigateTo(links.home)
+        await window.electronAPI.navigateTo(links.stock)
     }
     showSwalConfirm(goToSomeWhere, confirmContent)
 }
 
-function saveProductData() {
+async function saveProductData() {
     const statusValidation = getStatusValidationFields()
 
     if (statusValidation) {
@@ -592,17 +595,18 @@ function saveProductData() {
                 Descripcion__producto: getFieldDescription(),
                 Precio_costo__producto: getFieldCost(),
                 Precio_venta__producto: getFieldSale(),
-                Cantidad_piezas_por_caja__producto: getFieldQuantityInBox(),
+                Cantidad_piezas_por_caja__producto: getFieldPiecesInBox(),
                 Cantidad_existencias_actual_inventario__producto: getFieldCurrentStock(),
                 Cantidad_existencias_minimas_inventario__producto: getFieldMinStock(),
                 Cantidad_existencias_maximas_inventario__producto: getFieldMaxStock(),
             }
             
-            const productInsertedId = await window.electronAPI.insertNewProduct(productData)
+            editingStatus ? productData.Producto_PK = productToEdit.id : ''
+            const productInsertedId = await window.electronAPI.saveProduct(productData, editingStatus)
 
             if (typeof productInsertedId == "number"){
                 await swal({
-                    title: "Producto dado de alta exitosamente",
+                    title: editingStatus ? "Producto actualizado exitosamente" : "Producto dado de alta exitosamente",
                     button: {
                         text: 'Aceptar'
                     }
@@ -622,17 +626,45 @@ function saveProductData() {
         showSwalConfirm(undefined, confirmContent, saveProductTask)
 
     } else{
-        const errorMessageForm = document.getElementById('errorMessageForm')
-        errorMessageForm.classList.add('formulario__data-error')
-        errorMessageForm.classList.remove('display-none')
+        if (code.value == "") {
+            establecerIncorrecto(code.name, code, 'Campo Vacío')
+        }
 
-        buttonOption1.classList.toggle('floatbutton__option1-active')
-        buttonOption2.classList.toggle('floatbutton__option2-active')
+        if (description.value == "") {
+            establecerIncorrecto(description.name, description, 'Campo Vacío')
+        }
 
-        setTimeout(() => {
-            errorMessageForm.classList.remove('formulario__data-error')
-            errorMessageForm.classList.add('display-none')
-        }, 5000);
+        if (cost.value == "") {
+            establecerIncorrecto(cost.name, cost, 'Campo Vacío')
+        }
+
+        if (percent.value == "") {
+            establecerIncorrecto(percent.name, percent, 'Campo Vacío')
+        }
+
+        if (sale.value == "") {
+            establecerIncorrecto(sale.name, sale, 'Campo Vacío')
+        }
+
+        if (initialStock.value == "") {
+            establecerIncorrecto(initialStock.name, initialStock, 'Campo Vacío')
+        }
+
+        if (minStock.value == "") {
+            establecerIncorrecto(minStock.name, minStock, 'Campo Vacío')
+        }
+
+        if (maxStock.value == "") {
+            establecerIncorrecto(maxStock.name, maxStock, 'Campo Vacío')
+        }
+
+        if (piecesInBox.value == "") {
+            establecerIncorrecto(piecesInBox.name, piecesInBox, 'Campo Vacío')
+        }
+
+        await showSwalToFillemptyFields()
+        buttonOption1.classList.remove('floatbutton__option1-active')
+        buttonOption2.classList.remove('floatbutton__option2-active')
     }
 }
 

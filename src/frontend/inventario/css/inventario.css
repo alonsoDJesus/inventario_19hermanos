@@ -130,6 +130,27 @@ main{
     background-color: var(--primary);
 }
 
+.card__menu{
+    position: absolute;
+    background-color: var(--forth);
+    padding: .5rem 0;
+    border-radius: .3rem;
+    color: var(--primary);
+    font-family: 'OpenSans-Regular';
+    box-shadow: 0 0.3rem 0.5rem black;
+}
+
+.card__menu div{
+    padding: 0 1rem;
+    transition: .1s;
+}
+
+.card__menu div:hover{
+    cursor: pointer;
+    background-color: var(--primary);
+    color: var(--white);
+}
+
 .card__message-notfound{
     display: inline-block;
     width: 100%;
@@ -185,6 +206,10 @@ main{
 
 .display-inline-block{
     display: inline-block;
+}
+
+.display-none{
+    display: none;
 }
 
 #searchField__val{

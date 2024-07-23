@@ -132,7 +132,6 @@ async function deleteProductFromSaleDetail(saleId, productId){
         console.log(responseDeletedProduct)
         return responseDeletedProduct.affectedRows
     } catch (error) {
-        console.log(error)
         return error
     }
 }

@@ -5,7 +5,7 @@ const { getInitialSales, deleteSaleById } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
 const { getProducts, updateProductToSetAsUnavailable } = require('./controllers/inventario')
-const { existsProductWithCode, setNewProduct } = require('./controllers/registrar-producto')
+const { existsProductWithCode, saveProduct } = require('./controllers/registrar-producto')
 const { getDirName } = require('../../ruta')
 
 require('electron-reload')(getDirName())
@@ -55,10 +55,6 @@ app.whenReady().then( () => {
         return await getAvailableStocks(saleId)
     }),
 
-    ipcMain.handle('insert:product', async (event, productData) => {
-        return await setNewProduct(productData)
-    })
-
     ipcMain.handle('update:sale', async (event, saleUpdated, id) => {
         return await updateSaleById(saleUpdated, id)
     }),
@@ -93,6 +89,10 @@ app.whenReady().then( () => {
 
     ipcMain.handle('exists:productWithCode', async (event, productCode) => {
         return await existsProductWithCode(productCode)
+    }),
+
+    ipcMain.handle('save:product', async (event, productData, isUpdate) => {
+        return await saveProduct(productData, isUpdate)
     })
 
     const primaryDisplay = screen.getPrimaryDisplay()

@@ -58,7 +58,7 @@ async function showSwalToFillemptyFields(){
     await swal({
         icon: 'warning',
         title: '¡Te hacen falta datos!',
-        text: 'Revisa los campos que están señalados en rojo y llenalos',
+        text: 'Corrije o llena los campos que están señalados en rojo.',
         padding: '1.4rem',
         buttons: {    
             confirm: {

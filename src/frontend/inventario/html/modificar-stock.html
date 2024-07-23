@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar stock</title>
+
+    <link rel="stylesheet" href="../../project-styles/settings.css">
+    <link rel="stylesheet" href="../../project-styles/framework.css">
+    <link rel="stylesheet" href="../../menu/menu.css">
+    <link rel="stylesheet" href="../../validacion-fields/validacion-fields.css">
+    <link rel="stylesheet" href="../css/modificar-stock.css">
+    <link rel="stylesheet" href="../../sweetalert/sweetalert.css">
+
+    <script src="../js/inventario-resources.js"></script>
+</head>
+<body>
+    <script src="../../menu/menu.js"></script>
+
+    <header>
+        <h1 id="title">Modificar stock</h1>
+    </header>
+    
+    <main>
+        <form class="grid-3-columns">
+            <div class="input__group position-relative">
+                <div class="label__group">
+                    <img src="../../../../icons/bottle-water-solid.svg" alt="" class="h-1rem">
+                    <label for="description" class="fs-2">Descripción del producto</label>
+                </div>
+                <input id="description" name="description" type="text" class="form__field" title="Esta es la descripción del producto que vas a modificar" disabled>
+                <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
+            </div>
+
+            <div class="form__inputsGroup grid-3-columns">
+                <div class="input__subGroup position-relative">
+                    <div class="label__group">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <label for="currentStock" class="fs-2">Stock actual</label>
+                    </div>
+                    <input id="currentStock" name="currentStock" type="text" class="form__field" title="Este es el stock del producto previo a las modificaciones que vayas a hacer" disabled>
+                </div>
+    
+                <div class="input__subGroup position-relative">
+                    <div class="label__group">
+                        <img src="../../../../icons/plus-minus-solid.svg" alt="" class="h-1rem">
+                        <label for="modification" class="fs-2">Modificación</label>
+                    </div>
+                    <input id="modification" name="modification" type="text" class="form__field field-bgcolor-secondary" placeholder="10, -10" title="Escribe en cantidades positivas si vas a agregar existencias o cantidades negativas si vas a quitar existencias" autofocus>
+                    <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="modification__val"></div>
+                    <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
+                    <p class="formulario__input-error" id="modification__warning">Código inválido</p>
+                </div>
+    
+                <div class="input__subGroup position-relative">
+                    <div class="label__group">
+                        <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                        <label for="newStock" class="fs-2">Stock Nuevo</label>
+                    </div>
+                    <input id="newStock" name="newStock" type="text" class="form__field" title="Este es el stock nuevo que resultaría después que modifiques el stock actual" disabled>
+                </div>
+    
+                <div class="input__subGroup position-relative">
+                    <div class="label__group">
+                        <img src="../../../../icons/list-ul-solid.svg" alt="" class="h-1rem">
+                        <label for="reason" class="fs-2">Motivo</label>
+                    </div>
+                    <select id="reason" name="reason" type="text" class="form__field field-bgcolor-secondary" title="Aquí aparecen los motivos del cambio que estás realizando"></select>
+                    <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="reason__val"></div>
+                    <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
+                    <p class="formulario__input-error" id="reason__warning">Código inválido</p>
+                </div>
+            </div>
+
+            <div class="input__group position-relative">
+                <div class="label__group">
+                    <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                    <label for="piecesInBox" class="fs-2">Piezas por caja</label>
+                </div>
+                <input id="piecesInBox" name="piecesInBox" type="text" class="form__field" placeholder="4" title="Escribe cuantas piezas vienen en una sola caja">
+                <div class="formulario__validacion-estado icon-wrong opacity-0 new-top-modal right-2" id="piecesInBox__val"></div>
+                <!--img src="../../../icons/xmark-solid-red.svg" alt="" class="h-1rem formulario__validacion-estado select-options"-->
+                <p class="formulario__input-error" id="piecesInBox__warning">Código inválido</p>
+            </div>
+
+            <div class="input__group position-relative">
+                <div class="label__group">
+                    <img src="../../../../icons/boxes-stacked-solid.svg" alt="" class="h-1rem">
+                    <label for="boxesQuantity" class="fs-2">Cantidad de cajas</label>
+                </div>
+                <input id="boxesQuantity" name="boxesQuantity" type="text" class="form__field" title="Aquí aparece automáticamente cuantas cajas tienes de un determinado producto." disabled>
+            </div>
+        </form>
+    </main>
+
+    <script src="../../sweetalert/sweetalert.min.js"></script>
+    <script src="../../validacion-fields/validacion-fields.js"></script>
+    <script src="../js/modificar-stock.js"></script>
+</body>
+</html>

@@ -246,7 +246,7 @@ async function init() {
     })
 
     optionModifyProductStock.addEventListener('click', async () => { 
-        await window.electronAPI.navigateTo(links.newProduct, productCodeToEdit, 'edit')
+        await window.electronAPI.navigateTo(links.modifyStock, productCodeToEdit, 'edit')
     })
    
     searchCriteriaDeterminator = 'code'

@@ -1,7 +1,6 @@
 header{
     width: 75%;
-    margin: auto;
-    margin-top: 3rem;
+    margin: 3rem auto auto auto;
     display: flex;
     justify-content: space-between;
 }
@@ -32,10 +31,12 @@ header{
 
 .button-search{
     margin-left: 0.3rem;
+    margin-top: 0.5rem;
     padding: 0.65rem 1rem;
     border-radius: 0.4rem;
     cursor: pointer;
     transition: .3s;
+    height: 2.5rem;
 }
 
 .button-search:hover{
@@ -249,4 +250,9 @@ main{
     font-size: 1rem;
     border-radius: .4rem;
     cursor: pointer;
+}
+
+.search-group{
+    display: flex;
+    gap: .2rem;
 }

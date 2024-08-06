@@ -27,13 +27,16 @@
                 <option>Existencias en Stock</option>
             </select>
 
-            <div class="search-group">
-                <input type="text" name="searchField" id="searchField" title="searchField" class="display-inline-block header__field">
-                <div class="button-search display-inline-block" id="buttonSearch">
+            <div class="search-group position-relative">
+                <div class="position-relative" id="pruebaDiv">
+                    <input type="text" name="searchField" id="searchField" title="searchField" class="display-inline-block header__field">
+                    <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem new-top-modal" id="searchField__val"></div>
+                    <p class="formulario__input-error is-100" id="searchField__warning"></p>
+                </div>
+                <div class="button-search" id="buttonSearch">
                     <img src="../../../../icons/magnifying-glass-solid-white.svg" alt="" class="h-1rem">
                 </div>
-                <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem new-top-modal" id="searchField__val"></div>
-                <p class="formulario__input-error" id="searchField__warning"></p>
+                
             </div>
         </div>
     </header>

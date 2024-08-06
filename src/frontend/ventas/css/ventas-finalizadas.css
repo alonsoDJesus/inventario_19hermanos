@@ -45,7 +45,7 @@ input[type="radio"]:checked{
 }
 
 input[type="radio"]:focus{
-    border: var(--forth) solid .1rem; 
+    border: var(--white_op) solid .1rem; 
 }
 
 .input-group{
@@ -70,6 +70,12 @@ input[type="date"]{
     transition: .1s ease all;
     background-color: var(--primary);
     cursor: pointer;
+}
+
+input[type="date"]:focus{
+    border: 3px solid var(--white_op);
+    outline: none;
+    box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
 
 .button-search{

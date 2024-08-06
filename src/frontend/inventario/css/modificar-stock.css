@@ -53,7 +53,7 @@ label{
 }
 
 .form__field:focus{
-    border: 3px solid var(--forth);
+    border: 3px solid var(--white_op);
     outline: none;
     box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }

@@ -86,7 +86,7 @@ label{
 }
 
 .field:focus{
-    border: 3px solid var(--forth);
+    border: 3px solid var(--white_op);
     outline: none;
     box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
@@ -105,7 +105,7 @@ label{
 }
 
 .field:focus{
-    border: var(--forth) solid 0.2rem;
+    border: var(--white_op) solid 0.2rem;
     outline: none;
 }
 
@@ -136,7 +136,7 @@ label{
 }
 
 .checkbox__group input:focus{
-    border: var(--forth) solid .1rem; 
+    border: var(--white_op) solid .1rem; 
 }
 
 .checkbox__group img{
@@ -476,11 +476,12 @@ label{
 }
 
 .formulario__data-error{
-    background-color: var(--forth);
+    background-color: var(--error);
     position: relative;
     bottom: 0;
     left: 0;
     width: 100%;
+    color: var(--white);
 }
 
 #stock, #cost{

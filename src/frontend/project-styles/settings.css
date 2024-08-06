@@ -8,8 +8,10 @@
     --forth: #F6B17A;
     --forth_o: #fc9c4d;
     --white:#ffffff;
+    --white_op: #e2d9d9;
     --check: #63E6BE;
-    --warning: #FCE97E;  
+    --warning: #FCE97E;
+    --error: #E04656;
 }
 
 /*Importacion de Fuentes*/

@@ -24,9 +24,15 @@ header{
 }
 
 .header__field:focus{
-    border: 3px solid var(--forth);
+    border: 3px solid var(--white_op);
     outline: none;
     box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
+}
+
+.search-group{
+    display: flex;
+    gap: .2rem;
+    
 }
 
 .button-search{
@@ -215,7 +221,7 @@ main{
 
 #searchField__val{
     top: 1.2rem;
-    right: 3.5rem;
+    right: .4rem;
 }
 
 #warningStokMessage{
@@ -250,9 +256,4 @@ main{
     font-size: 1rem;
     border-radius: .4rem;
     cursor: pointer;
-}
-
-.search-group{
-    display: flex;
-    gap: .2rem;
 }

@@ -73,7 +73,7 @@ label{
 }
 
 input:focus, select:focus, .completingsale__financialdata input:focus{
-    border: 3px solid var(--forth);
+    border: 3px solid var(--white_op);
     outline: none;
     box-shadow: 3px 0px 30px rgba(163, 163, 163, 0.4);
 }
@@ -105,7 +105,7 @@ input:focus, select:focus, .completingsale__financialdata input:focus{
 }
 
 .checkbox__group input:focus{
-    border: var(--forth) solid .1rem; 
+    border: var(--white_op) solid .1rem; 
 }
 
 .checkbox__group img{

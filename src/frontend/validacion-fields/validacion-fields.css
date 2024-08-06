@@ -36,10 +36,10 @@
     font-family: 'OpenSans-Regular';
     font-size: 0.9rem;
     display: block;
-    background-color: var(--forth);
+    background-color: var(--error);
     padding: 0.3rem 1.4rem 0.3rem 1.4rem;
     border-radius: 0.3rem;
-    color: var(--primary);
+    color: var(--white);
     margin-top: 0.5rem;
 }
 

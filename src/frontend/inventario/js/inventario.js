@@ -231,7 +231,7 @@ async function init() {
                 if (checkValue) {
                     establecerCorrecto(searchField.name, searchField)
                 } else {
-                    const errorMessage = 'El código es demasiado largo\no escribiste algun símbolo raro'
+                    const errorMessage = 'Código demasiado largo\no símbolos raros'
                     establecerIncorrecto(searchField.name, searchField, errorMessage)
                 }
             }

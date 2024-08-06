@@ -20,6 +20,7 @@ const icons = {
     circleGreen: '../../../../icons/circle-solid-green.svg',
     circleRed: '../../../../icons/circle-solid-red.svg',
     circleYellow: '../../../../icons/circle-solid-yellow.svg',
+    percent: '../../../../icons/percent-solid.svg'
 }
 
 const links = {

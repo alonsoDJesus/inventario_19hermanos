@@ -22,6 +22,10 @@ let quantityProductsToSupply = {
 }
 let productCodeToEdit = ''
 
+function roundToTwo(num) {
+    return +(Math.round(num + 'e+2') + 'e-2');
+}
+
 function setQuantityProductsToSupply(){
     quantityProductsToSupply.lowLevelQuantity = lowLevelProducts.length
     quantityProductsToSupply.midLevelQuantity = midLevelProducts.length
@@ -120,6 +124,7 @@ function renderProducts(searchType) {
                     [icons.boxesWhite, `${product.piecesInBox} ${product.piecesInBox == 1 ? 'pieza' : 'piezas'} por caja`],
                     [icons.dollarWhite, `Costo: ${format.format(parseFloat(product.cost).toFixed(2))}`],
                     [icons.dollarWhite, `Venta: ${format.format(parseFloat(product.sale).toFixed(2))}`],
+                    [icons.percent, `Ganancia: ${roundToTwo((( parseFloat(product.sale) - parseFloat(product.cost) ) / parseFloat(product.cost)) * 100)}%`],
                     [product.levelIndicator, `Existencias: ${product.stock}`],
                 ]
 

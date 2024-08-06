@@ -1,6 +1,6 @@
 const {BrowserWindow} = require('electron')
 const path = require('node:path')
-
+//"start": "electron-forge start",
 let window;
 
 function createWindow(width, height) {
@@ -14,7 +14,9 @@ function createWindow(width, height) {
             preload: path.join(__dirname, 'preload.js')
         }
     })
-    window.loadFile('../inv_19h_electron_mysql/src/frontend/inicio/index.html')
+
+    const indexPath = path.resolve(__dirname, '..', '..', 'src', 'frontend', 'inicio', 'index.html')
+    window.loadFile(indexPath)
 }
 
 module.exports = {

@@ -125,8 +125,7 @@ function searchProduct(){
 }
 
 function formatNumberWitDecimals(num, includeDollarSign = true){
-    num = window.electronAPI.roundToTwo(parseFloat(num))
-    num = new Number(num).toLocaleString("es-MX", numericMXFormat)
+    num = new Number(parseFloat(num)).toLocaleString("es-MX", numericMXFormat)
     num =  !includeDollarSign ? num.replace('$', '') : num
     return num
 }

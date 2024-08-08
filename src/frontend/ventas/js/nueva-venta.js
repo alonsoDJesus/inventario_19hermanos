@@ -88,18 +88,11 @@ function getSaleID(){
 // }
 //----------------------------------------------------------------------------
 function setFieldSalePrice(saleValue){
-    switch (saleValue) {
-        case '':
-            sale.value = saleValue
-            break;
-    
-        default:
-            let saleFormatted = new Number(saleValue).toLocaleString("es-MX", numericMXFormat)
-            saleFormatted = saleFormatted.replace('$', '')
-            saleFormatted = `$ ${saleFormatted}`
-            sale.value = saleFormatted
-            break;
+    if (saleValue != "") {
+        saleValue = new Number(saleValue).toLocaleString("es-MX", numericMXFormat).replace('$', '')
+        saleValue = `$ ${saleValue}`
     }
+    sale.value = saleValue
 }
 
 function getFieldSalePrice(){
@@ -108,20 +101,16 @@ function getFieldSalePrice(){
             return ""
     
         default:
-            return parseFloat(sale.value.replace('$', '').replace(',', '').trim()).toFixed(2)
+            return parseFloat(sale.value.replace('$', '').replace(',', '').trim())
     }
 }
 
 function setFieldCostPrice(costValue){
-    switch (costValue) {
-        case '':
-            cost.value = costValue
-            break;
-    
-        default:
-            cost.value = `$ ${Intl.NumberFormat().format(costValue)}` 
-            break;
+    if (costValue != "") {
+        costValue = new Number(costValue).toLocaleString("es-MX", numericMXFormat).replace('$', '')
+        costValue = `$ ${costValue}`
     }
+    cost.value = costValue
 }
 
 function getFieldCostPrice(){

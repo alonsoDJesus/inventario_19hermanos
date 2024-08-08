@@ -30,6 +30,11 @@ const fieldsCheck = {
     piecesInBox: false,
 }
 
+const numericMXFormat = {
+    style: "currency",
+    currency: "MXN"
+}
+
 
 let params
 let productToEdit = {}
@@ -206,16 +211,15 @@ async function checkCostField(nameRegExp, field, fieldName){
 async function checkSaleFields(statusQuantity, fieldModified, fieldToModify, testByRegExp){
     switch (statusQuantity) {
         case true:
-            const cost = document.getElementById('cost')
 
             switch (fieldToModify.id) {
                 case 'sale':
-                    let salePrice = roundToTwo(getFieldCost() + getFieldCost() * (getFieldPercent() / 100.0))
+                    let salePrice = await window.electronAPI.roundToTwo(getFieldCost() + getFieldCost() * (getFieldPercent() / 100.0))
                     setFieldSale(salePrice) 
                     break;
             
                 default:
-                    let gainPercent = roundToTwo((( getFieldSale() - getFieldCost() ) / getFieldCost()) * 100)
+                    let gainPercent = await window.electronAPI.roundToTwo((( getFieldSale() - getFieldCost() ) / getFieldCost()) * 100)
                     setFieldPercent(gainPercent)
                     break;
             }
@@ -456,7 +460,11 @@ function getFieldDescription(){
 }
 
 function setFieldCost(costValue){
-    cost.value = costValue != "" ? parseFloat(costValue) : costValue
+    if (costValue != "") {
+        costValue = window.electronAPI.roundToTwo(parseFloat(costValue))
+        costValue = new Number(costValue).toLocaleString("es-MX", numericMXFormat).replace('$', '')
+    }
+    cost.value = costValue
 }
 
 function getFieldCost(){
@@ -464,7 +472,11 @@ function getFieldCost(){
 }
 
 function setFieldSale(saleValue){
-    sale.value = saleValue != "" ? parseFloat(saleValue) : saleValue
+    if (saleValue != "") {
+        saleValue = window.electronAPI.roundToTwo(parseFloat(saleValue))
+        saleValue = new Number(saleValue).toLocaleString("es-MX", numericMXFormat).replace('$', '')
+    }
+    sale.value =  saleValue
 }
 
 function getFieldSale(){
@@ -472,7 +484,11 @@ function getFieldSale(){
 }
 
 function setFieldPercent(percentValue){
-    percent.value = percentValue != "" ? parseFloat(percentValue) : perentValue
+    if (percentValue != "") {
+        percentValue = window.electronAPI.roundToTwo(parseFloat(percentValue))
+        percentValue = new Number(percentValue).toLocaleString("es-MX", numericMXFormat).replace('$', '')
+    }
+    percent.value = percentValue
 }
 
 function getFieldPercent(){
@@ -517,10 +533,6 @@ function setFieldBoxesQuantity(boxesQuantityValue){
 
 function getFieldBoxesQuantity(){
     return boxesQuantity.value == "" ? "" : parseInt(boxesQuantity.value)
-}
-
-function roundToTwo(num) {
-    return +(Math.round(num + 'e+2') + 'e-2');
 }
 
 function computeQuantityOfBoxes(){

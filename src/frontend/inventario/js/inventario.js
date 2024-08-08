@@ -7,11 +7,11 @@ const listSuggestions = document.getElementById('listSuggestions')
 const fieldsCheck = {
     searchField: false
 }
-const optionsFormat = {
-    style: 'currency',
-    currency: 'USD'
-}
-const format = new Intl.NumberFormat('en-US', optionsFormat);
+
+const numericMXFormat = {
+    style: "currency",
+    currency: "MXN"
+};
 
 let allProducts = []
 let productsNameSuggestions = []
@@ -124,6 +124,13 @@ function searchProduct(){
     }
 }
 
+function formatNumberWitDecimals(num, includeDollarSign = true){
+    num = window.electronAPI.roundToTwo(parseFloat(num))
+    num = new Number(num).toLocaleString("es-MX", numericMXFormat)
+    num =  !includeDollarSign ? num.replace('$', '') : num
+    return num
+}
+
 function renderProducts(searchType) {
     const productsContainer = document.getElementById('productsContainer') // Contenedor de las tarjetas
     productsContainer.innerHTML = '' // El contenedor se reinicia en cada renderización
@@ -162,9 +169,9 @@ function renderProducts(searchType) {
                 // Arreglo con datos adicionales sobre el producto en cuestión
                 let arrayBodyData = [
                     [icons.boxesWhite, `${product.piecesInBox} ${product.piecesInBox == 1 ? 'pieza' : 'piezas'} por caja`],
-                    [icons.dollarWhite, `Costo: ${format.format(await window.electronAPI.roundToTwo( parseFloat(product.cost) ) )}`],
-                    [icons.dollarWhite, `Venta: ${format.format(await window.electronAPI.roundToTwo( parseFloat(product.sale) ) )}`],
-                    [icons.percent, `Ganancia: ${format.format(await window.electronAPI.roundToTwo((( parseFloat(product.sale) - parseFloat(product.cost) ) / parseFloat(product.cost)) * 100))}%`.replace('$', '')],
+                    [icons.dollarWhite, `Costo: ${formatNumberWitDecimals(product.cost)}`],
+                    [icons.dollarWhite, `Venta: ${formatNumberWitDecimals(product.sale)}`],
+                    [icons.percent, `Ganancia: ${formatNumberWitDecimals((( parseFloat(product.sale) - parseFloat(product.cost) ) / parseFloat(product.cost)) * 100, false)}%`],
                     [product.levelIndicator, `Existencias: ${product.stock}`],
                 ]
 

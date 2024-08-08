@@ -113,6 +113,10 @@ contextBridge.exposeInMainWorld('electronAPI', {
         
         return expressions[valueType].test(value)
     },
+
+    roundToTwo: (num) => {
+        return +(Math.round(num + 'e+2') + 'e-2');
+    },
     
     selectInitialSales: (criteria) => {
         return ipcRenderer.invoke('select:initialSales', criteria) 

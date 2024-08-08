@@ -52,11 +52,12 @@ header{
 
 #listSuggestions li{
     padding: .25rem .5rem;
-    transition: .1s;
 }
 
-#listSuggestions li:hover{
+#listSuggestions li:hover, .selected{
     background-color: var(--forth);
+    color: var(--primary);
+    font-family: 'OpenSans-Regular';
 }
 
 #listSuggestions li:nth-child(1):hover{
@@ -255,11 +256,6 @@ main{
 
 .position-absolute{
     position: absolute;
-}
-
-.selected{
-    background-color: var(--forth);
-    color: var(--primary);
 }
 
 #searchField__val{

@@ -358,6 +358,13 @@ async function init() {
             currentIndexItem = -1
         }
     })
+
+    window.addEventListener('keydown', (event) => {
+        if (event.code == 'ArrowUp' && !listSuggestions.classList.contains('display-none')) {
+            event.preventDefault()
+            return
+        }
+    })
    
     searchCriteriaDeterminator = 'code'
     searchType = 'all'

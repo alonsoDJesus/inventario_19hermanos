@@ -4,7 +4,7 @@ const { getEmployees, getRoutes, getLastSaleID, setNewShift, setNewSaleWithShift
 const { getInitialSales, deleteSaleById } = require('./controllers/inicio')
 const { getCompletedSales } = require('./controllers/ventas-finalizadas')
 const { getSaleById, getSaleDetailById, updateSaleById, updateSaleDetailById } = require('./controllers/finalizar-venta')
-const { getProducts, updateProductToSetAsUnavailable } = require('./controllers/inventario')
+const { getProducts, getProductsNameSuggestions, updateProductToSetAsUnavailable } = require('./controllers/inventario')
 const { existsProductWithCode, saveProduct } = require('./controllers/registrar-producto')
 const { getDirName } = require('../../ruta')
 
@@ -31,8 +31,8 @@ app.whenReady().then( () => {
         return await getLastSaleID()
     }),
 
-    ipcMain.handle('select:products', async (event, searchCriteriaDeterminator) => {
-        return await getProducts(searchCriteriaDeterminator)
+    ipcMain.handle('select:products', async (event, searchCriteriaDeterminator, typeCriteria) => {
+        return await getProducts(searchCriteriaDeterminator, typeCriteria)
     }),
 
     ipcMain.handle('select:saleByID', async (event, id) => {
@@ -53,6 +53,10 @@ app.whenReady().then( () => {
 
     ipcMain.handle('select:availableStocks', async (event, saleId) => {
         return await getAvailableStocks(saleId)
+    }),
+
+    ipcMain.handle('select:productsNamesSuggestions', async (event, productName) => {
+        return await getProductsNameSuggestions(productName)
     }),
 
     ipcMain.handle('update:sale', async (event, saleUpdated, id) => {

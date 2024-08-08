@@ -2,6 +2,7 @@ const searchField = document.getElementById('searchField')
 const cardMenu = document.querySelector('.card__menu')
 const optionModifyProductData = document.getElementById('optionModifyProductData')
 const optionModifyProductStock = document.getElementById('optionModifyProductStock')
+const listSuggestions = document.getElementById('listSuggestions')
 
 const fieldsCheck = {
     searchField: false
@@ -13,6 +14,8 @@ const optionsFormat = {
 const format = new Intl.NumberFormat('en-US', optionsFormat);
 
 let allProducts = []
+let productsNameSuggestions = []
+let listSuggestionsItems = []
 let lowLevelProducts = [], midLevelProducts = [], highLevelProducts =[]
 let searchCriteriaDeterminator = '', searchType = ''
 let previousCardId = -1
@@ -21,9 +24,46 @@ let quantityProductsToSupply = {
     midLevelQuantity: 0
 }
 let productCodeToEdit = ''
+let currentIndexItem = -1
+let focusedElement = ""
+
+function setSearchField(searchValue){
+    searchField.value = searchValue
+}
 
 function roundToTwo(num) {
     return +(Math.round(num + 'e+2') + 'e-2');
+}
+
+function toggleListSuggestions(toggleAction){
+    if (toggleAction == 'hide') {
+        listSuggestions.classList.add('display-none')
+        listSuggestionsItems = []
+        return 
+    }
+    
+    listSuggestions.classList.remove('display-none')
+}
+
+function setItemSelected(itemSelected){
+    setSearchField(itemSelected)
+    searchProduct()
+    toggleListSuggestions('hide')
+    focusedElement = searchField.id
+}
+
+function setSuggestionsOnList(){
+    listSuggestions.innerHTML = ''
+    productsNameSuggestions.forEach(suggestion => {
+        const item = document.createElement('li')
+        item.innerText = suggestion['descrip']
+        item.setAttribute('id', suggestion['codigo'])
+        listSuggestions.appendChild(item)
+        item.addEventListener('click', () => setItemSelected(suggestion['descrip']))
+    });
+
+    listSuggestionsItems = document.querySelectorAll('#listSuggestions li')
+    currentIndexItem = -1
 }
 
 function setQuantityProductsToSupply(){
@@ -219,22 +259,79 @@ async function init() {
 
     sortSelector.addEventListener('change', determinateSearchCriteriaBySelector)
 
-    searchField.addEventListener('keyup', (event) => {
+    searchField.addEventListener('keyup', async (event) => {
+
         if (searchField.value == '') {
+            toggleListSuggestions('hide')
             clearValidations(searchField.name, searchField)
             determinateSearchCriteriaBySelector()
-        } else {
-            if (event.code == 'NumpadEnter' || event.code == 'Enter') {
+            return
+        }
+
+        if (searchField.value.length > 80) {
+            establecerIncorrecto(searchField.name, searchField, 'Mucho texto')
+            toggleListSuggestions('hide')
+            return
+        }
+
+        const checkValue = window.electronAPI.testByRegexp(searchField.value, 'nameProduct')
+        if (!checkValue) {
+            establecerIncorrecto(searchField.name, searchField, 'Símbolos raros')
+            toggleListSuggestions('hide')
+            return
+        }
+
+        if (event.code == 'NumpadEnter' || event.code == 'Enter') {
+
+            if (focusedElement == searchField.id) {
                 searchProduct()
-            } else {
-                const checkValue = window.electronAPI.testByRegexp(searchField.value, 'codeProduct')
-                if (checkValue) {
-                    establecerCorrecto(searchField.name, searchField)
-                } else {
-                    const errorMessage = 'Código demasiado largo\no símbolos raros'
-                    establecerIncorrecto(searchField.name, searchField, errorMessage)
-                }
+                toggleListSuggestions('hide')
+                return
             }
+
+            if (focusedElement == listSuggestions.id) {
+                setItemSelected(listSuggestionsItems[currentIndexItem].innerText)
+                return
+            }
+        }
+
+        if (event.code == 'ArrowDown') {
+            if (currentIndexItem > -1) {
+                listSuggestionsItems[currentIndexItem].classList.remove('selected') 
+            }
+
+            currentIndexItem = (currentIndexItem + 1) % listSuggestionsItems.length
+            listSuggestionsItems[currentIndexItem].classList.add('selected')
+            focusedElement = listSuggestions.id
+
+            return
+        }
+
+        if (event.code == 'ArrowUp') {
+            
+            if (currentIndexItem > -1) {
+                listSuggestionsItems[currentIndexItem].classList.remove('selected')
+                currentIndexItem = (currentIndexItem - 1 + listSuggestionsItems.length) % listSuggestionsItems.length
+                listSuggestionsItems[currentIndexItem].classList.add('selected')
+                focusedElement = listSuggestions.id
+            }
+
+            return
+        }
+
+        establecerCorrecto(searchField.name, searchField)
+        focusedElement = searchField.id
+        productsNameSuggestions = await window.electronAPI.selectProductsNamesSuggestions(searchField.value.trim())
+        setSuggestionsOnList()
+        toggleListSuggestions('show')
+
+    })
+
+    searchField.addEventListener('click', () => {
+        if (focusedElement == listSuggestions.id) {
+            listSuggestionsItems[currentIndexItem].classList.remove('selected')
+            currentIndexItem = -1
+            focusedElement = searchField.id
         }
     })
 
@@ -252,6 +349,14 @@ async function init() {
 
     optionModifyProductStock.addEventListener('click', async () => { 
         await window.electronAPI.navigateTo(links.modifyStock, productCodeToEdit, 'edit')
+    })
+
+    window.addEventListener('click', (clickEvent) => {
+        if (clickEvent.target.closest('#searchFieldContainer') == null && !listSuggestions.classList.contains('display-none')) {
+            listSuggestions.classList.add('display-none')
+            focusedElement = ""
+            currentIndexItem = -1
+        }
     })
    
     searchCriteriaDeterminator = 'code'
@@ -359,7 +464,7 @@ async function fetchProductsWithCriteria(){
     midLevelProducts = []
     highLevelProducts = []
 
-    allProducts = await window.electronAPI.selectProducts(searchCriteriaDeterminator)
+    allProducts = await window.electronAPI.selectProducts(searchCriteriaDeterminator, 'byDescription')
 
     levelClassifier()
     setQuantityProductsToSupply()

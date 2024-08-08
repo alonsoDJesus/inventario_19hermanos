@@ -28,8 +28,10 @@
             </select>
 
             <div class="search-group position-relative">
-                <div class="position-relative" id="pruebaDiv">
+                <div class="position-relative" id="searchFieldContainer">
                     <input type="text" name="searchField" id="searchField" title="searchField" class="display-inline-block header__field">
+                    <ul class="position-absolute display-none" id="listSuggestions">
+                    </ul>
                     <div class="formulario__validacion-estado icon-wrong opacity-0 mr-1rem new-top-modal" id="searchField__val"></div>
                     <p class="formulario__input-error is-100" id="searchField__warning"></p>
                 </div>

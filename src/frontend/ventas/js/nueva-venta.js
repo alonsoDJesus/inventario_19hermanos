@@ -290,38 +290,6 @@ async function prepareModalForm(productData = undefined) {
     code.focus() // Cambia el enfoque al select de los productos
 }
 
-// function isEmptyForm(fields) {
-//     let isEmpty = true, index = 0
-
-
-//     while (fields[index] != undefined && isEmpty == true) {
-//         if (fields[index].type == "select-one") {
-//             isEmpty = fields[index].selectedIndex == 0
-//         } else {
-//             isEmpty = fields[index].value == ''
-//         }
-//         index++
-//     }
-
-//     return isEmpty
-// }
-
-// Limpieza de validaciones
-// function clearValidations(nameField, field){
-//     // Se ocultan los íconos
-//     document.getElementById(`${nameField}__val`).classList.remove('opacity-1');
-//     document.getElementById(`${nameField}__val`).classList.add('opacity-0');
-
-//     // Se eliminan los íconos de correcto o incorrecto
-//     document.getElementById(`${nameField}__val`).classList.remove('icon-wrong');
-//     document.getElementById(`${nameField}__val`).classList.remove('icon-check');
-
-//     // Se eliminan mensajes de error
-//     field.parentNode.children[`${nameField}__warning`].classList.remove('formulario__input-error-activo')
-
-//     fieldsCheck[nameField] = false; // En el objeto de los campos se señala una entrada incorrecta
-// }
-
 function renderAllSales() {
     if (sessionStorage.getItem("addedSales")) {
         const auxAddedSales = JSON.parse(sessionStorage.getItem("addedSales"))
@@ -966,8 +934,6 @@ async function init() {
     const buttonCancelModal = document.getElementById('buttonCancelModal')
     const buttonSearchProduct = document.getElementById('buttonSearchProduct')
     const imgButton = document.querySelector('#buttonSearchProduct img')
-    const date = document.getElementById('date')
-    const checkDate = document.getElementById('checkDate')
     const employeesData = await fetchEmployeesData()
     const logCards = document.getElementById('logCards')
 

@@ -130,7 +130,7 @@ function renderProducts(searchType) {
     !productsContainer.classList.contains('view-grid-4') ?  productsContainer.classList.add('view-grid-4') : '' // Añade la vista de grid en caso de que se necesite
 
     if (allProducts.length !== 0) {
-        allProducts.forEach( (product, index) => {
+        allProducts.forEach( async (product, index) => {
             // Tarjeta 
             const card = document.createElement('article')
             card.classList.add('card')
@@ -162,9 +162,9 @@ function renderProducts(searchType) {
                 // Arreglo con datos adicionales sobre el producto en cuestión
                 let arrayBodyData = [
                     [icons.boxesWhite, `${product.piecesInBox} ${product.piecesInBox == 1 ? 'pieza' : 'piezas'} por caja`],
-                    [icons.dollarWhite, `Costo: ${format.format(parseFloat(product.cost).toFixed(2))}`],
-                    [icons.dollarWhite, `Venta: ${format.format(parseFloat(product.sale).toFixed(2))}`],
-                    [icons.percent, `Ganancia: ${roundToTwo((( parseFloat(product.sale) - parseFloat(product.cost) ) / parseFloat(product.cost)) * 100)}%`],
+                    [icons.dollarWhite, `Costo: ${format.format(await window.electronAPI.roundToTwo( parseFloat(product.cost) ) )}`],
+                    [icons.dollarWhite, `Venta: ${format.format(await window.electronAPI.roundToTwo( parseFloat(product.sale) ) )}`],
+                    [icons.percent, `Ganancia: ${format.format(await window.electronAPI.roundToTwo((( parseFloat(product.sale) - parseFloat(product.cost) ) / parseFloat(product.cost)) * 100))}%`.replace('$', '')],
                     [product.levelIndicator, `Existencias: ${product.stock}`],
                 ]
 
